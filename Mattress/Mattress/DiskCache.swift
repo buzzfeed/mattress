@@ -11,6 +11,9 @@
     DiskCache is a NSURLCache replacement that will store
     and retreive NSCachedURLResponses to disk.
 */
+
+import Foundation
+
 class DiskCache {
     let path: String
 

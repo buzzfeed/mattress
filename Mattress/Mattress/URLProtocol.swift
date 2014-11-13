@@ -8,7 +8,7 @@
 
 import Foundation
 
-private var caches: [URLCache] = []
+var caches: [URLCache] = []
 private let URLProtocolHandledRequestKey = "URLProtocolHandledRequestKey"
 
 /*!
@@ -41,7 +41,7 @@ class URLProtocol: NSURLProtocol, NSURLConnectionDataDelegate {
     */
     class func addCache(cache: URLCache) {
         if caches.count == 0 {
-            NSURLProtocol.registerClass(self)
+            registerProtocol(true)
         }
         caches.append(cache)
     }
@@ -57,8 +57,16 @@ class URLProtocol: NSURLProtocol, NSURLConnectionDataDelegate {
         if let index = index {
             caches.removeAtIndex(index)
             if caches.count == 0 {
-                NSURLProtocol.unregisterClass(self)
+                registerProtocol(false)
             }
+        }
+    }
+
+    class func registerProtocol(shouldRegister: Bool) {
+        if shouldRegister {
+            NSURLProtocol.registerClass(self)
+        } else {
+            NSURLProtocol.unregisterClass(self)
         }
     }
 

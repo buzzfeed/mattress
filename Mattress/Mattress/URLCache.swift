@@ -20,7 +20,7 @@ private let ArbitrarilyLargeSize = 1024 * 1024 * 5 * 20
     checked when retrieving stored responses.
 */
 public class URLCache: NSURLCache {
-    let offlineCache = DiskCache(path: "offline")
+    var offlineCache = DiskCache(path: "offline")
     var cachers: [WebViewCacher] = []
 
     /*
@@ -55,8 +55,21 @@ public class URLCache: NSURLCache {
 
     // Mark: - Methods
 
+    override init(memoryCapacity: Int, diskCapacity: Int, diskPath path: String?) {
+        super.init(memoryCapacity: memoryCapacity, diskCapacity: diskCapacity, diskPath: path)
+        addToProtocol(true)
+    }
+
     deinit {
-        URLProtocol.removeCache(self)
+        addToProtocol(false)
+    }
+
+    func addToProtocol(shouldAdd: Bool) {
+        if shouldAdd {
+            URLProtocol.addCache(self)
+        } else {
+            URLProtocol.removeCache(self)
+        }
     }
 
     func webViewCacherOriginatingRequest(request: NSURLRequest) -> WebViewCacher? {
