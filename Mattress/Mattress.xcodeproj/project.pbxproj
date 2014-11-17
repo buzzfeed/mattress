@@ -20,6 +20,7 @@
 		0BBA4BCD1A1527EC00709E9D /* WebViewCacher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B4929EA1A14004A003D9AB3 /* WebViewCacher.swift */; };
 		0BBA4BCF1A15431200709E9D /* URLProtocolTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBA4BCE1A15431200709E9D /* URLProtocolTests.swift */; };
 		0BBA4BD11A1552D500709E9D /* WebViewCacherTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBA4BD01A1552D500709E9D /* WebViewCacherTests.swift */; };
+		0BF50D631A169E3E0027B673 /* DiskCacheTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BF50D621A169E3E0027B673 /* DiskCacheTests.swift */; };
 		0BFAB50F1A15214600859B23 /* URLCacheTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BFAB50E1A15214600859B23 /* URLCacheTests.swift */; };
 /* End PBXBuildFile section */
 
@@ -46,6 +47,7 @@
 		0B4929EC1A14017C003D9AB3 /* URLProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = URLProtocol.swift; sourceTree = "<group>"; };
 		0BBA4BCE1A15431200709E9D /* URLProtocolTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = URLProtocolTests.swift; sourceTree = "<group>"; };
 		0BBA4BD01A1552D500709E9D /* WebViewCacherTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebViewCacherTests.swift; sourceTree = "<group>"; };
+		0BF50D621A169E3E0027B673 /* DiskCacheTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DiskCacheTests.swift; sourceTree = "<group>"; };
 		0BFAB50E1A15214600859B23 /* URLCacheTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = URLCacheTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -114,6 +116,7 @@
 				0BFAB50E1A15214600859B23 /* URLCacheTests.swift */,
 				0BBA4BCE1A15431200709E9D /* URLProtocolTests.swift */,
 				0BBA4BD01A1552D500709E9D /* WebViewCacherTests.swift */,
+				0BF50D621A169E3E0027B673 /* DiskCacheTests.swift */,
 				0B4929DA1A13FD9C003D9AB3 /* Supporting Files */,
 			);
 			path = MattressTests;
@@ -246,6 +249,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0BFAB50F1A15214600859B23 /* URLCacheTests.swift in Sources */,
+				0BF50D631A169E3E0027B673 /* DiskCacheTests.swift in Sources */,
 				0BBA4BCD1A1527EC00709E9D /* WebViewCacher.swift in Sources */,
 				0BBA4BCB1A1527E800709E9D /* URLProtocol.swift in Sources */,
 				0B4929DD1A13FD9C003D9AB3 /* MattressTests.swift in Sources */,

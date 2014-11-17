@@ -12,6 +12,8 @@ public let MattressOfflineCacheRequestPropertyKey = "MattressOfflineCacheRequest
 let URLCacheStoredRequestPropertyKey = "URLCacheStoredRequest"
 
 private let ArbitrarilyLargeSize = 1024 * 1024 * 5 * 20
+private let kB = 1024
+private let MB = kB * 1024
 
 /*!
     @class URLCache
@@ -20,7 +22,7 @@ private let ArbitrarilyLargeSize = 1024 * 1024 * 5 * 20
     checked when retrieving stored responses.
 */
 public class URLCache: NSURLCache {
-    var offlineCache = DiskCache(path: "offline")
+    var offlineCache = DiskCache(path: "offline", searchPathDirectory: .DocumentDirectory, cacheSize: 100 * MB)
     var cachers: [WebViewCacher] = []
 
     /*
@@ -85,9 +87,10 @@ public class URLCache: NSURLCache {
 
     override public func storeCachedResponse(cachedResponse: NSCachedURLResponse, forRequest request: NSURLRequest) {
         if URLCache.requestShouldBeStoredOffline(request) {
-            return offlineCache.storeCachedResponse(cachedResponse, forRequest: request)
+            let success = offlineCache.storeCachedResponse(cachedResponse, forRequest: request)
+        } else {
+            return super.storeCachedResponse(cachedResponse, forRequest: request)
         }
-        return super.storeCachedResponse(cachedResponse, forRequest: request)
     }
 
     public override func cachedResponseForRequest(request: NSURLRequest) -> NSCachedURLResponse? {

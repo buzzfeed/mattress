@@ -99,8 +99,9 @@ class MockDiskCache: DiskCache {
     var storeCacheCalledHandler: (() -> ())?
     var retrieveCacheCalledHandler: ((request: NSURLRequest) -> (NSCachedURLResponse?))?
 
-    override func storeCachedResponse(cachedResponse: NSCachedURLResponse, forRequest request: NSURLRequest) {
+    override func storeCachedResponse(cachedResponse: NSCachedURLResponse, forRequest request: NSURLRequest) -> Bool {
         storeCacheCalledHandler?()
+        return true
     }
 
     override func cachedResponseForRequest(request: NSURLRequest) -> NSCachedURLResponse? {
@@ -118,7 +119,7 @@ class MockURLCacheWithMockDiskCache: URLCache {
     override init(memoryCapacity: Int, diskCapacity: Int, diskPath path: String?) {
         super.init(memoryCapacity: memoryCapacity, diskCapacity: diskCapacity, diskPath: path)
 
-        offlineCache = MockDiskCache(path: "test")
+        offlineCache = MockDiskCache(path: "test", searchPathDirectory: .DocumentDirectory, cacheSize: 1024)
     }
 }
 
