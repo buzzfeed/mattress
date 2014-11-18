@@ -78,7 +78,7 @@ class WebViewCacher: NSObject, UIWebViewDelegate {
     func webView(webView: UIWebView, shouldStartLoadWithRequest request: NSURLRequest, navigationType: UIWebViewNavigationType) -> Bool {
         // Ensure all requests from this webView include the offline caching header
         mainDocumentURL = request.mainDocumentURL
-        if URLCache.requestShouldBeStoredOffline(request) {
+        if !URLCache.requestShouldBeStoredOffline(request) {
             let mutableRequest = mutableRequestForRequest(request)
             webView.loadRequest(mutableRequest)
             return false
