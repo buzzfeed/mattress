@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		0B4929D01A13FD9C003D9AB3 /* Mattress.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B4929CF1A13FD9C003D9AB3 /* Mattress.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		0B4929D61A13FD9C003D9AB3 /* Mattress.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0B4929CA1A13FD9C003D9AB3 /* Mattress.framework */; };
-		0B4929DD1A13FD9C003D9AB3 /* MattressTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B4929DC1A13FD9C003D9AB3 /* MattressTests.swift */; };
 		0B4929E71A13FDD1003D9AB3 /* URLCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B4929E61A13FDD1003D9AB3 /* URLCache.swift */; };
 		0B4929E91A13FE1C003D9AB3 /* DiskCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B4929E81A13FE1C003D9AB3 /* DiskCache.swift */; };
 		0B4929EB1A14004A003D9AB3 /* WebViewCacher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B4929EA1A14004A003D9AB3 /* WebViewCacher.swift */; };
@@ -40,7 +39,6 @@
 		0B4929CF1A13FD9C003D9AB3 /* Mattress.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Mattress.h; sourceTree = "<group>"; };
 		0B4929D51A13FD9C003D9AB3 /* MattressTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MattressTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		0B4929DB1A13FD9C003D9AB3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		0B4929DC1A13FD9C003D9AB3 /* MattressTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MattressTests.swift; sourceTree = "<group>"; };
 		0B4929E61A13FDD1003D9AB3 /* URLCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = URLCache.swift; sourceTree = "<group>"; };
 		0B4929E81A13FE1C003D9AB3 /* DiskCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DiskCache.swift; sourceTree = "<group>"; };
 		0B4929EA1A14004A003D9AB3 /* WebViewCacher.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebViewCacher.swift; sourceTree = "<group>"; };
@@ -112,7 +110,6 @@
 		0B4929D91A13FD9C003D9AB3 /* MattressTests */ = {
 			isa = PBXGroup;
 			children = (
-				0B4929DC1A13FD9C003D9AB3 /* MattressTests.swift */,
 				0BFAB50E1A15214600859B23 /* URLCacheTests.swift */,
 				0BBA4BCE1A15431200709E9D /* URLProtocolTests.swift */,
 				0BBA4BD01A1552D500709E9D /* WebViewCacherTests.swift */,
@@ -252,7 +249,6 @@
 				0BF50D631A169E3E0027B673 /* DiskCacheTests.swift in Sources */,
 				0BBA4BCD1A1527EC00709E9D /* WebViewCacher.swift in Sources */,
 				0BBA4BCB1A1527E800709E9D /* URLProtocol.swift in Sources */,
-				0B4929DD1A13FD9C003D9AB3 /* MattressTests.swift in Sources */,
 				0BBA4BCF1A15431200709E9D /* URLProtocolTests.swift in Sources */,
 				0BBA4BD11A1552D500709E9D /* WebViewCacherTests.swift in Sources */,
 				0BBA4BCA1A1527B500709E9D /* URLCache.swift in Sources */,
