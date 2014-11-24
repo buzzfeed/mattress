@@ -33,7 +33,6 @@ class DiskCache {
         var success = false
         let path = diskPathForRequest(request)?.path
         if let path = path {
-            println("Write to: \(path)")
             success = NSKeyedArchiver.archiveRootObject(cachedResponse, toFile: path)
         }
         return success

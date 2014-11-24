@@ -24,6 +24,7 @@ private let MB = kB * 1024
 public class URLCache: NSURLCache {
     var offlineCache = DiskCache(path: "offline", searchPathDirectory: .DocumentDirectory, cacheSize: 100 * MB)
     var cachers: [WebViewCacher] = []
+    var reachabilityHandler: (() -> Bool)?
 
     /*
     We need to override these because when deciding
@@ -94,12 +95,19 @@ public class URLCache: NSURLCache {
     }
 
     public override func cachedResponseForRequest(request: NSURLRequest) -> NSCachedURLResponse? {
-        var response = offlineCache.cachedResponseForRequest(request)
-        if response != nil {
-            return response
-        } else {
-            return super.cachedResponseForRequest(request)
+        var cachedResponse = offlineCache.cachedResponseForRequest(request)
+        if let response = cachedResponse {
+            var isOffline = false
+            if let handler = reachabilityHandler {
+                isOffline = !handler()
+            }
+            if isOffline {
+                let maxAgeResponse = maxAgeModifiedResponseForCachedResponse(response)
+                return maxAgeResponse
+            }
+            return cachedResponse
         }
+        return super.cachedResponseForRequest(request)
     }
 
     public func offlineCacheURL(url: NSURL, loadedHandler: WebViewLoadedHandler) {
@@ -110,5 +118,20 @@ public class URLCache: NSURLCache {
                 self.cachers.removeAtIndex(index)
             }
         }
+    }
+
+    func maxAgeModifiedResponseForCachedResponse(cachedResponse: NSCachedURLResponse) -> NSCachedURLResponse {
+        if let httpResponse = cachedResponse.response as? NSHTTPURLResponse {
+            if let url = httpResponse.URL {
+                var headers = httpResponse.allHeaderFields
+                headers.updateValue("max-age=\(60*60*24*365*10)", forKey: "Cache-Control")
+                let newResponse = NSHTTPURLResponse(URL: url, statusCode: httpResponse.statusCode, HTTPVersion: "HTTP/1.1", headerFields: headers)
+                if let newResponse = newResponse {
+                    let newCachedResponse = NSCachedURLResponse(response: newResponse, data: cachedResponse.data, userInfo: cachedResponse.userInfo, storagePolicy: cachedResponse.storagePolicy)
+                    return newCachedResponse
+                }
+            }
+        }
+        return cachedResponse // TODO: Can we check on whether we should store this
     }
 }

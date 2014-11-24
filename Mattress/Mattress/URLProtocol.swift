@@ -25,11 +25,18 @@ class URLProtocol: NSURLProtocol, NSURLConnectionDataDelegate {
             return false
         }
 
-        // Only handle this if a WebViewCacher is responsible
-        // for this request
         if let webViewCacher = webViewCacherForRequest(request) {
             return true
         }
+
+        // If we are offline we should use this protocol
+        // so we can make sure cacheIsValid is called
+        if let cache = NSURLCache.sharedURLCache() as? URLCache {
+            if let handler = cache.reachabilityHandler {
+                return !handler()
+            }
+        }
+
         return false
     }
 
@@ -80,8 +87,9 @@ class URLProtocol: NSURLProtocol, NSURLConnectionDataDelegate {
         return nil
     }
 
-    class func mutableCanonicalRequestForRequest(request: NSURLRequest) -> NSURLRequest {
+    class func mutableCanonicalRequestForRequest(request: NSURLRequest) -> NSMutableURLRequest {
         var mutableRequest = request.mutableCopy() as NSMutableURLRequest
+        mutableRequest.cachePolicy = .ReturnCacheDataElseLoad
         if let webViewCacher = webViewCacherForRequest(request) {
             mutableRequest = webViewCacher.mutableRequestForRequest(request)
         }
@@ -103,6 +111,13 @@ class URLProtocol: NSURLProtocol, NSURLConnectionDataDelegate {
 
     override func startLoading() {
         var mutableRequest = URLProtocol.mutableCanonicalRequestForRequest(request)
+        if let cache = NSURLCache.sharedURLCache() as? URLCache {
+            let cachedResponse = cache.cachedResponseForRequest(mutableRequest)
+            if let cachedResponse = cachedResponse {
+                client?.URLProtocol(self, cachedResponseIsValid: cachedResponse)
+                return
+            }
+        }
         self.connection = NSURLConnection(request: mutableRequest, delegate: self)
     }
 
@@ -112,10 +127,6 @@ class URLProtocol: NSURLProtocol, NSURLConnectionDataDelegate {
     }
 
     // Mark: - NSURLConnectionDataDelegate Methods
-
-    func connection(connection: NSURLConnection, willCacheResponse cachedResponse: NSCachedURLResponse) -> NSCachedURLResponse? {
-        return cachedResponse // TODO: Can we check on whether we should store this
-    }
 
     func connection(connection: NSURLConnection!, didReceiveResponse response: NSURLResponse) {
         // TODO: Can we check here if we stored this request and if not manuall do it?

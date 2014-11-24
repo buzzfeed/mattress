@@ -25,7 +25,7 @@ class WebViewCacher: NSObject, UIWebViewDelegate {
 
     func didOriginateRequest(request: NSURLRequest) -> Bool {
         if let mainDocumentURL = mainDocumentURL {
-            if request.mainDocumentURL == mainDocumentURL {
+            if request.mainDocumentURL == mainDocumentURL || request.URL == mainDocumentURL {
                 return true
             }
         }
