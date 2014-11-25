@@ -26,8 +26,8 @@ class DiskCache {
     var currentSize = 0
     var requestCaches: [String] = []
 
-    init(path: String, searchPathDirectory: NSSearchPathDirectory, cacheSize: Int) {
-        self.path = path
+    init(path: String?, searchPathDirectory: NSSearchPathDirectory, cacheSize: Int) {
+        self.path = path ?? "offline"
         self.searchPathDirectory = searchPathDirectory
         self.cacheSize = cacheSize
         loadPropertiesFromDisk()

@@ -22,7 +22,7 @@ private let ArbitrarilyLargeSize = MB * 100
     checked when retrieving stored responses.
 */
 public class URLCache: NSURLCache {
-    var offlineCache = DiskCache(path: "offline", searchPathDirectory: .DocumentDirectory, cacheSize: 100 * MB)
+    let offlineCache: DiskCache
     var cachers: [WebViewCacher] = []
     var reachabilityHandler: (() -> Bool)?
 
@@ -52,7 +52,11 @@ public class URLCache: NSURLCache {
 
     // Mark: - Methods
 
-    override init(memoryCapacity: Int, diskCapacity: Int, diskPath path: String?) {
+    init(memoryCapacity: Int, diskCapacity: Int, diskPath path: String?,
+        offlineDiskCapacity: Int, offlineDiskPath offlinePath: String?,
+        offlineSearchPathDirectory searchPathDirectory: NSSearchPathDirectory)
+    {
+        offlineCache = DiskCache(path: offlinePath, searchPathDirectory: searchPathDirectory, cacheSize: offlineDiskCapacity)
         super.init(memoryCapacity: memoryCapacity, diskCapacity: diskCapacity, diskPath: path)
         addToProtocol(true)
     }
