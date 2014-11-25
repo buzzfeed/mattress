@@ -95,6 +95,31 @@ class URLCacheTests: XCTestCase {
         }
     }
 
+    func testCachingARequestToTheStandardCacheAlsoUpdatesTheRequestInTheOfflineCacheIfItWasAlreadyStoredForOffline() {
+        let cache = MockURLCacheWithMockDiskCache(memoryCapacity: 0, diskCapacity: 0, diskPath: nil,
+            offlineDiskCapacity: 1024 * 1024, offlineDiskPath: nil, offlineSearchPathDirectory: .DocumentDirectory)
+        // Ensure we are online
+        cache.reachabilityHandler = {
+            return true
+        }
+
+        // Make sure the request has been stored once
+        let url = NSURL(string: "foo://bar")!
+        let data = "hello, world".dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)!
+        let response = NSURLResponse(URL: url, MIMEType: "text/html", expectedContentLength: data.length, textEncodingName: nil)
+        let request = NSURLRequest(URL: url)
+        let cachedResponse = NSCachedURLResponse(response: response, data: data, userInfo: nil, storagePolicy: .Allowed)
+        cache.mockDiskCache.storeCachedResponseOnSuper(cachedResponse, forRequest: request)
+
+        var didCall = false
+        cache.mockDiskCache.storeCacheCalledHandler = {
+            didCall = true
+        }
+
+        cache.storeCachedResponse(cachedResponse, forRequest: request)
+        XCTAssert(didCall, "The offline disk cache storage method was not called")
+    }
+
     // Mark: - Helpers
 
     func makeURLCache() -> URLCache {
@@ -119,6 +144,10 @@ class SourceCache: WebViewCacher {
 class MockDiskCache: DiskCache {
     var storeCacheCalledHandler: (() -> ())?
     var retrieveCacheCalledHandler: ((request: NSURLRequest) -> (NSCachedURLResponse?))?
+
+    func storeCachedResponseOnSuper(cachedResponse: NSCachedURLResponse, forRequest request: NSURLRequest) -> Bool {
+        return super.storeCachedResponse(cachedResponse, forRequest: request)
+    }
 
     override func storeCachedResponse(cachedResponse: NSCachedURLResponse, forRequest request: NSURLRequest) -> Bool {
         storeCacheCalledHandler?()

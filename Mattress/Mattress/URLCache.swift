@@ -88,7 +88,11 @@ public class URLCache: NSURLCache {
         if URLCache.requestShouldBeStoredOffline(request) {
             let success = offlineCache.storeCachedResponse(cachedResponse, forRequest: request)
         } else {
-            return super.storeCachedResponse(cachedResponse, forRequest: request)
+            super.storeCachedResponse(cachedResponse, forRequest: request)
+            // If we've already stored this in the offline cache, update it
+            if offlineCache.hasCacheForRequest(request) {
+                offlineCache.storeCachedResponse(cachedResponse, forRequest: request)
+            }
         }
     }
 

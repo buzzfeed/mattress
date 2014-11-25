@@ -114,6 +114,17 @@ class DiskCache {
         return response
     }
 
+    func hasCacheForRequest(request: NSURLRequest) -> Bool {
+        if let hash = hashForRequest(request) {
+            for requestHash in requestCaches {
+                if hash == requestHash {
+                    return true
+                }
+            }
+        }
+        return false
+    }
+
     /*!
         @method diskPathForPropertyList
         @abstract diskPathForPropertyList will get the path
@@ -180,6 +191,13 @@ class DiskCache {
             }
         }
         return url
+    }
+
+    func hashForRequest(request: NSURLRequest) -> String? {
+        if let urlString = request.URL.absoluteString {
+            return hashForURLString(urlString)
+        }
+        return nil
     }
 
     func hashForURLString(string: String) -> String? {
