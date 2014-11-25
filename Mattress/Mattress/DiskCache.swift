@@ -15,25 +15,92 @@
 import Foundation
 
 class DiskCache {
+    enum DictionaryKeys: String {
+        case cacheSize = "cacheSize"
+        case requestsFilenameArray = "requestsFilenameArray"
+    }
+
     let path: String
     let searchPathDirectory: NSSearchPathDirectory
     let cacheSize: Int
+    var currentSize = 0
+    var requestCaches: [String] = []
 
     init(path: String, searchPathDirectory: NSSearchPathDirectory, cacheSize: Int) {
         self.path = path
         self.searchPathDirectory = searchPathDirectory
         self.cacheSize = cacheSize
+        loadPropertiesFromDisk()
+    }
 
-        // Plist to track a list of mainDocumentURLs
-        // in order that they should be dropped as we hit
-        // our limit
+    func loadPropertiesFromDisk() {
+        if let plistPath = diskPathForPropertyList()?.path {
+            if !NSFileManager.defaultManager().fileExistsAtPath(plistPath) {
+                persistPropertiesToDisk()
+            } else {
+                if let dict = NSDictionary(contentsOfFile: plistPath) {
+                    if let currentSize = dict.valueForKey(DictionaryKeys.cacheSize.rawValue) as? Int {
+                        self.currentSize = currentSize
+                    }
+                    if let requestCaches = dict.valueForKey(DictionaryKeys.requestsFilenameArray.rawValue) as? [String] {
+                        self.requestCaches = requestCaches
+                    }
+                }
+            }
+        }
+    }
+
+    func persistPropertiesToDisk() {
+        if let plistPath = diskPathForPropertyList()?.path {
+            let dict = dictionaryForCache()
+            dict.writeToFile(plistPath, atomically: true)
+        }
+    }
+
+    func trimCacheIfNeeded() {
+        while currentSize > cacheSize && !requestCaches.isEmpty {
+            let fileName = requestCaches.removeAtIndex(0)
+            if let path = diskPathForRequestCacheNamed(fileName)?.path {
+                if let attributes = NSFileManager.defaultManager().attributesOfItemAtPath(path, error: nil) as? [String: AnyObject] {
+                    if let fileSize = attributes[NSFileSize] as? NSNumber {
+                        let size = fileSize.integerValue
+                        currentSize -= size
+                    }
+                }
+                NSFileManager.defaultManager().removeItemAtPath(path, error: nil)
+            }
+        }
+    }
+
+    func dictionaryForCache() -> NSDictionary {
+        var dict = NSMutableDictionary()
+        dict.setValue(currentSize, forKey: DictionaryKeys.cacheSize.rawValue)
+        dict.setValue(requestCaches, forKey: DictionaryKeys.requestsFilenameArray.rawValue)
+        return NSDictionary(dictionary: dict)
     }
 
     func storeCachedResponse(cachedResponse: NSCachedURLResponse, forRequest request: NSURLRequest) -> Bool {
         var success = false
         let path = diskPathForRequest(request)?.path
         if let path = path {
-            success = NSKeyedArchiver.archiveRootObject(cachedResponse, toFile: path)
+            let data = NSKeyedArchiver.archivedDataWithRootObject(cachedResponse)
+            currentSize += data.length
+            // TODO: Cleanup how we get the hash vs. the full path
+            let hash = hashForURLString(request.URL.absoluteString!)!
+            var index = -1
+            for i in 0..<requestCaches.count {
+                if requestCaches[i] == hash {
+                    index = i
+                    break
+                }
+            }
+            if index != -1 {
+                requestCaches.removeAtIndex(index)
+            }
+            requestCaches.append(hash)
+            trimCacheIfNeeded()
+            persistPropertiesToDisk()
+            success = data.writeToFile(path, atomically: false)
         }
         return success
     }
@@ -45,6 +112,30 @@ class DiskCache {
             response = NSKeyedUnarchiver.unarchiveObjectWithFile(path) as? NSCachedURLResponse
         }
         return response
+    }
+
+    /*!
+        @method diskPathForPropertyList
+        @abstract diskPathForPropertyList will get the path
+        to the property list associated with this diskCache.
+        It is stored in the same directory as the cached
+        request files.
+    */
+    func diskPathForPropertyList() -> NSURL? {
+        var url: NSURL?
+        let filename = "diskCacheInfo.plist"
+        if let baseURL = diskPath() {
+            url = NSURL(string: filename, relativeToURL: baseURL)
+        }
+        return url
+    }
+
+    func diskPathForRequestCacheNamed(name: String) -> NSURL? {
+        var url: NSURL?
+        if let baseURL = diskPath() {
+            url = NSURL(string: name, relativeToURL: baseURL)
+        }
+        return url
     }
 
     /*!
@@ -60,8 +151,7 @@ class DiskCache {
             filename = hashForURLString(string)
         }
         if let filename = filename {
-            var baseURL = diskPath()
-            if let baseURL = baseURL {
+            if let baseURL = diskPath() {
                 url = NSURL(string: filename, relativeToURL: baseURL)
             }
         }
