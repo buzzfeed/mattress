@@ -18,20 +18,26 @@ class URLProtocolTests: XCTestCase {
 
     func testProtocolRegistersItselfWhenFirstCacheIsCreated() {
         XCTAssertFalse(mockProtocolIsRegistered, "Should not have registered yet")
-        let cache = MockCache(memoryCapacity: 0, diskCapacity: 0, diskPath: nil)
+        let cache = makeMockCache()
         XCTAssertTrue(mockProtocolIsRegistered, "Protocol did not register itself")
     }
 
     func testProtocolUnregistersOnlyWhenLastCacheIsRemoved() {
         XCTAssertFalse(mockProtocolIsRegistered, "Should not have registered yet")
-        let cache1 = MockCache(memoryCapacity: 0, diskCapacity: 0, diskPath: nil)
+        let cache1 = makeMockCache()
         XCTAssertTrue(mockProtocolIsRegistered, "Protocol did not register itself")
-        let cache2 = MockCache(memoryCapacity: 0, diskCapacity: 0, diskPath: nil)
+        let cache2 = makeMockCache()
         // autoreleasepool does not call deinit, so have this instead :(
         cache2.fakeDeinit()
         XCTAssertTrue(mockProtocolIsRegistered, "Protocol was not still registered after deiniting the latter cache")
         cache1.fakeDeinit()
         XCTAssertFalse(mockProtocolIsRegistered, "Should have unregistered when both caches went away")
+    }
+
+    // Mark: - Helpers
+
+    func makeMockCache() -> MockCache {
+        return MockCache(memoryCapacity: 0, diskCapacity: 0, diskPath: nil, offlineDiskCapacity: 0, offlineDiskPath: nil, offlineSearchPathDirectory: .DocumentDirectory)
     }
 }
 

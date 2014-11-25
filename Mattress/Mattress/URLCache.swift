@@ -22,7 +22,7 @@ private let ArbitrarilyLargeSize = MB * 100
     checked when retrieving stored responses.
 */
 public class URLCache: NSURLCache {
-    let offlineCache: DiskCache
+    var offlineCache: DiskCache // Keep as var for testing
     var cachers: [WebViewCacher] = []
     var reachabilityHandler: (() -> Bool)?
 

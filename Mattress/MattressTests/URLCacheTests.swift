@@ -9,8 +9,17 @@
 import XCTest
 
 private let url = NSURL(string: "foo://bar")!
+private let TestDirectory = "test"
 
 class URLCacheTests: XCTestCase {
+
+    override func setUp() {
+        // Ensure plist on disk is reset
+        let diskCache = DiskCache(path: TestDirectory, searchPathDirectory: .DocumentDirectory, cacheSize: 0)
+        if let path = diskCache.diskPathForPropertyList()?.path {
+            NSFileManager.defaultManager().removeItemAtPath(path, error: nil)
+        }
+    }
 
     func testRequestShouldBeStoredOffline() {
         var mutableRequest = NSMutableURLRequest(URL: url)
@@ -23,7 +32,7 @@ class URLCacheTests: XCTestCase {
         NSURLProtocol.setProperty(true, forKey: MattressOfflineCacheRequestPropertyKey, inRequest: mutableRequest)
 
         var didCallMock = false
-        let cache = MockURLCacheWithMockDiskCache(memoryCapacity: 0, diskCapacity: 0, diskPath: nil)
+        let cache = makeMockURLCache()
         cache.mockDiskCache.storeCacheCalledHandler = {
             didCallMock = true
         }
@@ -36,7 +45,7 @@ class URLCacheTests: XCTestCase {
         var mutableRequest = NSMutableURLRequest(URL: url)
 
         var didCallMock = false
-        let cache = MockURLCacheWithMockDiskCache(memoryCapacity: 0, diskCapacity: 0, diskPath: nil)
+        let cache = makeMockURLCache()
         cache.mockDiskCache.storeCacheCalledHandler = {
             didCallMock = true
         }
@@ -49,7 +58,7 @@ class URLCacheTests: XCTestCase {
         let request = NSMutableURLRequest(URL: url)
         let cachedResponse = NSCachedURLResponse()
 
-        let cache = MockURLCacheWithMockDiskCache(memoryCapacity: 0, diskCapacity: 0, diskPath: nil)
+        let cache = makeMockURLCache()
         cache.mockDiskCache.retrieveCacheCalledHandler = { request in
             return cachedResponse
         }
@@ -62,7 +71,7 @@ class URLCacheTests: XCTestCase {
     }
 
     func testOfflineRequestGeneratesWebViewCacher() {
-        let cache = URLCache(memoryCapacity: 0, diskCapacity: 0, diskPath: nil)
+        let cache = makeURLCache()
         XCTAssert(cache.cachers.count == 0, "Cache should not start with any cachers")
         cache.offlineCacheURL(url) { webView in
             return true
@@ -75,7 +84,7 @@ class URLCacheTests: XCTestCase {
         let cacher1 = SourceCache()
         let cacher2 = WebViewCacher()
 
-        let cache = URLCache(memoryCapacity: 0, diskCapacity: 0, diskPath: nil)
+        let cache = makeURLCache()
         cache.cachers.append(cacher1)
         cache.cachers.append(cacher2)
         var source = cache.webViewCacherOriginatingRequest(request)
@@ -84,6 +93,18 @@ class URLCacheTests: XCTestCase {
         } else {
             XCTFail("No source cacher found")
         }
+    }
+
+    // Mark: - Helpers
+
+    func makeURLCache() -> URLCache {
+        return URLCache(memoryCapacity: 0, diskCapacity: 0, diskPath: nil,
+            offlineDiskCapacity: 0, offlineDiskPath: nil, offlineSearchPathDirectory: .DocumentDirectory)
+    }
+
+    func makeMockURLCache() -> MockURLCacheWithMockDiskCache {
+        return MockURLCacheWithMockDiskCache(memoryCapacity: 0, diskCapacity: 0, diskPath: nil,
+            offlineDiskCapacity: 0, offlineDiskPath: nil, offlineSearchPathDirectory: .DocumentDirectory)
     }
 }
 
@@ -116,10 +137,14 @@ class MockURLCacheWithMockDiskCache: URLCache {
         return offlineCache as MockDiskCache
     }
 
-    override init(memoryCapacity: Int, diskCapacity: Int, diskPath path: String?) {
-        super.init(memoryCapacity: memoryCapacity, diskCapacity: diskCapacity, diskPath: path)
+    override init(memoryCapacity: Int, diskCapacity: Int, diskPath path: String?,
+        offlineDiskCapacity: Int, offlineDiskPath offlinePath: String?,
+        offlineSearchPathDirectory searchPathDirectory: NSSearchPathDirectory)
+    {
+        super.init(memoryCapacity: memoryCapacity, diskCapacity: diskCapacity, diskPath: path,
+            offlineDiskCapacity: offlineDiskCapacity, offlineDiskPath: offlinePath, offlineSearchPathDirectory: searchPathDirectory)
 
-        offlineCache = MockDiskCache(path: "test", searchPathDirectory: .DocumentDirectory, cacheSize: 1024)
+        offlineCache = MockDiskCache(path: TestDirectory, searchPathDirectory: .DocumentDirectory, cacheSize: 1024)
     }
 }
 
