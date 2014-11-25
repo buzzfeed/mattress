@@ -84,23 +84,25 @@ class DiskCache {
         let path = diskPathForRequest(request)?.path
         if let path = path {
             let data = NSKeyedArchiver.archivedDataWithRootObject(cachedResponse)
-            currentSize += data.length
-            // TODO: Cleanup how we get the hash vs. the full path
-            let hash = hashForURLString(request.URL.absoluteString!)!
-            var index = -1
-            for i in 0..<requestCaches.count {
-                if requestCaches[i] == hash {
-                    index = i
-                    break
+            if data.length < cacheSize {
+                currentSize += data.length
+                // TODO: Cleanup how we get the hash vs. the full path
+                let hash = hashForURLString(request.URL.absoluteString!)!
+                var index = -1
+                for i in 0..<requestCaches.count {
+                    if requestCaches[i] == hash {
+                        index = i
+                        break
+                    }
                 }
+                if index != -1 {
+                    requestCaches.removeAtIndex(index)
+                }
+                requestCaches.append(hash)
+                trimCacheIfNeeded()
+                persistPropertiesToDisk()
+                success = data.writeToFile(path, atomically: false)
             }
-            if index != -1 {
-                requestCaches.removeAtIndex(index)
-            }
-            requestCaches.append(hash)
-            trimCacheIfNeeded()
-            persistPropertiesToDisk()
-            success = data.writeToFile(path, atomically: false)
         }
         return success
     }

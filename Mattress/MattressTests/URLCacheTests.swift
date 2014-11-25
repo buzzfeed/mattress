@@ -13,14 +13,6 @@ private let TestDirectory = "test"
 
 class URLCacheTests: XCTestCase {
 
-    override func setUp() {
-        // Ensure plist on disk is reset
-        let diskCache = DiskCache(path: TestDirectory, searchPathDirectory: .DocumentDirectory, cacheSize: 0)
-        if let path = diskCache.diskPathForPropertyList()?.path {
-            NSFileManager.defaultManager().removeItemAtPath(path, error: nil)
-        }
-    }
-
     func testRequestShouldBeStoredOffline() {
         var mutableRequest = NSMutableURLRequest(URL: url)
         NSURLProtocol.setProperty(true, forKey: MattressOfflineCacheRequestPropertyKey, inRequest: mutableRequest)
@@ -42,6 +34,12 @@ class URLCacheTests: XCTestCase {
     }
 
     func testStandardRequestDoesNotGoToOfflineDiskCache() {
+        // Ensure plist on disk is reset
+        let diskCache = DiskCache(path: TestDirectory, searchPathDirectory: .DocumentDirectory, cacheSize: 0)
+        if let path = diskCache.diskPathForPropertyList()?.path {
+            NSFileManager.defaultManager().removeItemAtPath(path, error: nil)
+        }
+
         var mutableRequest = NSMutableURLRequest(URL: url)
 
         var didCallMock = false
@@ -96,6 +94,12 @@ class URLCacheTests: XCTestCase {
     }
 
     func testCachingARequestToTheStandardCacheAlsoUpdatesTheRequestInTheOfflineCacheIfItWasAlreadyStoredForOffline() {
+        // Ensure plist on disk is reset
+        let diskCache = DiskCache(path: TestDirectory, searchPathDirectory: .DocumentDirectory, cacheSize: 0)
+        if let path = diskCache.diskPathForPropertyList()?.path {
+            NSFileManager.defaultManager().removeItemAtPath(path, error: nil)
+        }
+
         let cache = MockURLCacheWithMockDiskCache(memoryCapacity: 0, diskCapacity: 0, diskPath: nil,
             offlineDiskCapacity: 1024 * 1024, offlineDiskPath: nil, offlineSearchPathDirectory: .DocumentDirectory)
         // Ensure we are online

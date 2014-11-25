@@ -43,7 +43,7 @@ class DiskCacheTests: XCTestCase {
         let url = NSURL(string: "foo://bar")!
         let request = NSURLRequest(URL: url)
         let cachedResponse = cachedResponseWithDataString("hello, world", request: request, userInfo: ["foo" : "bar"])
-        let diskCache = DiskCache(path: "test", searchPathDirectory: .DocumentDirectory, cacheSize: 1024)
+        let diskCache = DiskCache(path: "test", searchPathDirectory: .DocumentDirectory, cacheSize: 1024 * 1024)
         let success = diskCache.storeCachedResponse(cachedResponse, forRequest: request)
         XCTAssert(success, "Did not save the cached response to disk")
     }
@@ -54,7 +54,7 @@ class DiskCacheTests: XCTestCase {
         let url = NSURL(string: "foo://bar")!
         let request = NSURLRequest(URL: url)
         let cachedResponse = cachedResponseWithDataString("hello, world", request: request, userInfo: ["foo" : "bar"])
-        let diskCache = DiskCache(path: "test", searchPathDirectory: .DocumentDirectory, cacheSize: 1024)
+        let diskCache = DiskCache(path: "test", searchPathDirectory: .DocumentDirectory, cacheSize: 1024 * 1024)
         diskCache.storeCachedResponse(cachedResponse, forRequest: request)
 
         let restored = diskCache.cachedResponseForRequest(request)
@@ -74,7 +74,7 @@ class DiskCacheTests: XCTestCase {
         let request2 = NSURLRequest(URL: url2)
         let cachedResponse2 = cachedResponseWithDataString("goodbye, cruel world", request: request2, userInfo: ["baz" : "qux"])
 
-        let diskCache = DiskCache(path: "test", searchPathDirectory: .DocumentDirectory, cacheSize: 1024)
+        let diskCache = DiskCache(path: "test", searchPathDirectory: .DocumentDirectory, cacheSize: 1024 * 1024)
         let success1 = diskCache.storeCachedResponse(cachedResponse1, forRequest: request1)
         let success2 = diskCache.storeCachedResponse(cachedResponse2, forRequest: request2)
         XCTAssert(success1 && success2, "The responses did not save properly")
@@ -233,7 +233,11 @@ class DiskCacheTests: XCTestCase {
     func assertCachedResponsesAreEqual(#response1 : NSCachedURLResponse, response2: NSCachedURLResponse) {
         XCTAssert(response1.data == response2.data, "Data did not match")
         XCTAssert(response1.response.URL == response2.response.URL, "Response did not match")
-        XCTAssert(response1.userInfo!.description == response2.userInfo!.description, "userInfo didn't match")
+        if response1.userInfo != nil && response2.userInfo != nil {
+            XCTAssert(response1.userInfo!.description == response2.userInfo!.description, "userInfo didn't match")
+        } else if !(response1.userInfo == nil && response2.userInfo == nil) {
+            XCTFail("userInfo did not match")
+        }
     }
 
     func cachedResponseWithDataString(dataString: String, request: NSURLRequest, userInfo: [NSObject : AnyObject]?) -> NSCachedURLResponse {
