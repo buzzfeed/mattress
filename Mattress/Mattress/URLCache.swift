@@ -11,9 +11,9 @@ import Foundation
 public let MattressOfflineCacheRequestPropertyKey = "MattressOfflineCacheRequest"
 let URLCacheStoredRequestPropertyKey = "URLCacheStoredRequest"
 
-private let ArbitrarilyLargeSize = 1024 * 1024 * 5 * 20
 private let kB = 1024
 private let MB = kB * 1024
+private let ArbitrarilyLargeSize = MB * 100
 
 /*!
     @class URLCache
@@ -34,12 +34,6 @@ public class URLCache: NSURLCache {
     TODO: Can we remove this and catch requests that
     didn't get cached in the URLProtocol somehow?
     */
-    override public var memoryCapacity: Int {
-        get {
-            return ArbitrarilyLargeSize
-        }
-        set (value) {}
-    }
     override public var diskCapacity: Int {
         get {
             return ArbitrarilyLargeSize
