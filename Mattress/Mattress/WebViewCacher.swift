@@ -69,6 +69,8 @@ class WebViewCacher: NSObject, UIWebViewDelegate {
             isComplete = loadedHandler(webView: webView)
         }
         if isComplete {
+            webView.stopLoading()
+            self.webView = nil
             if let completionHandler = completionHandler {
                 completionHandler(webViewCacher: self)
             }
