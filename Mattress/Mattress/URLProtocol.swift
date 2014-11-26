@@ -11,40 +11,46 @@ import Foundation
 var caches: [URLCache] = []
 private let URLProtocolHandledRequestKey = "URLProtocolHandledRequestKey"
 
-/*!
-    @class URLProtocol
-    URLProtocol is the protocol in charge of ensuring
-    that any requests made as a result of the WebViewCacher
+/**
+    URLProtocol is an NSURLProtocol in charge of ensuring
+    that any requests made as a result of a WebViewCacher
     are forwarded back to the WebViewCacher responsible.
+
+    Additionally it ensures that when we are offline, we will
+    use the offline diskCache if possible.
 */
 class URLProtocol: NSURLProtocol, NSURLConnectionDataDelegate {
     var connection: NSURLConnection?
+
+    // MARK: - Class Methods
 
     override class func canInitWithRequest(request: NSURLRequest) -> Bool {
         if NSURLProtocol.propertyForKey(URLProtocolHandledRequestKey, inRequest: request) != nil {
             return false
         }
 
+        // We should only use this protocol when there is a webViewCacher
+        // responsible for the request, or if we are offline
         if let webViewCacher = webViewCacherForRequest(request) {
             return true
         }
-
-        // If we are offline we should use this protocol
-        // so we can make sure cacheIsValid is called
         if let cache = NSURLCache.sharedURLCache() as? URLCache {
-            if let handler = cache.reachabilityHandler {
-                return !handler()
+            if let handler = cache.isOfflineHandler {
+                return handler()
             }
         }
-
         return false
     }
 
-    /*!
-        @method addCache:
-        @abstract Adds another cache that should be
-        should be checked in with when deciding which
+    /**
+        addCache: Adds another URLCache that should
+        be checked in with when deciding which/if a
         WebViewCacher is responsible for a request.
+    
+        This method is responsible for having this
+        protocol registered. It will only register
+        itself when there is a URLCache that has been
+        added.
     */
     class func addCache(cache: URLCache) {
         if caches.count == 0 {
@@ -53,11 +59,13 @@ class URLProtocol: NSURLProtocol, NSURLConnectionDataDelegate {
         caches.append(cache)
     }
 
-    /*!
-        @method removeCache:
-        @abstract Remove the cache from the list of
-        caches that should be used to find the
+    /**
+        removeCache: removes the URLCache from the
+        list of caches that should be used to find the
         WebViewCacher responsible for requests.
+    
+        If there are no more caches, this protocol will
+        unregister itself.
     */
     class func removeCache(cache: URLCache) {
         var index = find(caches, cache)
@@ -77,6 +85,10 @@ class URLProtocol: NSURLProtocol, NSURLConnectionDataDelegate {
         }
     }
 
+    /**
+        Finds the webViewCacher responsible for a request by
+        asking each of its URLCaches in reverse order.
+    */
     class func webViewCacherForRequest(request: NSURLRequest) -> WebViewCacher? {
         for i in reverse(0..<caches.count) {
             let cache = caches[i]
@@ -97,8 +109,6 @@ class URLProtocol: NSURLProtocol, NSURLConnectionDataDelegate {
         return mutableRequest
     }
 
-    // Mark: - Class Overrides
-
     override class func canonicalRequestForRequest(request: NSURLRequest) -> NSURLRequest {
         return mutableCanonicalRequestForRequest(request)
     }
@@ -107,7 +117,7 @@ class URLProtocol: NSURLProtocol, NSURLConnectionDataDelegate {
         return super.requestIsCacheEquivalent(a, toRequest:b)
     }
 
-    // Mark: - Loading
+    // MARK: - Instance Methods
 
     override func startLoading() {
         var mutableRequest = URLProtocol.mutableCanonicalRequestForRequest(request)
@@ -129,7 +139,6 @@ class URLProtocol: NSURLProtocol, NSURLConnectionDataDelegate {
     // Mark: - NSURLConnectionDataDelegate Methods
 
     func connection(connection: NSURLConnection!, didReceiveResponse response: NSURLResponse) {
-        // TODO: Can we check here if we stored this request and if not manuall do it?
         self.client?.URLProtocol(self, didReceiveResponse: response, cacheStoragePolicy: .Allowed)
     }
 

@@ -35,7 +35,7 @@ class URLCacheTests: XCTestCase {
 
     func testStandardRequestDoesNotGoToOfflineDiskCache() {
         // Ensure plist on disk is reset
-        let diskCache = DiskCache(path: TestDirectory, searchPathDirectory: .DocumentDirectory, cacheSize: 0)
+        let diskCache = DiskCache(path: TestDirectory, searchPathDirectory: .DocumentDirectory, maxCacheSize: 0)
         if let path = diskCache.diskPathForPropertyList()?.path {
             NSFileManager.defaultManager().removeItemAtPath(path, error: nil)
         }
@@ -95,17 +95,15 @@ class URLCacheTests: XCTestCase {
 
     func testCachingARequestToTheStandardCacheAlsoUpdatesTheRequestInTheOfflineCacheIfItWasAlreadyStoredForOffline() {
         // Ensure plist on disk is reset
-        let diskCache = DiskCache(path: TestDirectory, searchPathDirectory: .DocumentDirectory, cacheSize: 0)
+        let diskCache = DiskCache(path: TestDirectory, searchPathDirectory: .DocumentDirectory, maxCacheSize: 0)
         if let path = diskCache.diskPathForPropertyList()?.path {
             NSFileManager.defaultManager().removeItemAtPath(path, error: nil)
         }
 
         let cache = MockURLCacheWithMockDiskCache(memoryCapacity: 0, diskCapacity: 0, diskPath: nil,
-            offlineDiskCapacity: 1024 * 1024, offlineDiskPath: nil, offlineSearchPathDirectory: .DocumentDirectory)
-        // Ensure we are online
-        cache.reachabilityHandler = {
-            return true
-        }
+            offlineDiskCapacity: 1024 * 1024, offlineDiskPath: nil, offlineSearchPathDirectory: .DocumentDirectory, isOfflineHandler: {
+                return false
+        })
 
         // Make sure the request has been stored once
         let url = NSURL(string: "foo://bar")!
@@ -127,13 +125,13 @@ class URLCacheTests: XCTestCase {
     // Mark: - Helpers
 
     func makeURLCache() -> URLCache {
-        return URLCache(memoryCapacity: 0, diskCapacity: 0, diskPath: nil,
-            offlineDiskCapacity: 0, offlineDiskPath: nil, offlineSearchPathDirectory: .DocumentDirectory)
+        return URLCache(memoryCapacity: 0, diskCapacity: 0, diskPath: nil, offlineDiskCapacity: 0,
+            offlineDiskPath: nil, offlineSearchPathDirectory: .DocumentDirectory, isOfflineHandler: nil)
     }
 
     func makeMockURLCache() -> MockURLCacheWithMockDiskCache {
-        return MockURLCacheWithMockDiskCache(memoryCapacity: 0, diskCapacity: 0, diskPath: nil,
-            offlineDiskCapacity: 0, offlineDiskPath: nil, offlineSearchPathDirectory: .DocumentDirectory)
+        return MockURLCacheWithMockDiskCache(memoryCapacity: 0, diskCapacity: 0, diskPath: nil, offlineDiskCapacity: 0,
+            offlineDiskPath: nil, offlineSearchPathDirectory: .DocumentDirectory, isOfflineHandler: nil)
     }
 }
 
@@ -170,14 +168,13 @@ class MockURLCacheWithMockDiskCache: URLCache {
         return offlineCache as MockDiskCache
     }
 
-    override init(memoryCapacity: Int, diskCapacity: Int, diskPath path: String?,
-        offlineDiskCapacity: Int, offlineDiskPath offlinePath: String?,
-        offlineSearchPathDirectory searchPathDirectory: NSSearchPathDirectory)
+    override init(memoryCapacity: Int, diskCapacity: Int, diskPath path: String?, offlineDiskCapacity: Int,
+        offlineDiskPath offlinePath: String?, offlineSearchPathDirectory searchPathDirectory: NSSearchPathDirectory, isOfflineHandler: (() -> Bool)?)
     {
-        super.init(memoryCapacity: memoryCapacity, diskCapacity: diskCapacity, diskPath: path,
-            offlineDiskCapacity: offlineDiskCapacity, offlineDiskPath: offlinePath, offlineSearchPathDirectory: searchPathDirectory)
+        super.init(memoryCapacity: memoryCapacity, diskCapacity: diskCapacity, diskPath: path, offlineDiskCapacity: offlineDiskCapacity,
+            offlineDiskPath: offlinePath, offlineSearchPathDirectory: searchPathDirectory, isOfflineHandler: isOfflineHandler)
 
-        offlineCache = MockDiskCache(path: TestDirectory, searchPathDirectory: .DocumentDirectory, cacheSize: 1024)
+        offlineCache = MockDiskCache(path: TestDirectory, searchPathDirectory: .DocumentDirectory, maxCacheSize: 1024)
     }
 }
 

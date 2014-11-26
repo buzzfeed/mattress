@@ -15,24 +15,20 @@ private let kB = 1024
 private let MB = kB * 1024
 private let ArbitrarilyLargeSize = MB * 100
 
-/*!
-    @class URLCache
-    URLCache creates an offline diskCache that will
-    be stored to when appropriate, and will always be
-    checked when retrieving stored responses.
+/**
+    URLCache is an NSURLCache with an additional diskCache used
+    only for storing requests that should be available offline.
 */
 public class URLCache: NSURLCache {
-    var offlineCache: DiskCache // Keep as var for testing
+    var offlineCache: DiskCache
     var cachers: [WebViewCacher] = []
-    var reachabilityHandler: (() -> Bool)?
+    var isOfflineHandler: (() -> Bool)?
 
     /*
-    We need to override these because when deciding
-    whether or not to cache, the connection will
-    make sure our cache is sufficiently large enough.
-    
-    TODO: Can we remove this and catch requests that
-    didn't get cached in the URLProtocol somehow?
+    We need to override this because the connection
+    might decide not to cache something if it decides
+    the cache is too small wrt the size of the request
+    to be cached.
     */
     override public var diskCapacity: Int {
         get {
@@ -41,7 +37,7 @@ public class URLCache: NSURLCache {
         set (value) {}
     }
 
-    // Mark: - Class Methods
+    // MARK: - Class Methods
 
     class func requestShouldBeStoredOffline(request: NSURLRequest) -> Bool {
         if let value = NSURLProtocol.propertyForKey(MattressOfflineCacheRequestPropertyKey, inRequest: request) as? Bool {
@@ -50,13 +46,29 @@ public class URLCache: NSURLCache {
         return false
     }
 
-    // Mark: - Methods
+    // MARK: - Instance Methods
 
-    init(memoryCapacity: Int, diskCapacity: Int, diskPath path: String?,
-        offlineDiskCapacity: Int, offlineDiskPath offlinePath: String?,
-        offlineSearchPathDirectory searchPathDirectory: NSSearchPathDirectory)
+    /**
+        Initializes a URLCache.
+
+        :param: memoryCapacity The memory capacity of the cache in bytes
+        :param: diskCapacity The disk capacity of the cache in bytes
+        :param: diskPath The location in the application's default cache
+            directory at which to store the on-disk cache
+        :param: offlineDiskCapacity The disk capacity of the cache dedicated
+            to requests that should be available offline
+        :param: offlineDiskPath The location at which to store the offline
+            disk cache, relative to the specified offlineSearchPathDirectory
+        :param: offlineSearchPathDirectory The searchPathDirectory to use as
+            the location for the offline disk cache
+        :param: isOfflineHandler A handler that will be called as needed to
+            determine if the offline cache should be used
+    */
+    init(memoryCapacity: Int, diskCapacity: Int, diskPath path: String?, offlineDiskCapacity: Int, offlineDiskPath offlinePath: String?,
+        offlineSearchPathDirectory searchPathDirectory: NSSearchPathDirectory, isOfflineHandler: (() -> Bool)?)
     {
-        offlineCache = DiskCache(path: offlinePath, searchPathDirectory: searchPathDirectory, cacheSize: offlineDiskCapacity)
+        offlineCache = DiskCache(path: offlinePath, searchPathDirectory: searchPathDirectory, maxCacheSize: offlineDiskCapacity)
+        self.isOfflineHandler = isOfflineHandler
         super.init(memoryCapacity: memoryCapacity, diskCapacity: diskCapacity, diskPath: path)
         addToProtocol(true)
     }
@@ -73,6 +85,10 @@ public class URLCache: NSURLCache {
         }
     }
 
+    /**
+        This method will attempt to find a WebViewCacher responsible
+        for a given request.
+    */
     func webViewCacherOriginatingRequest(request: NSURLRequest) -> WebViewCacher? {
         for cacher in cachers {
             if cacher.didOriginateRequest(request) {
@@ -82,7 +98,7 @@ public class URLCache: NSURLCache {
         return nil
     }
 
-    // MARK: - Public
+    // MARK: Public
 
     override public func storeCachedResponse(cachedResponse: NSCachedURLResponse, forRequest request: NSURLRequest) {
         if URLCache.requestShouldBeStoredOffline(request) {
@@ -104,6 +120,18 @@ public class URLCache: NSURLCache {
         return super.cachedResponseForRequest(request)
     }
 
+    /**
+        This method should be called to signal that the entire page at a url
+        should be downloaded and stored in the offlineCache. Any urls cached
+        in this way will be available when the device is offline.
+    
+        :param: url The url of a webpage to download
+        :param: loadedHandler A handler that will be called every time the
+            UIWebView used to load the request calls its delegate's
+            webViewDidFinishLoad method. This handler will receive the webView
+            and should return true if we are done loading the page, or false
+            if we should continue loading.
+    */
     public func offlineCacheURL(url: NSURL, loadedHandler: WebViewLoadedHandler) {
         let webViewCacher = WebViewCacher()
         cachers.append(webViewCacher)

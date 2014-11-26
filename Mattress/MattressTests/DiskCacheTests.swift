@@ -12,7 +12,7 @@ class DiskCacheTests: XCTestCase {
 
     override func setUp() {
         // Ensure plist on disk is reset
-        let diskCache = DiskCache(path: "test", searchPathDirectory: .DocumentDirectory, cacheSize: 0)
+        let diskCache = DiskCache(path: "test", searchPathDirectory: .DocumentDirectory, maxCacheSize: 0)
         if let path = diskCache.diskPathForPropertyList()?.path {
             NSFileManager.defaultManager().removeItemAtPath(path, error: nil)
         }
@@ -22,7 +22,7 @@ class DiskCacheTests: XCTestCase {
         let url = NSURL(string: "foo://bar")!
         let request1 = NSURLRequest(URL: url)
         let request2 = NSURLRequest(URL: url)
-        let diskCache = DiskCache(path: "test", searchPathDirectory: .DocumentDirectory, cacheSize: 1024)
+        let diskCache = DiskCache(path: "test", searchPathDirectory: .DocumentDirectory, maxCacheSize: 1024)
         let path = diskCache.diskPathForRequest(request1)
         XCTAssertNotNil(path, "Path for request was nil")
         XCTAssert(path == diskCache.diskPathForRequest(request2), "Requests for the same url did not match")
@@ -33,7 +33,7 @@ class DiskCacheTests: XCTestCase {
         let url2 = NSURL(string: "foo://baz")!
         let request1 = NSURLRequest(URL: url1)
         let request2 = NSURLRequest(URL: url2)
-        let diskCache = DiskCache(path: "test", searchPathDirectory: .DocumentDirectory, cacheSize: 1024)
+        let diskCache = DiskCache(path: "test", searchPathDirectory: .DocumentDirectory, maxCacheSize: 1024)
         let path1 = diskCache.diskPathForRequest(request1)
         let path2 = diskCache.diskPathForRequest(request2)
         XCTAssert(path1 != path2, "Paths should not be matching")
@@ -43,7 +43,7 @@ class DiskCacheTests: XCTestCase {
         let url = NSURL(string: "foo://bar")!
         let request = NSURLRequest(URL: url)
         let cachedResponse = cachedResponseWithDataString("hello, world", request: request, userInfo: ["foo" : "bar"])
-        let diskCache = DiskCache(path: "test", searchPathDirectory: .DocumentDirectory, cacheSize: 1024 * 1024)
+        let diskCache = DiskCache(path: "test", searchPathDirectory: .DocumentDirectory, maxCacheSize: 1024 * 1024)
         let success = diskCache.storeCachedResponse(cachedResponse, forRequest: request)
         XCTAssert(success, "Did not save the cached response to disk")
     }
@@ -54,7 +54,7 @@ class DiskCacheTests: XCTestCase {
         let url = NSURL(string: "foo://bar")!
         let request = NSURLRequest(URL: url)
         let cachedResponse = cachedResponseWithDataString("hello, world", request: request, userInfo: ["foo" : "bar"])
-        let diskCache = DiskCache(path: "test", searchPathDirectory: .DocumentDirectory, cacheSize: 1024 * 1024)
+        let diskCache = DiskCache(path: "test", searchPathDirectory: .DocumentDirectory, maxCacheSize: 1024 * 1024)
         diskCache.storeCachedResponse(cachedResponse, forRequest: request)
 
         let restored = diskCache.cachedResponseForRequest(request)
@@ -74,7 +74,7 @@ class DiskCacheTests: XCTestCase {
         let request2 = NSURLRequest(URL: url2)
         let cachedResponse2 = cachedResponseWithDataString("goodbye, cruel world", request: request2, userInfo: ["baz" : "qux"])
 
-        let diskCache = DiskCache(path: "test", searchPathDirectory: .DocumentDirectory, cacheSize: 1024 * 1024)
+        let diskCache = DiskCache(path: "test", searchPathDirectory: .DocumentDirectory, maxCacheSize: 1024 * 1024)
         let success1 = diskCache.storeCachedResponse(cachedResponse1, forRequest: request1)
         let success2 = diskCache.storeCachedResponse(cachedResponse2, forRequest: request2)
         XCTAssert(success1 && success2, "The responses did not save properly")
@@ -97,7 +97,7 @@ class DiskCacheTests: XCTestCase {
         let url = NSURL(string: "foo://bar")!
         let request = NSURLRequest(URL: url)
         let cachedResponse = cachedResponseWithDataString("hello, world", request: request, userInfo: ["foo" : "bar"])
-        let diskCache = DiskCache(path: "test", searchPathDirectory: .DocumentDirectory, cacheSize: 1024 * 1024)
+        let diskCache = DiskCache(path: "test", searchPathDirectory: .DocumentDirectory, maxCacheSize: 1024 * 1024)
         XCTAssert(diskCache.currentSize == 0, "Current size should start zeroed out")
         diskCache.storeCachedResponse(cachedResponse, forRequest: request)
         if let path = diskCache.diskPathForRequest(request)?.path {
@@ -117,7 +117,7 @@ class DiskCacheTests: XCTestCase {
     }
 
     func testStoringARequestIncreasesTheRequestCachesSize() {
-        let diskCache = DiskCache(path: "test", searchPathDirectory: .DocumentDirectory, cacheSize: 1024)
+        let diskCache = DiskCache(path: "test", searchPathDirectory: .DocumentDirectory, maxCacheSize: 1024)
         let url = NSURL(string: "foo://bar")!
         let request = NSURLRequest(URL: url)
         let cachedResponse = cachedResponseWithDataString("hello, world", request: request, userInfo: nil)
@@ -128,7 +128,7 @@ class DiskCacheTests: XCTestCase {
 
     func testFilesAreRemovedInChronOrderWhenCacheExceedsMaxSize() {
         let cacheSize = 1024 * 1024 // 1MB so dataSize dwarfs the size of encoding the object itself
-        let diskCache = DiskCache(path: "test", searchPathDirectory: .DocumentDirectory, cacheSize: cacheSize)
+        let diskCache = DiskCache(path: "test", searchPathDirectory: .DocumentDirectory, maxCacheSize: cacheSize)
         let dataSize = cacheSize/3 + 1
 
         let url1 = NSURL(string: "foo://bar")!
@@ -152,7 +152,7 @@ class DiskCacheTests: XCTestCase {
     }
 
     func testPlistIsUpdatedAfterStoringARequest() {
-        let diskCache = DiskCache(path: "test", searchPathDirectory: .DocumentDirectory, cacheSize: 1024)
+        let diskCache = DiskCache(path: "test", searchPathDirectory: .DocumentDirectory, maxCacheSize: 1024)
         let url = NSURL(string: "foo://bar")!
         let request = NSURLRequest(URL: url)
         let cachedResponse = cachedResponseWithDataString("hello, world", request: request, userInfo: nil)
@@ -164,7 +164,7 @@ class DiskCacheTests: XCTestCase {
         if let plistPath = diskCache.diskPathForPropertyList()?.path {
             if NSFileManager.defaultManager().fileExistsAtPath(plistPath) {
                 if let dict = NSDictionary(contentsOfFile: plistPath) {
-                    if let currentSize = dict.valueForKey(DiskCache.DictionaryKeys.cacheSize.rawValue) as? Int {
+                    if let currentSize = dict.valueForKey(DiskCache.DictionaryKeys.maxCacheSize.rawValue) as? Int {
                         XCTAssert(currentSize == expectedSize, "Current size did not match expected value")
                     } else {
                         XCTFail("Plist did not have currentSize property")
@@ -187,7 +187,7 @@ class DiskCacheTests: XCTestCase {
         var expectedRequestCaches: [String] = []
         var expectedSize = 0
         autoreleasepool { [unowned self] in
-            let diskCache = DiskCache(path: "test", searchPathDirectory: .DocumentDirectory, cacheSize: 1024)
+            let diskCache = DiskCache(path: "test", searchPathDirectory: .DocumentDirectory, maxCacheSize: 1024)
             let url = NSURL(string: "foo://bar")!
             let request = NSURLRequest(URL: url)
             let cachedResponse = self.cachedResponseWithDataString("hello, world", request: request, userInfo: nil)
@@ -195,14 +195,14 @@ class DiskCacheTests: XCTestCase {
             expectedRequestCaches = diskCache.requestCaches
             expectedSize = diskCache.currentSize
         }
-        let newDiskCache = DiskCache(path: "test", searchPathDirectory: .DocumentDirectory, cacheSize: 1024)
+        let newDiskCache = DiskCache(path: "test", searchPathDirectory: .DocumentDirectory, maxCacheSize: 1024)
         XCTAssert(newDiskCache.currentSize == expectedSize, "Size property did not match expectations")
         XCTAssert(newDiskCache.requestCaches == expectedRequestCaches, "RequestCaches did not match expectations")
     }
 
     func testRequestCacheIsRemovedFromDiskAfterTrim() {
         let cacheSize = 1024 * 1024 // 1MB so dataSize dwarfs the size of encoding the object itself
-        let diskCache = DiskCache(path: "test", searchPathDirectory: .DocumentDirectory, cacheSize: cacheSize)
+        let diskCache = DiskCache(path: "test", searchPathDirectory: .DocumentDirectory, maxCacheSize: cacheSize)
         let dataSize = cacheSize/3 + 1
 
         let url1 = NSURL(string: "foo://bar")!
