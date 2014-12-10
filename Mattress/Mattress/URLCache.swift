@@ -64,7 +64,7 @@ public class URLCache: NSURLCache {
         :param: isOfflineHandler A handler that will be called as needed to
             determine if the offline cache should be used
     */
-    init(memoryCapacity: Int, diskCapacity: Int, diskPath path: String?, offlineDiskCapacity: Int, offlineDiskPath offlinePath: String?,
+    public init(memoryCapacity: Int, diskCapacity: Int, diskPath path: String?, offlineDiskCapacity: Int, offlineDiskPath offlinePath: String?,
         offlineSearchPathDirectory searchPathDirectory: NSSearchPathDirectory, isOfflineHandler: (() -> Bool)?)
     {
         offlineCache = DiskCache(path: offlinePath, searchPathDirectory: searchPathDirectory, maxCacheSize: offlineDiskCapacity)
