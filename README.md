@@ -4,7 +4,12 @@ A Swift framework for storing entire web pages into an offline cache distinct fr
 
 **Installation**
 ----------------
-This space left intentionally blank.
+
+1. Add Mattress as a [submodule](http://git-scm.com/docs/git-submodule) with `git submodule add https://github.com/buzzfeed/mattress` (ideally forking and pointing to your fork's url)
+2. Open the `Mattress` folder, and drag `Mattress.xcodeproj` into the file navigator of your app project. **NOTE: The Mattress project needs to be added somewhere under the target project or you won't be able to add it to your target dependencies.**
+3. Ensure that the deployment target of the Mattress project matches that of the application target.
+4. In your target's "Build Phases" panel, add `Mattress.framework` to the "Target Dependencies"
+5. Click on the `+` button at the top left of the panel and select "New Copy Files Phase". Rename this new phase to "Copy Frameworks", set the "Destination" to "Frameworks", and add `Mattress.framework`.
 
 **Usage**
 ---------
