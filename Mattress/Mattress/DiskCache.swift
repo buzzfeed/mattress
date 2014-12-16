@@ -12,6 +12,7 @@
 */
 
 import Foundation
+import UIKit
 
 class DiskCache {
     /**
@@ -23,6 +24,16 @@ class DiskCache {
     }
 
     // MARK: - Properties
+    var isAtLeastiOS8: Bool {
+        struct Static {
+            static var onceToken : dispatch_once_t = 0
+            static var value: Bool = false
+        }
+        dispatch_once(&Static.onceToken) {
+            Static.value = (UIDevice.currentDevice().systemVersion as NSString).doubleValue >= 8.0
+        }
+        return Static.value
+    }
 
     let path: String
     let searchPathDirectory: NSSearchPathDirectory
@@ -126,25 +137,75 @@ class DiskCache {
     func storeCachedResponse(cachedResponse: NSCachedURLResponse, forRequest request: NSURLRequest) -> Bool {
         var success = false
         if let hash = hashForRequest(request) {
-            if let path = diskPathForRequestCacheNamed(hash)?.path {
-                let data = NSKeyedArchiver.archivedDataWithRootObject(cachedResponse)
-                if data.length < maxCacheSize {
-                    currentSize += data.length
-                    var index = -1
-                    for i in 0..<requestCaches.count {
-                        if requestCaches[i] == hash {
-                            index = i
-                            break
-                        }
+            if isAtLeastiOS8 {
+                success = saveObject(cachedResponse, withHash: hash)
+            } else {
+                success = storeCachedResponsePieces(cachedResponse, withHash: hash)
+            }
+        }
+        return success
+    }
+
+    /**
+        This will store components of the NSCachedURLResponse to disk each
+        individually to work around iOS 7 not properly storing the response
+        to disk with it's data and userInfo.
+    
+        NOTE: Storage policy is not stored because it is irrelevant to offline
+        cached responses.
+
+        :param: cachedResponse an NSCachedURLResponse to persist to disk.
+        :param: hash The hash associated with the NSCachedURLResponse.
+
+        :returns: A Bool representing whether or not we successfully
+            stored the response to disk.
+    */
+    func storeCachedResponsePieces(cachedResponse: NSCachedURLResponse, withHash hash: String) -> Bool {
+        var success = true
+        let responseHash = hashForResponseFromHash(hash)
+        success = success && saveObject(cachedResponse.response, withHash: responseHash)
+        let dataHash = hashForDataFromHash(hash)
+        success = success && saveObject(cachedResponse.data, withHash: dataHash)
+        if let userInfo = cachedResponse.userInfo {
+            if !userInfo.isEmpty {
+                let userInfoHash = hashForUserInfoFromHash(hash)
+                success = success && saveObject(userInfo, withHash: userInfoHash)
+            }
+        }
+        return success
+    }
+
+    /**
+        Saves an archived object's data to disk with the hash it
+        should be associated with. This will only store the request
+        if it could fit in our max cache size, and will empty out
+        older cached items if it needs to to make room.
+    
+        :param: data The data of the archived root object.
+        :param: hash The hash associated with that object.
+    
+        :returns: A Bool indicating that the saves were successful.
+    */
+    func saveObject(object: NSCoding, withHash hash: String) -> Bool {
+        var success = false
+        let data = NSKeyedArchiver.archivedDataWithRootObject(object)
+        if let path = diskPathForRequestCacheNamed(hash)?.path {
+            if data.length < maxCacheSize {
+                currentSize += data.length
+                var index = -1
+                for i in 0..<requestCaches.count {
+                    if requestCaches[i] == hash {
+                        index = i
+                        break
                     }
-                    if index != -1 {
-                        requestCaches.removeAtIndex(index)
-                    }
-                    requestCaches.append(hash)
-                    trimCacheIfNeeded()
-                    persistPropertiesToDisk()
-                    success = data.writeToFile(path, atomically: false)
                 }
+                if index != -1 {
+                    requestCaches.removeAtIndex(index)
+                }
+                requestCaches.append(hash)
+                trimCacheIfNeeded()
+                persistPropertiesToDisk()
+                success = data.writeToFile(path, atomically: false)
             }
         }
         return success
@@ -158,9 +219,42 @@ class DiskCache {
     func cachedResponseForRequest(request: NSURLRequest) -> NSCachedURLResponse? {
         var response: NSCachedURLResponse?
         if let path = diskPathForRequest(request)?.path {
-            response = NSKeyedUnarchiver.unarchiveObjectWithFile(path) as? NSCachedURLResponse
+            if isAtLeastiOS8 {
+                response = NSKeyedUnarchiver.unarchiveObjectWithFile(path) as? NSCachedURLResponse
+            } else {
+                response = cachedResponseFromPiecesForRequest(request)
+            }
         }
         return response
+    }
+
+    /**
+        Will create the cachedResponse from its response, data and
+        userInfo. This is only used to workaround the bug in iOS 7
+        preventing us from just saving the cachedResponse itself.
+    */
+    func cachedResponseFromPiecesForRequest(request: NSURLRequest) -> NSCachedURLResponse? {
+        var cachedResponse: NSCachedURLResponse? = nil
+        var response: NSURLResponse? = nil
+        var data: NSData? = nil
+        var userInfo: [NSObject : AnyObject]? = nil
+
+        if let basePath = diskPathForRequest(request)?.path {
+            let responsePath = hashForResponseFromHash(basePath)
+            response = NSKeyedUnarchiver.unarchiveObjectWithFile(responsePath) as? NSURLResponse
+            let dataPath = hashForDataFromHash(basePath)
+            data = NSKeyedUnarchiver.unarchiveObjectWithFile(dataPath) as? NSData
+            let userInfoPath = hashForUserInfoFromHash(basePath)
+            userInfo = NSKeyedUnarchiver.unarchiveObjectWithFile(userInfoPath) as? [NSObject : AnyObject]
+        }
+
+        if let response = response {
+            if let data = data {
+                cachedResponse = NSCachedURLResponse(response: response, data: data, userInfo: userInfo, storagePolicy: .Allowed)
+            }
+        }
+
+        return cachedResponse
     }
 
     /**
@@ -242,13 +336,40 @@ class DiskCache {
 
     /**
         Returns the hash/filename that should be used for
-        a give NSURLRequest.
+        a given NSURLRequest.
     */
     func hashForRequest(request: NSURLRequest) -> String? {
         if let urlString = request.URL.absoluteString {
             return hashForURLString(urlString)
         }
         return nil
+    }
+
+    /**
+        Returns the hash/filename for the response associated with
+        the hash for a request. This is only used as an iOS 7
+        workaround.
+    */
+    func hashForResponseFromHash(hash: String) -> String {
+        return "\(hash)_response"
+    }
+
+    /**
+        Returns the hash/filename for the data associated with
+        the hash for a request. This is only used as an iOS 7
+        workaround.
+    */
+    func hashForDataFromHash(hash: String) -> String {
+        return "\(hash)_data"
+    }
+
+    /**
+        Returns the hash/filename for the userInfo associated with
+        the hash for a request. This is only used as an iOS 7
+        workaround.
+    */
+    func hashForUserInfoFromHash(hash: String) -> String {
+        return "\(hash)_userInfo"
     }
 
     /**

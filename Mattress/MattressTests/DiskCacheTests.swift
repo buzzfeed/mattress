@@ -225,7 +225,46 @@ class DiskCacheTests: XCTestCase {
         diskCache.storeCachedResponse(cachedResponse3, forRequest: request3) // This should cause response1 to be removed
         isFileOnDisk = NSFileManager.defaultManager().fileExistsAtPath(pathForResponse)
         XCTAssertFalse(isFileOnDisk, "File should no longer be on disk")
+    }
 
+    func testiOS7CanSaveCachedResponse() {
+        let cacheSize = 1024 * 1024 // 1MB so dataSize dwarfs the size of encoding the object itself
+        let dataSize = cacheSize/3 + 1
+        let diskCache = DiskCacheiOS7(path: "test", searchPathDirectory: .DocumentDirectory, maxCacheSize: cacheSize)
+
+        let url = NSURL(string: "foo://bar")!
+        let request = NSURLRequest(URL: url)
+        let userInfo = ["foo" : "bar"]
+        let cachedResponse = cachedResponseWithDataOfSize(dataSize, request: request, userInfo: userInfo)
+        diskCache.storeCachedResponse(cachedResponse, forRequest: request)
+        let basePath = (diskCache.diskPathForRequest(request)?.path)!
+
+        let responsePath = diskCache.hashForResponseFromHash(basePath)
+        let dataPath = diskCache.hashForDataFromHash(basePath)
+        let userInfoPath = diskCache.hashForUserInfoFromHash(basePath)
+
+        XCTAssert(NSFileManager.defaultManager().fileExistsAtPath(responsePath), "Response file should be on disk")
+        XCTAssert(NSFileManager.defaultManager().fileExistsAtPath(dataPath), "Data file should be on disk")
+        XCTAssert(NSFileManager.defaultManager().fileExistsAtPath(userInfoPath), "User Info file should be on disk")
+    }
+
+    func testiOS7CanRestoreCachedResponse() {
+        let cacheSize = 1024 * 1024 // 1MB so dataSize dwarfs the size of encoding the object itself
+        let dataSize = cacheSize/3 + 1
+        let diskCache = DiskCacheiOS7(path: "test", searchPathDirectory: .DocumentDirectory, maxCacheSize: cacheSize)
+
+        let url = NSURL(string: "foo://bar")!
+        let request = NSURLRequest(URL: url)
+        let userInfo = ["foo" : "bar"]
+        let cachedResponse = cachedResponseWithDataOfSize(dataSize, request: request, userInfo: userInfo)
+        diskCache.storeCachedResponse(cachedResponse, forRequest: request)
+        let basePath = (diskCache.diskPathForRequest(request)?.path)!
+
+        if let response = diskCache.cachedResponseForRequest(request) {
+            assertCachedResponsesAreEqual(response1: response, response2: cachedResponse)
+        } else {
+            XCTFail("Could not retrieve cached response")
+        }
     }
 
     // Mark: - Test Helpers
@@ -248,10 +287,16 @@ class DiskCacheTests: XCTestCase {
     }
 
     func cachedResponseWithDataOfSize(dataSize: Int, request: NSURLRequest, userInfo: [NSObject : AnyObject]?) -> NSCachedURLResponse {
-        var bytes: [UInt32] = Array(count: dataSize, repeatedValue: 0)
+        var bytes: [UInt32] = Array(count: dataSize, repeatedValue: 1)
         let data = NSData(bytes: &bytes, length: dataSize)
         let response = NSURLResponse(URL: request.URL, MIMEType: "text/html", expectedContentLength: data.length, textEncodingName: nil)
         let cachedResponse = NSCachedURLResponse(response: response, data: data, userInfo: userInfo, storagePolicy: .Allowed)
         return cachedResponse
+    }
+}
+
+class DiskCacheiOS7: DiskCache {
+    override var isAtLeastiOS8: Bool {
+        return false
     }
 }
