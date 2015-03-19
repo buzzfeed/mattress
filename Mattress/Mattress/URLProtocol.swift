@@ -9,6 +9,8 @@
 import Foundation
 
 var caches: [URLCache] = []
+let cacheLockObject = NSObject()
+
 private let URLProtocolHandledRequestKey = "URLProtocolHandledRequestKey"
 
 /**
@@ -53,10 +55,12 @@ class URLProtocol: NSURLProtocol, NSURLConnectionDataDelegate {
         added.
     */
     class func addCache(cache: URLCache) {
-        if caches.count == 0 {
-            registerProtocol(true)
-        }
-        caches.append(cache)
+        synchronized(cacheLockObject, { () -> Void in
+            if caches.count == 0 {
+                self.registerProtocol(true)
+            }
+            caches.append(cache)
+        })
     }
 
     /**
@@ -68,20 +72,22 @@ class URLProtocol: NSURLProtocol, NSURLConnectionDataDelegate {
         unregister itself.
     */
     class func removeCache(cache: URLCache) {
-        var index = find(caches, cache)
-        if let index = index {
-            caches.removeAtIndex(index)
-            if caches.count == 0 {
-                registerProtocol(false)
+        synchronized(cacheLockObject) { () -> Void in
+            var index = find(caches, cache)
+            if let index = index {
+                caches.removeAtIndex(index)
+                if caches.count == 0 {
+                    self.registerProtocol(false)
+                }
             }
         }
     }
 
     class func registerProtocol(shouldRegister: Bool) {
         if shouldRegister {
-            NSURLProtocol.registerClass(self)
+            self.registerClass(self)
         } else {
-            NSURLProtocol.unregisterClass(self)
+            self.unregisterClass(self)
         }
     }
 
@@ -90,13 +96,19 @@ class URLProtocol: NSURLProtocol, NSURLConnectionDataDelegate {
         asking each of its URLCaches in reverse order.
     */
     class func webViewCacherForRequest(request: NSURLRequest) -> WebViewCacher? {
-        for i in reverse(0..<caches.count) {
-            let cache = caches[i]
-            if let webViewCacher = cache.webViewCacherOriginatingRequest(request) {
-                return webViewCacher
+        var webViewCacherReturn: WebViewCacher? = nil
+        
+        synchronized(cacheLockObject) { () -> Void in
+            for i in reverse(0..<caches.count) {
+                let cache = caches[i]
+                if let webViewCacher = cache.webViewCacherOriginatingRequest(request) {
+                    webViewCacherReturn = webViewCacher
+                    break;
+                }
             }
         }
-        return nil
+        
+        return webViewCacherReturn
     }
 
     class func mutableCanonicalRequestForRequest(request: NSURLRequest) -> NSMutableURLRequest {

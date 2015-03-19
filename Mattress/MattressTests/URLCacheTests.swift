@@ -179,5 +179,8 @@ class MockURLCacheWithMockDiskCache: URLCache {
 }
 
 class MockCacher: WebViewCacher {
-    override func offlineCacheURL(url: NSURL, loadedHandler: WebViewLoadedHandler, completionHandler: WebViewCacherCompletionHandler) {}
+    override  func offlineCacheURL(url: NSURL,
+                         loadedHandler: WebViewLoadedHandler,
+                     completionHandler: WebViewCacherCompletionHandler,
+                          errorHandler: (NSError) -> ()) {}
 }
