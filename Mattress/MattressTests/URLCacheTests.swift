@@ -11,6 +11,13 @@ import XCTest
 private let url = NSURL(string: "foo://bar")!
 private let TestDirectory = "test"
 
+class MockCacher: WebViewCacher {
+    override func offlineCacheURL(url: NSURL,
+        loadedHandler: WebViewLoadedHandler,
+        completionHandler: WebViewCacherCompletionHandler,
+        failureHandler: (NSError) -> ()) {}
+}
+
 class URLCacheTests: XCTestCase {
 
     func testRequestShouldBeStoredOffline() {
@@ -178,9 +185,3 @@ class MockURLCacheWithMockDiskCache: URLCache {
     }
 }
 
-class MockCacher: WebViewCacher {
-    override  func offlineCacheURL(url: NSURL,
-                         loadedHandler: WebViewLoadedHandler,
-                     completionHandler: WebViewCacherCompletionHandler,
-                          errorHandler: (NSError) -> ()) {}
-}

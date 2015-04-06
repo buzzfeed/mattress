@@ -137,14 +137,14 @@ public class URLCache: NSURLCache {
     public func offlineCacheURL(url: NSURL,
                       loadedHandler: WebViewLoadedHandler,
                     completeHandler: (() ->Void)? = nil,
-                       errorHandler: ((NSError) ->Void)? = nil) {
+                     failureHandler: ((NSError) ->Void)? = nil) {
         let webViewCacher = WebViewCacher()
         
         synchronized(self) {
             self.cachers.append(webViewCacher)
         }
         
-        var errorHandler = errorHandler
+        var failureHandler = failureHandler
         var completeHandler = completeHandler
 
         webViewCacher.offlineCacheURL(url, loadedHandler: loadedHandler, completionHandler: { (webViewCacher) -> () in
@@ -157,11 +157,11 @@ public class URLCache: NSURLCache {
                 
                 completeHandler = nil
             }
-            }, errorHandler: { (error) -> () in
+            }, failureHandler: { (error) -> () in
                 
-                errorHandler?(error)
+                failureHandler?(error)
                 
-                errorHandler = nil
+                failureHandler = nil
             })
             
         }

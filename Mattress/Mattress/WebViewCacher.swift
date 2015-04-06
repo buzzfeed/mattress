@@ -24,7 +24,7 @@ class WebViewCacher: NSObject, UIWebViewDelegate {
 
     var loadedHandler: WebViewLoadedHandler?
     var completionHandler: WebViewCacherCompletionHandler?
-    var errorHandler: ((NSError) -> ())? = nil
+    var failureHandler: ((NSError) -> ())? = nil
     var mainDocumentURL: NSURL?
     var webView: UIWebView?
 
@@ -82,10 +82,10 @@ class WebViewCacher: NSObject, UIWebViewDelegate {
     func offlineCacheURL(url: NSURL,
                loadedHandler: WebViewLoadedHandler,
            completionHandler: WebViewCacherCompletionHandler,
-                errorHandler: (NSError) -> ()) {
+                failureHandler: (NSError) -> ()) {
         self.loadedHandler = loadedHandler
         self.completionHandler = completionHandler
-        self.errorHandler = errorHandler
+        self.failureHandler = failureHandler
         loadURLInWebView(url)
     }
 
@@ -134,11 +134,11 @@ class WebViewCacher: NSObject, UIWebViewDelegate {
     
         synchronized(self) { () -> Void in
             
-            if let errorHandler = self.errorHandler {
-                errorHandler(error)
+            if let failureHandler = self.failureHandler {
+                failureHandler(error)
             }
             
-            self.errorHandler = nil
+            self.failureHandler = nil
         }
     }
 
