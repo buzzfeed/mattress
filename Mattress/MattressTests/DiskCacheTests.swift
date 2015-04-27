@@ -281,7 +281,7 @@ class DiskCacheTests: XCTestCase {
 
     func cachedResponseWithDataString(dataString: String, request: NSURLRequest, userInfo: [NSObject : AnyObject]?) -> NSCachedURLResponse {
         let data = dataString.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)!
-        let response = NSURLResponse(URL: request.URL, MIMEType: "text/html", expectedContentLength: data.length, textEncodingName: nil)
+        let response = NSURLResponse(URL: request.URL!, MIMEType: "text/html", expectedContentLength: data.length, textEncodingName: nil)
         let cachedResponse = NSCachedURLResponse(response: response, data: data, userInfo: userInfo, storagePolicy: .Allowed)
         return cachedResponse
     }
@@ -289,7 +289,7 @@ class DiskCacheTests: XCTestCase {
     func cachedResponseWithDataOfSize(dataSize: Int, request: NSURLRequest, userInfo: [NSObject : AnyObject]?) -> NSCachedURLResponse {
         var bytes: [UInt32] = Array(count: dataSize, repeatedValue: 1)
         let data = NSData(bytes: &bytes, length: dataSize)
-        let response = NSURLResponse(URL: request.URL, MIMEType: "text/html", expectedContentLength: data.length, textEncodingName: nil)
+        let response = NSURLResponse(URL: request.URL!, MIMEType: "text/html", expectedContentLength: data.length, textEncodingName: nil)
         let cachedResponse = NSCachedURLResponse(response: response, data: data, userInfo: userInfo, storagePolicy: .Allowed)
         return cachedResponse
     }

@@ -369,7 +369,7 @@ class DiskCache {
         a given NSURLRequest.
     */
     func hashForRequest(request: NSURLRequest) -> String? {
-        if let urlString = request.URL.absoluteString {
+        if let urlString = request.URL?.absoluteString {
             return hashForURLString(urlString)
         }
         return nil

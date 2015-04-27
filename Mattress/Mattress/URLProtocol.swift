@@ -112,7 +112,7 @@ class URLProtocol: NSURLProtocol, NSURLConnectionDataDelegate {
     }
 
     class func mutableCanonicalRequestForRequest(request: NSURLRequest) -> NSMutableURLRequest {
-        var mutableRequest = request.mutableCopy() as NSMutableURLRequest
+        var mutableRequest = request.mutableCopy() as! NSMutableURLRequest
         mutableRequest.cachePolicy = .ReturnCacheDataElseLoad
         if let webViewCacher = webViewCacherForRequest(request) {
             mutableRequest = webViewCacher.mutableRequestForRequest(request)

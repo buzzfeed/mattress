@@ -60,7 +60,7 @@ class WebViewCacher: NSObject, UIWebViewDelegate {
         cached will be added.
     */
     func mutableRequestForRequest(request: NSURLRequest) -> NSMutableURLRequest {
-        var mutableRequest = request.mutableCopy() as NSMutableURLRequest
+        var mutableRequest = request.mutableCopy() as! NSMutableURLRequest
         NSURLProtocol.setProperty(true, forKey: MattressOfflineCacheRequestPropertyKey, inRequest: mutableRequest)
         return mutableRequest
     }
