@@ -9,7 +9,7 @@
 import UIKit
 
 public typealias WebViewLoadedHandler = (webView: UIWebView) -> (Bool)
-typealias WebViewCacherCompletionHandler = ((webViewCacher: WebViewCacher) -> ())
+typealias WebViewCacherCompletionHandler = (webViewCacher: WebViewCacher) -> ()
 
 /**
     WebViewCacher is in charge of loading all of the
@@ -24,6 +24,7 @@ class WebViewCacher: NSObject, UIWebViewDelegate {
 
     var loadedHandler: WebViewLoadedHandler?
     var completionHandler: WebViewCacherCompletionHandler?
+    var failureHandler: ((NSError) -> ())? = nil
     var mainDocumentURL: NSURL?
     var webView: UIWebView?
 
@@ -59,7 +60,7 @@ class WebViewCacher: NSObject, UIWebViewDelegate {
         cached will be added.
     */
     func mutableRequestForRequest(request: NSURLRequest) -> NSMutableURLRequest {
-        var mutableRequest = request.mutableCopy() as NSMutableURLRequest
+        var mutableRequest = request.mutableCopy() as! NSMutableURLRequest
         NSURLProtocol.setProperty(true, forKey: MattressOfflineCacheRequestPropertyKey, inRequest: mutableRequest)
         return mutableRequest
     }
@@ -78,9 +79,13 @@ class WebViewCacher: NSObject, UIWebViewDelegate {
         :param: completionHandler Called once the loadedHandler has returned
             true and we are done caching the requests at the given url.
     */
-    func offlineCacheURL(url: NSURL, loadedHandler: WebViewLoadedHandler, completionHandler: WebViewCacherCompletionHandler) {
+    func offlineCacheURL(url: NSURL,
+               loadedHandler: WebViewLoadedHandler,
+           completionHandler: WebViewCacherCompletionHandler,
+                failureHandler: (NSError) -> ()) {
         self.loadedHandler = loadedHandler
         self.completionHandler = completionHandler
+        self.failureHandler = failureHandler
         loadURLInWebView(url)
     }
 
@@ -90,24 +95,50 @@ class WebViewCacher: NSObject, UIWebViewDelegate {
         let webView = UIWebView(frame: CGRectZero)
         let request = NSURLRequest(URL: url)
         var mutableRequest = mutableRequestForRequest(request)
+        self.webView = webView
         webView.delegate = self
         webView.loadRequest(mutableRequest as NSURLRequest)
-        self.webView = webView
+        NSLog("WebView loadRequest:%x", self.webView!)
     }
 
     // MARK: - UIWebViewDelegate
 
     func webViewDidFinishLoad(webView: UIWebView) {
+        
         var isComplete = true
-        if let loadedHandler = loadedHandler {
-            isComplete = loadedHandler(webView: webView)
-        }
-        if isComplete {
-            webView.stopLoading()
-            self.webView = nil
-            if let completionHandler = completionHandler {
-                completionHandler(webViewCacher: self)
+        synchronized(self) { () -> Void in
+            if let loadedHandler = self.loadedHandler {
+                isComplete = loadedHandler(webView: webView)
             }
+            if isComplete == true {
+            
+                webView.stopLoading()
+                self.webView = nil
+                    
+                if let completionHandler = self.completionHandler {
+                    completionHandler(webViewCacher: self)
+                }
+                self.completionHandler = nil
+            }
+        }
+    }
+    
+    func webView(webView: UIWebView, didFailLoadWithError error: NSError) {
+        
+        // we can ignore this error
+        if (error.code == -999) {
+            return;
+        }
+        
+        NSLog("WebViewLoadError:%@", error)
+    
+        synchronized(self) { () -> Void in
+            
+            if let failureHandler = self.failureHandler {
+                failureHandler(error)
+            }
+            
+            self.failureHandler = nil
         }
     }
 
