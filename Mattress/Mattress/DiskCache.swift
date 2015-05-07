@@ -223,7 +223,11 @@ class DiskCache {
                     self.requestCaches.append(hash)
                     self.trimCacheIfNeeded()
                     self.persistPropertiesToDisk()
-                    success = data.writeToFile(path, atomically: false)
+                    var error: NSError?
+                    success = data.writeToFile(path, options: .allZeros, error: &error)
+                    if let error = error {
+                        NSLog("Error writing request to disk: \(error)")
+                    }
                 }
             }
         }
@@ -407,12 +411,12 @@ class DiskCache {
         a given the URL absoluteString of a request.
     */
     func hashForURLString(string: String) -> String? {
+        
         // TODO: This should probably be an MD5 hash, but I couldn't get Crypto imported properly
-        let data = string.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)
-        var out = data?.description
-        out = out?.stringByReplacingOccurrencesOfString(" ", withString: "", options: NSStringCompareOptions.LiteralSearch, range: nil)
-        out = out?.stringByReplacingOccurrencesOfString("<", withString: "", options: NSStringCompareOptions.LiteralSearch, range: nil)
-        out = out?.stringByReplacingOccurrencesOfString(">", withString: "", options: NSStringCompareOptions.LiteralSearch, range: nil)
+        // http://iosdeveloperzone.com/2014/10/03/using-commoncrypto-in-swift/
+
+        let toRemove = NSCharacterSet.alphanumericCharacterSet().invertedSet
+        let out = "".join(string.componentsSeparatedByCharactersInSet(toRemove))
         return out
     }
 }
