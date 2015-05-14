@@ -38,17 +38,8 @@ class URLProtocol: NSURLProtocol, NSURLConnectionDataDelegate {
             }
         }
 
-        // We should only use this protocol when there is a webViewCacher
-        // responsible for the request, or if we are offline
-        if let webViewCacher = webViewCacherForRequest(request) {
-            return true
-        }
-        if let cache = NSURLCache.sharedURLCache() as? URLCache {
-            if let handler = cache.isOfflineHandler {
-                return handler()
-            }
-        }
-        return false
+        let scheme = request.URL?.scheme
+        return scheme == "http" || scheme == "https"
     }
 
     /**
