@@ -25,8 +25,8 @@ class WebViewCacher: NSObject, UIWebViewDelegate {
     var loadedHandler: WebViewLoadedHandler?
     var completionHandler: WebViewCacherCompletionHandler?
     var failureHandler: ((NSError) -> ())? = nil
-    var mainDocumentURL: NSURL?
-    var webView: UIWebView?
+    private var mainDocumentURL: NSURL?
+    private var webView: UIWebView?
 
     // MARK: - Instance Methods
 
@@ -104,14 +104,12 @@ class WebViewCacher: NSObject, UIWebViewDelegate {
     // MARK: - UIWebViewDelegate
 
     func webViewDidFinishLoad(webView: UIWebView) {
-        
         var isComplete = true
         synchronized(self) { () -> Void in
             if let loadedHandler = self.loadedHandler {
                 isComplete = loadedHandler(webView: webView)
             }
             if isComplete == true {
-            
                 webView.stopLoading()
                 self.webView = nil
                     
@@ -124,20 +122,17 @@ class WebViewCacher: NSObject, UIWebViewDelegate {
     }
     
     func webView(webView: UIWebView, didFailLoadWithError error: NSError) {
-        
         // we can ignore this error
-        if (error.code == -999) {
-            return;
+        if error.code == -999 {
+            return
         }
         
         NSLog("WebViewLoadError:%@", error)
     
         synchronized(self) { () -> Void in
-            
             if let failureHandler = self.failureHandler {
                 failureHandler(error)
             }
-            
             self.failureHandler = nil
         }
     }

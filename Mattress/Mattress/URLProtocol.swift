@@ -36,10 +36,11 @@ class URLProtocol: NSURLProtocol, NSURLConnectionDataDelegate {
         if let webViewCacher = webViewCacherForRequest(request) {
             return true
         }
-        if let cache = NSURLCache.sharedURLCache() as? URLCache {
-            if let handler = cache.isOfflineHandler {
-                return handler()
-            }
+        if let
+            cache = NSURLCache.sharedURLCache() as? URLCache,
+            handler = cache.isOfflineHandler
+        {
+            return handler()
         }
         return false
     }
@@ -95,7 +96,7 @@ class URLProtocol: NSURLProtocol, NSURLConnectionDataDelegate {
         Finds the webViewCacher responsible for a request by
         asking each of its URLCaches in reverse order.
     */
-    class func webViewCacherForRequest(request: NSURLRequest) -> WebViewCacher? {
+    private class func webViewCacherForRequest(request: NSURLRequest) -> WebViewCacher? {
         var webViewCacherReturn: WebViewCacher? = nil
         
         synchronized(cacheLockObject) { () -> Void in
@@ -103,7 +104,7 @@ class URLProtocol: NSURLProtocol, NSURLConnectionDataDelegate {
                 let cache = caches[i]
                 if let webViewCacher = cache.webViewCacherOriginatingRequest(request) {
                     webViewCacherReturn = webViewCacher
-                    break;
+                    break
                 }
             }
         }
@@ -111,7 +112,7 @@ class URLProtocol: NSURLProtocol, NSURLConnectionDataDelegate {
         return webViewCacherReturn
     }
 
-    class func mutableCanonicalRequestForRequest(request: NSURLRequest) -> NSMutableURLRequest {
+    private class func mutableCanonicalRequestForRequest(request: NSURLRequest) -> NSMutableURLRequest {
         var mutableRequest = request.mutableCopy() as! NSMutableURLRequest
         mutableRequest.cachePolicy = .ReturnCacheDataElseLoad
         if let webViewCacher = webViewCacherForRequest(request) {
@@ -133,12 +134,12 @@ class URLProtocol: NSURLProtocol, NSURLConnectionDataDelegate {
 
     override func startLoading() {
         var mutableRequest = URLProtocol.mutableCanonicalRequestForRequest(request)
-        if let cache = NSURLCache.sharedURLCache() as? URLCache {
-            let cachedResponse = cache.cachedResponseForRequest(mutableRequest)
-            if let cachedResponse = cachedResponse {
-                client?.URLProtocol(self, cachedResponseIsValid: cachedResponse)
-                return
-            }
+        if let
+            cache = NSURLCache.sharedURLCache() as? URLCache,
+            cachedResponse = cache.cachedResponseForRequest(mutableRequest)
+        {
+            client?.URLProtocol(self, cachedResponseIsValid: cachedResponse)
+            return
         }
         self.connection = NSURLConnection(request: mutableRequest, delegate: self)
     }
@@ -150,7 +151,7 @@ class URLProtocol: NSURLProtocol, NSURLConnectionDataDelegate {
 
     // Mark: - NSURLConnectionDataDelegate Methods
 
-    func connection(connection: NSURLConnection!, didReceiveResponse response: NSURLResponse) {
+    func connection(connection: NSURLConnection, didReceiveResponse response: NSURLResponse) {
         self.client?.URLProtocol(self, didReceiveResponse: response, cacheStoragePolicy: .Allowed)
     }
 
@@ -162,7 +163,7 @@ class URLProtocol: NSURLProtocol, NSURLConnectionDataDelegate {
         self.client?.URLProtocolDidFinishLoading(self)
     }
 
-    func connection(connection: NSURLConnection!, didFailWithError error: NSError) {
+    func connection(connection: NSURLConnection, didFailWithError error: NSError) {
         self.client?.URLProtocol(self, didFailWithError: error)
     }
 }

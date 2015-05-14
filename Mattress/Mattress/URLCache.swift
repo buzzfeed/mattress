@@ -20,7 +20,6 @@ private let ArbitrarilyLargeSize = MB * 100
     only for storing requests that should be available offline.
 */
 public class URLCache: NSURLCache {
-    
     var isOfflineHandler: (() -> Bool)?
     
     var offlineCache: DiskCache
@@ -114,7 +113,7 @@ public class URLCache: NSURLCache {
         }
     }
 
-    public override func cachedResponseForRequest(request: NSURLRequest) -> NSCachedURLResponse? {
+    override public func cachedResponseForRequest(request: NSURLRequest) -> NSCachedURLResponse? {
         var cachedResponse = offlineCache.cachedResponseForRequest(request)
         if cachedResponse != nil {
             return cachedResponse
@@ -154,15 +153,11 @@ public class URLCache: NSURLCache {
                 }
                 
                 completeHandler?()
-                
                 completeHandler = nil
             }
             }, failureHandler: { (error) -> () in
-                
                 failureHandler?(error)
-                
                 failureHandler = nil
             })
-            
         }
 }
