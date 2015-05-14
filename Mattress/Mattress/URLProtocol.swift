@@ -30,6 +30,13 @@ class URLProtocol: NSURLProtocol, NSURLConnectionDataDelegate {
         if NSURLProtocol.propertyForKey(URLProtocolHandledRequestKey, inRequest: request) != nil {
             return false
         }
+        
+        if let avoidCache = NSURLProtocol.propertyForKey(MattressAvoidCacheRequestPropertyKey, inRequest: request) as? Bool {
+            // We've flagged this request to avoid retreiving from cache
+            if avoidCache == true {
+                return false
+            }
+        }
 
         // We should only use this protocol when there is a webViewCacher
         // responsible for the request, or if we are offline
