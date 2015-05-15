@@ -23,6 +23,8 @@
 		0BFAB50F1A15214600859B23 /* URLCacheTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BFAB50E1A15214600859B23 /* URLCacheTests.swift */; };
 		2FA084A51ACC538E0033B060 /* Synchronization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FA084A41ACC538E0033B060 /* Synchronization.swift */; };
 		2FA084F01ACDEE260033B060 /* Synchronization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FA084A41ACC538E0033B060 /* Synchronization.swift */; };
+		2FFFE5A81B06894900F57E22 /* CryptoSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2FFFE5A71B06894900F57E22 /* CryptoSwift.framework */; };
+		2FFFE5AA1B06896C00F57E22 /* CryptoSwift.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 2FFFE5A71B06894900F57E22 /* CryptoSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -34,6 +36,19 @@
 			remoteInfo = Mattress;
 		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		2FFFE5A91B06896000F57E22 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				2FFFE5AA1B06896C00F57E22 /* CryptoSwift.framework in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		0B4929CA1A13FD9C003D9AB3 /* Mattress.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Mattress.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -50,6 +65,7 @@
 		0BF50D621A169E3E0027B673 /* DiskCacheTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DiskCacheTests.swift; sourceTree = "<group>"; };
 		0BFAB50E1A15214600859B23 /* URLCacheTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = URLCacheTests.swift; sourceTree = "<group>"; };
 		2FA084A41ACC538E0033B060 /* Synchronization.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Synchronization.swift; sourceTree = "<group>"; };
+		2FFFE5A71B06894900F57E22 /* CryptoSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CryptoSwift.framework; path = Carthage/Build/iOS/CryptoSwift.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -57,6 +73,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2FFFE5A81B06894900F57E22 /* CryptoSwift.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -76,6 +93,7 @@
 			children = (
 				0B4929CC1A13FD9C003D9AB3 /* Mattress */,
 				0B4929D91A13FD9C003D9AB3 /* MattressTests */,
+				2FFFE5A61B06891E00F57E22 /* Frameworks */,
 				0B4929CB1A13FD9C003D9AB3 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -131,6 +149,14 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
+		2FFFE5A61B06891E00F57E22 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				2FFFE5A71B06894900F57E22 /* CryptoSwift.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -153,6 +179,7 @@
 				0B4929C61A13FD9C003D9AB3 /* Frameworks */,
 				0B4929C71A13FD9C003D9AB3 /* Headers */,
 				0B4929C81A13FD9C003D9AB3 /* Resources */,
+				2FFFE5A91B06896000F57E22 /* CopyFiles */,
 			);
 			buildRules = (
 			);
@@ -366,9 +393,13 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				INFOPLIST_FILE = Mattress/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -385,9 +416,13 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				INFOPLIST_FILE = Mattress/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
