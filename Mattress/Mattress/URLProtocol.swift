@@ -23,11 +23,17 @@ private let URLProtocolHandledRequestKey = "URLProtocolHandledRequestKey"
 */
 class URLProtocol: NSURLProtocol, NSURLConnectionDataDelegate {
     var connection: NSURLConnection?
-
+    
+    static var shouldRetrieveFromOfflineCacheByDefault = false
+    
     // MARK: - Class Methods
 
     override class func canInitWithRequest(request: NSURLRequest) -> Bool {
         if NSURLProtocol.propertyForKey(URLProtocolHandledRequestKey, inRequest: request) != nil {
+            return false
+        }
+        
+        if (shouldRetrieveFromOfflineCacheByDefault == false) {
             return false
         }
         
