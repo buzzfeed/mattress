@@ -33,10 +33,6 @@ class URLProtocol: NSURLProtocol, NSURLConnectionDataDelegate {
             return false
         }
         
-        if (shouldRetrieveFromOfflineCacheByDefault == false) {
-            return false
-        }
-        
         if let avoidCache = NSURLProtocol.propertyForKey(MattressAvoidCacheRequestPropertyKey, inRequest: request) as? Bool {
             // We've flagged this request to avoid retreiving from cache
             if avoidCache == true {
@@ -44,8 +40,7 @@ class URLProtocol: NSURLProtocol, NSURLConnectionDataDelegate {
             }
         }
 
-        let scheme = request.URL?.scheme
-        return scheme == "http" || scheme == "https"
+        return shouldRetrieveFromOfflineCacheByDefault
     }
 
     /**
