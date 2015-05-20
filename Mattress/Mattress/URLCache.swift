@@ -20,9 +20,11 @@ private let ArbitrarilyLargeSize = MB * 100
     only for storing requests that should be available offline.
 */
 public class URLCache: NSURLCache {
+    
+    var isOfflineHandler: (() -> Bool)?
+    
     var offlineCache: DiskCache
     var cachers: [WebViewCacher] = []
-    var isOfflineHandler: (() -> Bool)?
 
     /*
     We need to override this because the connection
@@ -132,13 +134,35 @@ public class URLCache: NSURLCache {
             and should return true if we are done loading the page, or false
             if we should continue loading.
     */
-    public func offlineCacheURL(url: NSURL, loadedHandler: WebViewLoadedHandler) {
+    public func offlineCacheURL(url: NSURL,
+                      loadedHandler: WebViewLoadedHandler,
+                    completeHandler: (() ->Void)? = nil,
+                     failureHandler: ((NSError) ->Void)? = nil) {
         let webViewCacher = WebViewCacher()
-        cachers.append(webViewCacher)
-        webViewCacher.offlineCacheURL(url, loadedHandler: loadedHandler) { buzzCacher in
-            if let index = find(self.cachers, webViewCacher) {
-                self.cachers.removeAtIndex(index)
-            }
+        
+        synchronized(self) {
+            self.cachers.append(webViewCacher)
         }
-    }
+        
+        var failureHandler = failureHandler
+        var completeHandler = completeHandler
+
+        webViewCacher.offlineCacheURL(url, loadedHandler: loadedHandler, completionHandler: { (webViewCacher) -> () in
+            synchronized(self) {
+                if let index = find(self.cachers, webViewCacher) {
+                    self.cachers.removeAtIndex(index)
+                }
+                
+                completeHandler?()
+                
+                completeHandler = nil
+            }
+            }, failureHandler: { (error) -> () in
+                
+                failureHandler?(error)
+                
+                failureHandler = nil
+            })
+            
+        }
 }

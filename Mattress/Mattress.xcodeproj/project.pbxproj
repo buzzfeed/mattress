@@ -21,6 +21,8 @@
 		0BBA4BD11A1552D500709E9D /* WebViewCacherTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBA4BD01A1552D500709E9D /* WebViewCacherTests.swift */; };
 		0BF50D631A169E3E0027B673 /* DiskCacheTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BF50D621A169E3E0027B673 /* DiskCacheTests.swift */; };
 		0BFAB50F1A15214600859B23 /* URLCacheTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BFAB50E1A15214600859B23 /* URLCacheTests.swift */; };
+		2FA084A51ACC538E0033B060 /* Synchronization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FA084A41ACC538E0033B060 /* Synchronization.swift */; };
+		2FA084F01ACDEE260033B060 /* Synchronization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FA084A41ACC538E0033B060 /* Synchronization.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -47,6 +49,7 @@
 		0BBA4BD01A1552D500709E9D /* WebViewCacherTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebViewCacherTests.swift; sourceTree = "<group>"; };
 		0BF50D621A169E3E0027B673 /* DiskCacheTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DiskCacheTests.swift; sourceTree = "<group>"; };
 		0BFAB50E1A15214600859B23 /* URLCacheTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = URLCacheTests.swift; sourceTree = "<group>"; };
+		2FA084A41ACC538E0033B060 /* Synchronization.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Synchronization.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -89,6 +92,7 @@
 		0B4929CC1A13FD9C003D9AB3 /* Mattress */ = {
 			isa = PBXGroup;
 			children = (
+				2FA084A41ACC538E0033B060 /* Synchronization.swift */,
 				0B4929CF1A13FD9C003D9AB3 /* Mattress.h */,
 				0B4929E61A13FDD1003D9AB3 /* URLCache.swift */,
 				0B4929EC1A14017C003D9AB3 /* URLProtocol.swift */,
@@ -236,6 +240,7 @@
 			files = (
 				0B4929E91A13FE1C003D9AB3 /* DiskCache.swift in Sources */,
 				0B4929ED1A14017C003D9AB3 /* URLProtocol.swift in Sources */,
+				2FA084A51ACC538E0033B060 /* Synchronization.swift in Sources */,
 				0B4929EB1A14004A003D9AB3 /* WebViewCacher.swift in Sources */,
 				0B4929E71A13FDD1003D9AB3 /* URLCache.swift in Sources */,
 			);
@@ -253,6 +258,7 @@
 				0BBA4BD11A1552D500709E9D /* WebViewCacherTests.swift in Sources */,
 				0BBA4BCA1A1527B500709E9D /* URLCache.swift in Sources */,
 				0BBA4BCC1A1527EA00709E9D /* DiskCache.swift in Sources */,
+				2FA084F01ACDEE260033B060 /* Synchronization.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

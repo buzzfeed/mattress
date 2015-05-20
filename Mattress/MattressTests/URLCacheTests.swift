@@ -11,6 +11,13 @@ import XCTest
 private let url = NSURL(string: "foo://bar")!
 private let TestDirectory = "test"
 
+class MockCacher: WebViewCacher {
+    override func offlineCacheURL(url: NSURL,
+        loadedHandler: WebViewLoadedHandler,
+        completionHandler: WebViewCacherCompletionHandler,
+        failureHandler: (NSError) -> ()) {}
+}
+
 class URLCacheTests: XCTestCase {
 
     func testRequestShouldBeStoredOffline() {
@@ -71,9 +78,9 @@ class URLCacheTests: XCTestCase {
     func testOfflineRequestGeneratesWebViewCacher() {
         let cache = makeURLCache()
         XCTAssert(cache.cachers.count == 0, "Cache should not start with any cachers")
-        cache.offlineCacheURL(url) { webView in
+        cache.offlineCacheURL(url, loadedHandler: { webView in
             return true
-        }
+        })
         XCTAssert(cache.cachers.count == 1, "Should have created a single WebViewCacher")
     }
 
@@ -165,7 +172,7 @@ class MockDiskCache: DiskCache {
 }
 class MockURLCacheWithMockDiskCache: URLCache {
     var mockDiskCache: MockDiskCache {
-        return offlineCache as MockDiskCache
+        return offlineCache as! MockDiskCache
     }
 
     override init(memoryCapacity: Int, diskCapacity: Int, diskPath path: String?, offlineDiskCapacity: Int,
@@ -178,6 +185,3 @@ class MockURLCacheWithMockDiskCache: URLCache {
     }
 }
 
-class MockCacher: WebViewCacher {
-    override func offlineCacheURL(url: NSURL, loadedHandler: WebViewLoadedHandler, completionHandler: WebViewCacherCompletionHandler) {}
-}

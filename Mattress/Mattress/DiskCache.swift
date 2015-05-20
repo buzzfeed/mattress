@@ -38,6 +38,9 @@ class DiskCache {
     let path: String
     let searchPathDirectory: NSSearchPathDirectory
     let maxCacheSize: Int
+    
+    let lockObject = NSObject()
+    
     var currentSize = 0
     var requestCaches: [String] = []
 
@@ -47,7 +50,7 @@ class DiskCache {
         Initializes a new DiskCache
     
         :param: path The path of the location on disk that should be used
-            to store requests.
+            to store requests. This MUST be unique for each DiskCache instance. Otherwise you will have hard to debug crashes.
         :param: searchPathDirectory The NSSearchPathDirectory that should be
             used to find the location at which to store requests.
         :param: maxCacheSize The size limit of this diskCache. When the size
@@ -67,16 +70,20 @@ class DiskCache {
         this cache from disk.
     */
     func loadPropertiesFromDisk() {
-        if let plistPath = diskPathForPropertyList()?.path {
-            if !NSFileManager.defaultManager().fileExistsAtPath(plistPath) {
-                persistPropertiesToDisk()
-            } else {
-                if let dict = NSDictionary(contentsOfFile: plistPath) {
-                    if let currentSize = dict.valueForKey(DictionaryKeys.maxCacheSize.rawValue) as? Int {
-                        self.currentSize = currentSize
-                    }
-                    if let requestCaches = dict.valueForKey(DictionaryKeys.requestsFilenameArray.rawValue) as? [String] {
-                        self.requestCaches = requestCaches
+        
+        synchronized(lockObject) { () -> Void in
+
+            if let plistPath = self.diskPathForPropertyList()?.path {
+                if !NSFileManager.defaultManager().fileExistsAtPath(plistPath) {
+                    self.persistPropertiesToDisk()
+                } else {
+                    if let dict = NSDictionary(contentsOfFile: plistPath) {
+                        if let currentSize = dict.valueForKey(DictionaryKeys.maxCacheSize.rawValue) as? Int {
+                            self.currentSize = currentSize
+                        }
+                        if let requestCaches = dict.valueForKey(DictionaryKeys.requestsFilenameArray.rawValue) as? [String] {
+                            self.requestCaches = requestCaches
+                        }
                     }
                 }
             }
@@ -88,9 +95,12 @@ class DiskCache {
         this cache to disk.
     */
     func persistPropertiesToDisk() {
-        if let plistPath = diskPathForPropertyList()?.path {
-            let dict = dictionaryForCache()
-            dict.writeToFile(plistPath, atomically: true)
+        synchronized(lockObject) { () -> Void in
+            if let plistPath = self.diskPathForPropertyList()?.path {
+                let dict = self.dictionaryForCache()
+                dict.writeToFile(plistPath, atomically: true)
+            }
+            return
         }
     }
 
@@ -136,13 +146,17 @@ class DiskCache {
     */
     func storeCachedResponse(cachedResponse: NSCachedURLResponse, forRequest request: NSURLRequest) -> Bool {
         var success = false
-        if let hash = hashForRequest(request) {
-            if isAtLeastiOS8 {
-                success = saveObject(cachedResponse, withHash: hash)
-            } else {
-                success = storeCachedResponsePieces(cachedResponse, withHash: hash)
+        
+        synchronized(lockObject) { () -> Void in
+            if let hash = self.hashForRequest(request) {
+                if self.isAtLeastiOS8 {
+                    success = self.saveObject(cachedResponse, withHash: hash)
+                } else {
+                    success = self.storeCachedResponsePieces(cachedResponse, withHash: hash)
+                }
             }
         }
+        
         return success
     }
 
@@ -160,16 +174,18 @@ class DiskCache {
         :returns: A Bool representing whether or not we successfully
             stored the response to disk.
     */
-    func storeCachedResponsePieces(cachedResponse: NSCachedURLResponse, withHash hash: String) -> Bool {
+    private func storeCachedResponsePieces(cachedResponse: NSCachedURLResponse, withHash hash: String) -> Bool {
         var success = true
-        let responseHash = hashForResponseFromHash(hash)
-        success = success && saveObject(cachedResponse.response, withHash: responseHash)
-        let dataHash = hashForDataFromHash(hash)
-        success = success && saveObject(cachedResponse.data, withHash: dataHash)
-        if let userInfo = cachedResponse.userInfo {
-            if !userInfo.isEmpty {
-                let userInfoHash = hashForUserInfoFromHash(hash)
-                success = success && saveObject(userInfo, withHash: userInfoHash)
+        synchronized(lockObject) { () -> Void in
+            let responseHash = self.hashForResponseFromHash(hash)
+            success = success && self.saveObject(cachedResponse.response, withHash: responseHash)
+            let dataHash = self.hashForDataFromHash(hash)
+            success = success && self.saveObject(cachedResponse.data, withHash: dataHash)
+            if let userInfo = cachedResponse.userInfo {
+                if !userInfo.isEmpty {
+                    let userInfoHash = self.hashForUserInfoFromHash(hash)
+                    success = success && self.saveObject(userInfo, withHash: userInfoHash)
+                }
             }
         }
         return success
@@ -186,28 +202,36 @@ class DiskCache {
     
         :returns: A Bool indicating that the saves were successful.
     */
-    func saveObject(object: NSCoding, withHash hash: String) -> Bool {
+    private func saveObject(object: NSCoding, withHash hash: String) -> Bool {
         var success = false
-        let data = NSKeyedArchiver.archivedDataWithRootObject(object)
-        if let path = diskPathForRequestCacheNamed(hash)?.path {
-            if data.length < maxCacheSize {
-                currentSize += data.length
-                var index = -1
-                for i in 0..<requestCaches.count {
-                    if requestCaches[i] == hash {
-                        index = i
-                        break
+        
+        synchronized(lockObject) { () -> Void in
+            let data = NSKeyedArchiver.archivedDataWithRootObject(object)
+            if let path = self.diskPathForRequestCacheNamed(hash)?.path {
+                if data.length < self.maxCacheSize {
+                    self.currentSize += data.length
+                    var index = -1
+                    for i in 0..<self.requestCaches.count {
+                        if self.requestCaches[i] == hash {
+                            index = i
+                            break
+                        }
+                    }
+                    if index != -1 {
+                        self.requestCaches.removeAtIndex(index)
+                    }
+                    self.requestCaches.append(hash)
+                    self.trimCacheIfNeeded()
+                    self.persistPropertiesToDisk()
+                    var error: NSError?
+                    success = data.writeToFile(path, options: .allZeros, error: &error)
+                    if let error = error {
+                        NSLog("Error writing request to disk: \(error)")
                     }
                 }
-                if index != -1 {
-                    requestCaches.removeAtIndex(index)
-                }
-                requestCaches.append(hash)
-                trimCacheIfNeeded()
-                persistPropertiesToDisk()
-                success = data.writeToFile(path, atomically: false)
             }
         }
+    
         return success
     }
 
@@ -218,13 +242,18 @@ class DiskCache {
     */
     func cachedResponseForRequest(request: NSURLRequest) -> NSCachedURLResponse? {
         var response: NSCachedURLResponse?
-        if let path = diskPathForRequest(request)?.path {
-            if isAtLeastiOS8 {
-                response = NSKeyedUnarchiver.unarchiveObjectWithFile(path) as? NSCachedURLResponse
-            } else {
-                response = cachedResponseFromPiecesForRequest(request)
+        
+        synchronized(lockObject) { () -> Void in
+
+            if let path = self.diskPathForRequest(request)?.path {
+                if self.isAtLeastiOS8 {
+                    response = NSKeyedUnarchiver.unarchiveObjectWithFile(path) as? NSCachedURLResponse
+                } else {
+                    response = self.cachedResponseFromPiecesForRequest(request)
+                }
             }
         }
+
         return response
     }
 
@@ -233,24 +262,29 @@ class DiskCache {
         userInfo. This is only used to workaround the bug in iOS 7
         preventing us from just saving the cachedResponse itself.
     */
-    func cachedResponseFromPiecesForRequest(request: NSURLRequest) -> NSCachedURLResponse? {
+    private func cachedResponseFromPiecesForRequest(request: NSURLRequest) -> NSCachedURLResponse? {
+       
         var cachedResponse: NSCachedURLResponse? = nil
-        var response: NSURLResponse? = nil
-        var data: NSData? = nil
-        var userInfo: [NSObject : AnyObject]? = nil
+        
+        synchronized(lockObject) { () -> Void in
 
-        if let basePath = diskPathForRequest(request)?.path {
-            let responsePath = hashForResponseFromHash(basePath)
-            response = NSKeyedUnarchiver.unarchiveObjectWithFile(responsePath) as? NSURLResponse
-            let dataPath = hashForDataFromHash(basePath)
-            data = NSKeyedUnarchiver.unarchiveObjectWithFile(dataPath) as? NSData
-            let userInfoPath = hashForUserInfoFromHash(basePath)
-            userInfo = NSKeyedUnarchiver.unarchiveObjectWithFile(userInfoPath) as? [NSObject : AnyObject]
-        }
+            var response: NSURLResponse? = nil
+            var data: NSData? = nil
+            var userInfo: [NSObject : AnyObject]? = nil
 
-        if let response = response {
-            if let data = data {
-                cachedResponse = NSCachedURLResponse(response: response, data: data, userInfo: userInfo, storagePolicy: .Allowed)
+            if let basePath = self.diskPathForRequest(request)?.path {
+                let responsePath = self.hashForResponseFromHash(basePath)
+                response = NSKeyedUnarchiver.unarchiveObjectWithFile(responsePath) as? NSURLResponse
+                let dataPath = self.hashForDataFromHash(basePath)
+                data = NSKeyedUnarchiver.unarchiveObjectWithFile(dataPath) as? NSData
+                let userInfoPath = self.hashForUserInfoFromHash(basePath)
+                userInfo = NSKeyedUnarchiver.unarchiveObjectWithFile(userInfoPath) as? [NSObject : AnyObject]
+            }
+
+            if let response = response {
+                if let data = data {
+                    cachedResponse = NSCachedURLResponse(response: response, data: data, userInfo: userInfo, storagePolicy: .Allowed)
+                }
             }
         }
 
@@ -339,7 +373,7 @@ class DiskCache {
         a given NSURLRequest.
     */
     func hashForRequest(request: NSURLRequest) -> String? {
-        if let urlString = request.URL.absoluteString {
+        if let urlString = request.URL?.absoluteString {
             return hashForURLString(urlString)
         }
         return nil
@@ -377,12 +411,12 @@ class DiskCache {
         a given the URL absoluteString of a request.
     */
     func hashForURLString(string: String) -> String? {
+        
         // TODO: This should probably be an MD5 hash, but I couldn't get Crypto imported properly
-        let data = string.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)
-        var out = data?.description
-        out = out?.stringByReplacingOccurrencesOfString(" ", withString: "", options: NSStringCompareOptions.LiteralSearch, range: nil)
-        out = out?.stringByReplacingOccurrencesOfString("<", withString: "", options: NSStringCompareOptions.LiteralSearch, range: nil)
-        out = out?.stringByReplacingOccurrencesOfString(">", withString: "", options: NSStringCompareOptions.LiteralSearch, range: nil)
+        // http://iosdeveloperzone.com/2014/10/03/using-commoncrypto-in-swift/
+
+        let toRemove = NSCharacterSet.alphanumericCharacterSet().invertedSet
+        let out = "".join(string.componentsSeparatedByCharactersInSet(toRemove))
         return out
     }
 }
