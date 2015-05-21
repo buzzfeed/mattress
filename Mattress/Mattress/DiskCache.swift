@@ -13,7 +13,6 @@
 
 import Foundation
 import UIKit
-import CryptoSwift
 
 class DiskCache {
     /**
@@ -417,7 +416,7 @@ class DiskCache {
     */
     func hashForURLString(string: String) -> String? {
         let toRemove = NSCharacterSet.alphanumericCharacterSet().invertedSet
-        let out = "".join(string.componentsSeparatedByCharactersInSet(toRemove)).md5()
+        let out = "".join(string.componentsSeparatedByCharactersInSet(toRemove))
 
         return out
     }
