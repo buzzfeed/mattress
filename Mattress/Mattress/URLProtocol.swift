@@ -34,7 +34,7 @@ class URLProtocol: NSURLProtocol, NSURLConnectionDataDelegate {
 
         if let avoidCache = NSURLProtocol.propertyForKey(MattressAvoidCacheRequestPropertyKey, inRequest: request) as? Bool {
             // We've flagged this request to avoid retreiving from cache
-            if avoidCache == true {
+            if avoidCache {
                 return false
             }
         }
