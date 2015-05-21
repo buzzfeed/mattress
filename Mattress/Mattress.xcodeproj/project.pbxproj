@@ -21,11 +21,8 @@
 		0BBA4BD11A1552D500709E9D /* WebViewCacherTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBA4BD01A1552D500709E9D /* WebViewCacherTests.swift */; };
 		0BF50D631A169E3E0027B673 /* DiskCacheTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BF50D621A169E3E0027B673 /* DiskCacheTests.swift */; };
 		0BFAB50F1A15214600859B23 /* URLCacheTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BFAB50E1A15214600859B23 /* URLCacheTests.swift */; };
-		2F0BD6D91B0D3F49004FAD06 /* CryptoSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2FFFE5A71B06894900F57E22 /* CryptoSwift.framework */; };
 		2FA084A51ACC538E0033B060 /* Synchronization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FA084A41ACC538E0033B060 /* Synchronization.swift */; };
 		2FA084F01ACDEE260033B060 /* Synchronization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FA084A41ACC538E0033B060 /* Synchronization.swift */; };
-		2FFFE5A81B06894900F57E22 /* CryptoSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2FFFE5A71B06894900F57E22 /* CryptoSwift.framework */; };
-		2FFFE5AA1B06896C00F57E22 /* CryptoSwift.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 2FFFE5A71B06894900F57E22 /* CryptoSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -45,7 +42,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				2FFFE5AA1B06896C00F57E22 /* CryptoSwift.framework in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -66,7 +62,6 @@
 		0BF50D621A169E3E0027B673 /* DiskCacheTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DiskCacheTests.swift; sourceTree = "<group>"; };
 		0BFAB50E1A15214600859B23 /* URLCacheTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = URLCacheTests.swift; sourceTree = "<group>"; };
 		2FA084A41ACC538E0033B060 /* Synchronization.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Synchronization.swift; sourceTree = "<group>"; };
-		2FFFE5A71B06894900F57E22 /* CryptoSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CryptoSwift.framework; path = Carthage/Build/iOS/CryptoSwift.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -74,7 +69,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2FFFE5A81B06894900F57E22 /* CryptoSwift.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -83,7 +77,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				0B6EF8CC1A38E4FB0095EBD3 /* Mattress.framework in Frameworks */,
-				2F0BD6D91B0D3F49004FAD06 /* CryptoSwift.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -154,7 +147,6 @@
 		2FFFE5A61B06891E00F57E22 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				2FFFE5A71B06894900F57E22 /* CryptoSwift.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
