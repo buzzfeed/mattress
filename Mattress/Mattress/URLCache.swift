@@ -108,9 +108,14 @@ public class URLCache: NSURLCache {
             let success = offlineCache.storeCachedResponse(cachedResponse, forRequest: request)
         } else {
             super.storeCachedResponse(cachedResponse, forRequest: request)
-            // If we've already stored this in the offline cache, update it
-            if offlineCache.hasCacheForRequest(request) {
-                offlineCache.storeCachedResponse(cachedResponse, forRequest: request)
+            // Don't store failure responses
+            if let httpResponse = cachedResponse.response as? NSHTTPURLResponse {
+                if httpResponse.statusCode < 400 {
+                    // If we've already stored this in the offline cache, update it
+                    if offlineCache.hasCacheForRequest(request) {
+                        offlineCache.storeCachedResponse(cachedResponse, forRequest: request)
+                    }
+                }
             }
         }
     }
