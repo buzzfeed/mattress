@@ -8,9 +8,13 @@
 
 import Foundation
 
+/**
+    Key used for a boolean property set on NSURLRequests by a
+    WebViewCacher to indicate they should be stored in the cache.
+*/
 public let MattressCacheRequestPropertyKey = "MattressCacheRequest"
-public let MattressAvoidCacheRetreiveOnlineRequestPropertyKey = "MattressAvoidCacheRetreiveOnlineRequestPropertyKey" // for the main document that we don't want to cache
-let URLCacheStoredRequestPropertyKey = "URLCacheStoredRequest"
+/// Used to avoid hitting the cache when online
+public let MattressAvoidCacheRetreiveOnlineRequestPropertyKey = "MattressAvoidCacheRetreiveOnlineRequestPropertyKey"
 
 private let kB = 1024
 private let MB = kB * 1024
@@ -22,9 +26,13 @@ private let ArbitrarilyLargeSize = MB * 100
     hitting the network.
 */
 public class URLCache: NSURLCache {
+    // Handler used to determine if we're offline
     var isOfflineHandler: (() -> Bool)?
-    
+
+    // Associated disk cache
     var diskCache: DiskCache
+
+    // Array of WebViewCacher objects used to cache pages
     var cachers: [WebViewCacher] = []
 
     /*
@@ -42,6 +50,13 @@ public class URLCache: NSURLCache {
 
     // MARK: - Class Methods
 
+    /**
+        Determines whether a request should be cached in Mattress for later use.
+
+        :param: request The request
+
+        :returns: A boolean of whether the request should be cached.
+    */
     class func requestShouldBeStoredInMattress(request: NSURLRequest) -> Bool {
         if let value = NSURLProtocol.propertyForKey(MattressCacheRequestPropertyKey, inRequest: request) as? Bool {
             return value
@@ -80,6 +95,11 @@ public class URLCache: NSURLCache {
         addToProtocol(false)
     }
 
+    /**
+        Adds or removes the URLCache to/from the URLProtocol caches.
+    
+        :param: shouldAdd If true, adds the cache. Otherwise, removes.
+    */
     func addToProtocol(shouldAdd: Bool) {
         if shouldAdd {
             URLProtocol.addCache(self)
@@ -89,8 +109,13 @@ public class URLCache: NSURLCache {
     }
 
     /**
-        This method will attempt to find a WebViewCacher responsible
+        Attempts to find a WebViewCacher responsible
         for a given request.
+    
+        :param: request The request
+    
+        :returns: The WebViewCacher responsible for the request if found,
+            otherwise nil.
     */
     func webViewCacherOriginatingRequest(request: NSURLRequest) -> WebViewCacher? {
         for cacher in cachers {
@@ -137,16 +162,20 @@ public class URLCache: NSURLCache {
     }
 
     /**
-        This method should be called to signal that the entire page at a url
-        should be downloaded and stored in the Mattress diskCache. Any urls cached
-        in this way will be available when the device is offline.
-    
+
+        Downloads and stores an entire page in the diskCache. Any urls
+        cached in this way will be available when the device is offline.
+
         :param: url The url of a webpage to download
         :param: loadedHandler A handler that will be called every time the
             UIWebView used to load the request calls its delegate's
             webViewDidFinishLoad method. This handler will receive the webView
             and should return true if we are done loading the page, or false
             if we should continue loading.
+        :param: completeHandler A handler called once the process has been 
+            completed.
+        :param: failureHandler A handler with a single error parameter called
+            in case of failure.
     */
     public func diskCacheURL(url: NSURL,
                       loadedHandler: WebViewLoadedHandler,

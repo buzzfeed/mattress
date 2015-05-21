@@ -22,24 +22,30 @@ class WebViewCacher: NSObject, UIWebViewDelegate {
 
     // MARK: - Properties
 
+    /// Handler called to determine if a webpage is considered loaded.
     var loadedHandler: WebViewLoadedHandler?
+    /// Handler called once a webpage has finished loading.
     var completionHandler: WebViewCacherCompletionHandler?
+    /// Handler called if a webpage fails to load.
     var failureHandler: ((NSError) -> ())? = nil
+    /// Main URL for the webpage request.
     private var mainDocumentURL: NSURL?
+    /// Webview used to load the webpage.
     private var webView: UIWebView?
 
     // MARK: - Instance Methods
 
     /**
-        didOriginateRequest: uses the associated mainDocumentURL
-        to determine if it thinks it is responsible for a given
-        NSURLRequest.
+        Uses the associated mainDocumentURL to determine if it
+        thinks it is responsible for a given NSURLRequest.
     
         This is necessary because the UIWebView can fire off requests
         without telling the webViewDelegate about them, so the
         URLProtocol will catch them for us, which should result in
         this method being called.
-    
+        
+        :param: request The request in question.
+
         :returns: A Bool indicating whether this WebViewCacher is
             responsible for that NSURLRequest.
     */
@@ -53,11 +59,15 @@ class WebViewCacher: NSObject, UIWebViewDelegate {
     }
 
     /**
-        mutableRequestForRequest: creates a mutable request for a
-        given request that should be handled by the WebViewCacher.
+        Creates a mutable request for a given request that should
+        be handled by the WebViewCacher.
     
         The property signaling that the request should be stored in
         the Mattress disk cache will be added.
+    
+        :param: request The request.
+    
+        :returns: A mutable request based on the requested passed in.
     */
     func mutableRequestForRequest(request: NSURLRequest) -> NSMutableURLRequest {
         var mutableRequest = request.mutableCopy() as! NSMutableURLRequest
@@ -78,6 +88,7 @@ class WebViewCacher: NSObject, UIWebViewDelegate {
             loading.
         :param: completionHandler Called once the loadedHandler has returned
             true and we are done caching the requests at the given url.
+        :param: completionHandler Called if the webpage fails to load.
     */
     func mattressCacheURL(url: NSURL,
                 loadedHandler: WebViewLoadedHandler,
@@ -91,6 +102,11 @@ class WebViewCacher: NSObject, UIWebViewDelegate {
 
     // MARK: WebView Loading
 
+    /**
+        Loads a URL in the webview associated with the WebViewCacher.
+    
+        :param: url URL of the webpage to be loaded.
+    */
     private func loadURLInWebView(url: NSURL) {
         let webView = UIWebView(frame: CGRectZero)
         let request = NSURLRequest(URL: url)
