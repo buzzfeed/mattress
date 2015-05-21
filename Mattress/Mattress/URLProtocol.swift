@@ -32,24 +32,31 @@ class URLProtocol: NSURLProtocol, NSURLConnectionDataDelegate {
             return false
         }
 
-        if let avoidCache = NSURLProtocol.propertyForKey(MattressAvoidCacheRequestPropertyKey, inRequest: request) as? Bool {
-            // We've flagged this request to avoid retreiving from cache
-            if avoidCache {
-                return false
+        var isOffline = false
+        if let cache = NSURLCache.sharedURLCache() as? URLCache {
+            if let handler = cache.isOfflineHandler {
+                isOffline = handler()
             }
         }
 
+        // Online requests get a chance to opt out of retreival from cache
+        if !isOffline &&
+            NSURLProtocol.propertyForKey(MattressAvoidCacheRetreiveOnlineRequestPropertyKey,
+                inRequest: request) as? Bool == true
+        {
+            return false
+        }
+
+        // Online requests that didn't opt out will get included if turned on
         let scheme = request.URL?.scheme
         if scheme == "http" || scheme == "https" {
             if shouldRetrieveFromOfflineCacheByDefault {
                 return true
-            } else if let cache = NSURLCache.sharedURLCache() as? URLCache {
-                if let handler = cache.isOfflineHandler {
-                    return handler()
-                }
             }
         }
-        return false
+
+        // Otherwise when we're offline we should be using our cache
+        return isOffline
     }
 
     /**

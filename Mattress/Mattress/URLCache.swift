@@ -9,7 +9,7 @@
 import Foundation
 
 public let MattressOfflineCacheRequestPropertyKey = "MattressOfflineCacheRequest"
-public let MattressAvoidCacheRequestPropertyKey = "MattressAvoidCacheRequestPropertyKey" // for the main document that we don't want to cache
+public let MattressAvoidCacheRetreiveOnlineRequestPropertyKey = "MattressAvoidCacheRetreiveOnlineRequestPropertyKey" // for the main document that we don't want to cache
 let URLCacheStoredRequestPropertyKey = "URLCacheStoredRequest"
 
 private let kB = 1024
