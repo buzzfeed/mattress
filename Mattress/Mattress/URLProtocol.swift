@@ -12,6 +12,7 @@ var caches: [URLCache] = []
 let cacheLockObject = NSObject()
 
 private let URLProtocolHandledRequestKey = "URLProtocolHandledRequestKey"
+public var shouldRetrieveFromOfflineCacheByDefault = false
 
 /**
     URLProtocol is an NSURLProtocol in charge of ensuring
@@ -30,7 +31,7 @@ class URLProtocol: NSURLProtocol, NSURLConnectionDataDelegate {
         if NSURLProtocol.propertyForKey(URLProtocolHandledRequestKey, inRequest: request) != nil {
             return false
         }
-        
+
         if let avoidCache = NSURLProtocol.propertyForKey(MattressAvoidCacheRequestPropertyKey, inRequest: request) as? Bool {
             // We've flagged this request to avoid retreiving from cache
             if avoidCache == true {
@@ -39,7 +40,16 @@ class URLProtocol: NSURLProtocol, NSURLConnectionDataDelegate {
         }
 
         let scheme = request.URL?.scheme
-        return scheme == "http" || scheme == "https"
+        if scheme == "http" || scheme == "https" {
+            if shouldRetrieveFromOfflineCacheByDefault {
+                return true
+            } else if let cache = NSURLCache.sharedURLCache() as? URLCache {
+                if let handler = cache.isOfflineHandler {
+                    return handler()
+                }
+            }
+        }
+        return false
     }
 
     /**
