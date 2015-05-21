@@ -30,6 +30,13 @@ class URLProtocol: NSURLProtocol, NSURLConnectionDataDelegate {
         if NSURLProtocol.propertyForKey(URLProtocolHandledRequestKey, inRequest: request) != nil {
             return false
         }
+        
+        if let avoidCache = NSURLProtocol.propertyForKey(MattressAvoidCacheRequestPropertyKey, inRequest: request) as? Bool {
+            // We've flagged this request to avoid retreiving from cache
+            if avoidCache == true {
+                return false
+            }
+        }
 
         let scheme = request.URL?.scheme
         return scheme == "http" || scheme == "https"
