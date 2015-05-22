@@ -1,0 +1,11 @@
+//
+//  CommonCrypto.xcconfig
+//  Mattress
+//
+//  Created by Kevin Lord on 5/22/15.
+//  Copyright (c) 2015 BuzzFeed. All rights reserved.
+//
+
+MODULEMAP_FILE[sdk=iphoneos*]        = $(SRCROOT)/CommonCrypto/iphoneos.modulemap
+MODULEMAP_FILE[sdk=iphonesimulator*] = $(SRCROOT)/CommonCrypto/iphonesimulator.modulemap
+MODULEMAP_FILE[sdk=macosx*]          = $(SRCROOT)/CommonCrypto/macosx.modulemap
