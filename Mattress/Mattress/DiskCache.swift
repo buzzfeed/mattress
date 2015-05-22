@@ -262,6 +262,18 @@ class DiskCache {
     }
 
     /**
+        This will simply check if a response exists in the cache for the
+        specified request.
+    */
+    internal func hasOfflineCachedResponseForRequest(request: NSURLRequest) -> Bool {
+
+        if let path = self.diskPathForRequest(request)?.path {
+            return NSFileManager.defaultManager().fileExistsAtPath(path)
+        }
+        return false
+    }
+
+    /**
         Will create the cachedResponse from its response, data and
         userInfo. This is only used to workaround the bug in iOS 7
         preventing us from just saving the cachedResponse itself.

@@ -32,6 +32,11 @@ class URLProtocol: NSURLProtocol, NSURLConnectionDataDelegate {
             return false
         }
 
+        // In the case that we're trying to offlineCache, we should always use this protocol
+        if let webViewCacher = webViewCacherForRequest(request) {
+            return true
+        }
+
         var isOffline = false
         if let cache = NSURLCache.sharedURLCache() as? URLCache {
             if let handler = cache.isOfflineHandler {
@@ -48,14 +53,19 @@ class URLProtocol: NSURLProtocol, NSURLConnectionDataDelegate {
         }
 
         // Online requests that didn't opt out will get included if turned on
+        // and if there is something in the offline cache to get fetched.
         let scheme = request.URL?.scheme
         if scheme == "http" || scheme == "https" {
             if shouldRetrieveFromOfflineCacheByDefault {
-                return true
+                if let cache = NSURLCache.sharedURLCache() as? URLCache {
+                    if cache.hasOfflineCachedResponseForRequest(request) {
+                        return true
+                    }
+                }
             }
         }
 
-        // Otherwise when we're offline we should be using our cache
+        // Otherwise only use this protocol when offline
         return isOffline
     }
 
@@ -132,6 +142,7 @@ class URLProtocol: NSURLProtocol, NSURLConnectionDataDelegate {
         if let webViewCacher = webViewCacherForRequest(request) {
             mutableRequest = webViewCacher.mutableRequestForRequest(request)
         }
+
         NSURLProtocol.setProperty(true, forKey: URLProtocolHandledRequestKey, inRequest: mutableRequest)
         return mutableRequest
     }

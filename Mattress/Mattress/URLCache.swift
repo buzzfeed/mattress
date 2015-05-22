@@ -128,6 +128,10 @@ public class URLCache: NSURLCache {
         return super.cachedResponseForRequest(request)
     }
 
+    internal func hasOfflineCachedResponseForRequest(request: NSURLRequest) -> Bool{
+        return offlineCache.hasOfflineCachedResponseForRequest(request)
+    }
+
     /**
         This method should be called to signal that the entire page at a url
         should be downloaded and stored in the offlineCache. Any urls cached
