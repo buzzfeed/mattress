@@ -35,11 +35,11 @@ class DiskCache {
         return Static.value
     }
 
-    let path: String
-    let searchPathDirectory: NSSearchPathDirectory
-    let maxCacheSize: Int
+    private let path: String
+    private let searchPathDirectory: NSSearchPathDirectory
+    private let maxCacheSize: Int
     
-    let lockObject = NSObject()
+    private let lockObject = NSObject()
     
     var currentSize = 0
     var requestCaches: [String] = []
@@ -69,10 +69,8 @@ class DiskCache {
         Load appropriate properties from the plist to restore
         this cache from disk.
     */
-    func loadPropertiesFromDisk() {
-        
+    private func loadPropertiesFromDisk() {
         synchronized(lockObject) { () -> Void in
-
             if let plistPath = self.diskPathForPropertyList()?.path {
                 if !NSFileManager.defaultManager().fileExistsAtPath(plistPath) {
                     self.persistPropertiesToDisk()
@@ -94,7 +92,7 @@ class DiskCache {
         Save appropriate properties to a plist to save
         this cache to disk.
     */
-    func persistPropertiesToDisk() {
+    private func persistPropertiesToDisk() {
         synchronized(lockObject) { () -> Void in
             if let plistPath = self.diskPathForPropertyList()?.path {
                 let dict = self.dictionaryForCache()
@@ -108,15 +106,16 @@ class DiskCache {
         This will keep removing the oldest request until our
         currentSize is not greater than the maxCacheSize.
     */
-    func trimCacheIfNeeded() {
+    private func trimCacheIfNeeded() {
         while currentSize > maxCacheSize && !requestCaches.isEmpty {
             let fileName = requestCaches.removeAtIndex(0)
             if let path = diskPathForRequestCacheNamed(fileName)?.path {
-                if let attributes = NSFileManager.defaultManager().attributesOfItemAtPath(path, error: nil) as? [String: AnyObject] {
-                    if let fileSize = attributes[NSFileSize] as? NSNumber {
+                if let
+                    attributes = NSFileManager.defaultManager().attributesOfItemAtPath(path, error: nil) as? [String: AnyObject],
+                    fileSize = attributes[NSFileSize] as? NSNumber
+                {
                         let size = fileSize.integerValue
                         currentSize -= size
-                    }
                 }
                 NSFileManager.defaultManager().removeItemAtPath(path, error: nil)
             }
@@ -127,7 +126,7 @@ class DiskCache {
         Create an NSDictionary that will be used to store
         this diskCache's properties to disk.
     */
-    func dictionaryForCache() -> NSDictionary {
+    private func dictionaryForCache() -> NSDictionary {
         var dict = NSMutableDictionary()
         dict.setValue(currentSize, forKey: DictionaryKeys.maxCacheSize.rawValue)
         dict.setValue(requestCaches, forKey: DictionaryKeys.requestsFilenameArray.rawValue)
@@ -263,7 +262,6 @@ class DiskCache {
         preventing us from just saving the cachedResponse itself.
     */
     private func cachedResponseFromPiecesForRequest(request: NSURLRequest) -> NSCachedURLResponse? {
-       
         var cachedResponse: NSCachedURLResponse? = nil
         
         synchronized(lockObject) { () -> Void in
@@ -281,10 +279,11 @@ class DiskCache {
                 userInfo = NSKeyedUnarchiver.unarchiveObjectWithFile(userInfoPath) as? [NSObject : AnyObject]
             }
 
-            if let response = response {
-                if let data = data {
-                    cachedResponse = NSCachedURLResponse(response: response, data: data, userInfo: userInfo, storagePolicy: .Allowed)
-                }
+            if let
+                response = response,
+                data = data
+            {
+                cachedResponse = NSCachedURLResponse(response: response, data: data, userInfo: userInfo, storagePolicy: .Allowed)
             }
         }
 
@@ -323,7 +322,7 @@ class DiskCache {
         Returns the path where we should store a cache
         with the specified filename.
     */
-    func diskPathForRequestCacheNamed(name: String) -> NSURL? {
+    private func diskPathForRequestCacheNamed(name: String) -> NSURL? {
         var url: NSURL?
         if let baseURL = diskPath() {
             url = NSURL(string: name, relativeToURL: baseURL)
@@ -337,10 +336,12 @@ class DiskCache {
     */
     func diskPathForRequest(request: NSURLRequest) -> NSURL? {
         var url: NSURL?
-        if let hash = hashForRequest(request) {
-            if let baseURL = diskPath() {
-                url = NSURL(string: hash, relativeToURL: baseURL)
-            }
+        if let
+            hash = hashForRequest(request),
+            baseURL = diskPath()
+        {
+            NSLog("stuff not nil")
+            url = NSURL(string: hash, relativeToURL: baseURL)
         }
         return url
     }
@@ -349,21 +350,20 @@ class DiskCache {
         Return the path that should be used as the baseURL for
         all paths associated with this diskCache.
     */
-    func diskPath() -> NSURL? {
+    private func diskPath() -> NSURL? {
         var url: NSURL?
-        if let baseURL = NSFileManager.defaultManager().URLForDirectory(searchPathDirectory,
-            inDomain: .UserDomainMask, appropriateForURL: nil, create: false, error: nil)
+        if let
+            baseURL = NSFileManager.defaultManager().URLForDirectory(searchPathDirectory,
+                inDomain: .UserDomainMask, appropriateForURL: nil, create: false, error: nil),
+            fileURL = NSURL(string: path, relativeToURL: baseURL),
+            fileURLString = fileURL.absoluteString
         {
-            url = NSURL(string: path, relativeToURL: baseURL)
-            if let url = url {
-                if let urlString = url.absoluteString {
-                    var isDir : ObjCBool = false
-                    if !NSFileManager.defaultManager().fileExistsAtPath(urlString, isDirectory: &isDir) {
-                        NSFileManager.defaultManager().createDirectoryAtURL(url,
-                            withIntermediateDirectories: true, attributes: nil, error: nil)
-                    }
-                }
+            var isDir : ObjCBool = false
+            if !NSFileManager.defaultManager().fileExistsAtPath(fileURLString, isDirectory: &isDir) {
+                NSFileManager.defaultManager().createDirectoryAtURL(fileURL,
+                    withIntermediateDirectories: true, attributes: nil, error: nil)
             }
+            url = fileURL
         }
         return url
     }
@@ -411,7 +411,6 @@ class DiskCache {
         a given the URL absoluteString of a request.
     */
     func hashForURLString(string: String) -> String? {
-        
         // TODO: This should probably be an MD5 hash, but I couldn't get Crypto imported properly
         // http://iosdeveloperzone.com/2014/10/03/using-commoncrypto-in-swift/
 
