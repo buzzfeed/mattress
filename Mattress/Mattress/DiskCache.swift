@@ -104,6 +104,12 @@ class DiskCache {
         }
     }
 
+    func clearCache() {
+        if let path = diskPath()?.path {
+            NSFileManager.defaultManager().removeItemAtPath(path, error: nil)
+        }
+    }
+
     /**
         This will keep removing the oldest request until our
         currentSize is not greater than the maxCacheSize.

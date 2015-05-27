@@ -115,7 +115,7 @@ class URLCacheTests: XCTestCase {
         // Make sure the request has been stored once
         let url = NSURL(string: "foo://bar")!
         let data = "hello, world".dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)!
-        let response = NSURLResponse(URL: url, MIMEType: "text/html", expectedContentLength: data.length, textEncodingName: nil)
+        let response = NSHTTPURLResponse(URL: url, statusCode: 200, HTTPVersion: "HTTP/1.1", headerFields: nil)!
         let request = NSURLRequest(URL: url)
         let cachedResponse = NSCachedURLResponse(response: response, data: data, userInfo: nil, storagePolicy: .Allowed)
         cache.mockDiskCache.storeCachedResponseOnSuper(cachedResponse, forRequest: request)

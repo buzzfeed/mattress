@@ -103,6 +103,10 @@ public class URLCache: NSURLCache {
 
     // MARK: Public
 
+    public func clearOfflineCache() {
+        offlineCache.clearCache()
+    }
+
     override public func storeCachedResponse(cachedResponse: NSCachedURLResponse, forRequest request: NSURLRequest) {
         if URLCache.requestShouldBeStoredOffline(request) {
             let success = offlineCache.storeCachedResponse(cachedResponse, forRequest: request)
