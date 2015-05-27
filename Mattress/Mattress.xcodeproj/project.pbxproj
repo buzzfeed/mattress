@@ -21,10 +21,13 @@
 		0BBA4BD11A1552D500709E9D /* WebViewCacherTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBA4BD01A1552D500709E9D /* WebViewCacherTests.swift */; };
 		0BF50D631A169E3E0027B673 /* DiskCacheTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BF50D621A169E3E0027B673 /* DiskCacheTests.swift */; };
 		0BFAB50F1A15214600859B23 /* URLCacheTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BFAB50E1A15214600859B23 /* URLCacheTests.swift */; };
+		143537F31B0F7DF600FD502B /* NSData+Crypto.swift in Sources */ = {isa = PBXBuildFile; fileRef = 143537F21B0F7DF600FD502B /* NSData+Crypto.swift */; };
+		143537F41B0F7DF600FD502B /* NSData+Crypto.swift in Sources */ = {isa = PBXBuildFile; fileRef = 143537F21B0F7DF600FD502B /* NSData+Crypto.swift */; };
+		143537F61B0F7E2700FD502B /* String+Crypto.swift in Sources */ = {isa = PBXBuildFile; fileRef = 143537F51B0F7E2700FD502B /* String+Crypto.swift */; };
+		143537F71B0F7E2700FD502B /* String+Crypto.swift in Sources */ = {isa = PBXBuildFile; fileRef = 143537F51B0F7E2700FD502B /* String+Crypto.swift */; };
+		1435381B1B0F84C700FD502B /* CommonCrypto.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 143537FD1B0F825800FD502B /* CommonCrypto.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		2FA084A51ACC538E0033B060 /* Synchronization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FA084A41ACC538E0033B060 /* Synchronization.swift */; };
 		2FA084F01ACDEE260033B060 /* Synchronization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FA084A41ACC538E0033B060 /* Synchronization.swift */; };
-		2FFFE5A81B06894900F57E22 /* CryptoSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2FFFE5A71B06894900F57E22 /* CryptoSwift.framework */; };
-		2FFFE5AA1B06896C00F57E22 /* CryptoSwift.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 2FFFE5A71B06894900F57E22 /* CryptoSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -35,20 +38,14 @@
 			remoteGlobalIDString = 0B4929C91A13FD9C003D9AB3;
 			remoteInfo = Mattress;
 		};
-/* End PBXContainerItemProxy section */
-
-/* Begin PBXCopyFilesBuildPhase section */
-		2FFFE5A91B06896000F57E22 /* CopyFiles */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				2FFFE5AA1B06896C00F57E22 /* CryptoSwift.framework in CopyFiles */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
+		143538171B0F83AA00FD502B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0B4929C11A13FD9C003D9AB3 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 143537FC1B0F825800FD502B;
+			remoteInfo = CommonCrypto;
 		};
-/* End PBXCopyFilesBuildPhase section */
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		0B4929CA1A13FD9C003D9AB3 /* Mattress.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Mattress.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -64,6 +61,12 @@
 		0BBA4BD01A1552D500709E9D /* WebViewCacherTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebViewCacherTests.swift; sourceTree = "<group>"; };
 		0BF50D621A169E3E0027B673 /* DiskCacheTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DiskCacheTests.swift; sourceTree = "<group>"; };
 		0BFAB50E1A15214600859B23 /* URLCacheTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = URLCacheTests.swift; sourceTree = "<group>"; };
+		143537F21B0F7DF600FD502B /* NSData+Crypto.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSData+Crypto.swift"; sourceTree = "<group>"; };
+		143537F51B0F7E2700FD502B /* String+Crypto.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+Crypto.swift"; sourceTree = "<group>"; };
+		143537FD1B0F825800FD502B /* CommonCrypto.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = CommonCrypto.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		143538161B0F82C700FD502B /* CommonCrypto.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = CommonCrypto.xcconfig; sourceTree = "<group>"; };
+		143538191B0F83C900FD502B /* libcommonCrypto.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libcommonCrypto.dylib; path = usr/lib/system/libcommonCrypto.dylib; sourceTree = SDKROOT; };
+		1435381C1B0F86B500FD502B /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2FA084A41ACC538E0033B060 /* Synchronization.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Synchronization.swift; sourceTree = "<group>"; };
 		2FFFE5A71B06894900F57E22 /* CryptoSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CryptoSwift.framework; path = Carthage/Build/iOS/CryptoSwift.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -73,7 +76,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2FFFE5A81B06894900F57E22 /* CryptoSwift.framework in Frameworks */,
+				1435381B1B0F84C700FD502B /* CommonCrypto.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -85,6 +88,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		143537F91B0F825800FD502B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -93,6 +103,7 @@
 			children = (
 				0B4929CC1A13FD9C003D9AB3 /* Mattress */,
 				0B4929D91A13FD9C003D9AB3 /* MattressTests */,
+				143537FE1B0F825800FD502B /* CommonCrypto */,
 				2FFFE5A61B06891E00F57E22 /* Frameworks */,
 				0B4929CB1A13FD9C003D9AB3 /* Products */,
 			);
@@ -103,6 +114,7 @@
 			children = (
 				0B4929CA1A13FD9C003D9AB3 /* Mattress.framework */,
 				0B4929D51A13FD9C003D9AB3 /* MattressTests.xctest */,
+				143537FD1B0F825800FD502B /* CommonCrypto.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -110,6 +122,7 @@
 		0B4929CC1A13FD9C003D9AB3 /* Mattress */ = {
 			isa = PBXGroup;
 			children = (
+				143537EE1B0F7D6700FD502B /* Extensions */,
 				2FA084A41ACC538E0033B060 /* Synchronization.swift */,
 				0B4929CF1A13FD9C003D9AB3 /* Mattress.h */,
 				0B4929E61A13FDD1003D9AB3 /* URLCache.swift */,
@@ -149,9 +162,28 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
+		143537EE1B0F7D6700FD502B /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				143537F21B0F7DF600FD502B /* NSData+Crypto.swift */,
+				143537F51B0F7E2700FD502B /* String+Crypto.swift */,
+			);
+			name = Extensions;
+			sourceTree = "<group>";
+		};
+		143537FE1B0F825800FD502B /* CommonCrypto */ = {
+			isa = PBXGroup;
+			children = (
+				1435381C1B0F86B500FD502B /* Info.plist */,
+				143538161B0F82C700FD502B /* CommonCrypto.xcconfig */,
+			);
+			path = CommonCrypto;
+			sourceTree = "<group>";
+		};
 		2FFFE5A61B06891E00F57E22 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				143538191B0F83C900FD502B /* libcommonCrypto.dylib */,
 				2FFFE5A71B06894900F57E22 /* CryptoSwift.framework */,
 			);
 			name = Frameworks;
@@ -168,6 +200,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		143537FA1B0F825800FD502B /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
@@ -179,11 +218,11 @@
 				0B4929C61A13FD9C003D9AB3 /* Frameworks */,
 				0B4929C71A13FD9C003D9AB3 /* Headers */,
 				0B4929C81A13FD9C003D9AB3 /* Resources */,
-				2FFFE5A91B06896000F57E22 /* CopyFiles */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				143538181B0F83AA00FD502B /* PBXTargetDependency */,
 			);
 			name = Mattress;
 			productName = Mattress;
@@ -208,6 +247,24 @@
 			productReference = 0B4929D51A13FD9C003D9AB3 /* MattressTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
+		143537FC1B0F825800FD502B /* CommonCrypto */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 143538101B0F825900FD502B /* Build configuration list for PBXNativeTarget "CommonCrypto" */;
+			buildPhases = (
+				143537F81B0F825800FD502B /* Sources */,
+				143537F91B0F825800FD502B /* Frameworks */,
+				143537FA1B0F825800FD502B /* Headers */,
+				143537FB1B0F825800FD502B /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = CommonCrypto;
+			productName = CommonCrypto;
+			productReference = 143537FD1B0F825800FD502B /* CommonCrypto.framework */;
+			productType = "com.apple.product-type.framework";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -222,6 +279,9 @@
 					};
 					0B4929D41A13FD9C003D9AB3 = {
 						CreatedOnToolsVersion = 6.1;
+					};
+					143537FC1B0F825800FD502B = {
+						CreatedOnToolsVersion = 6.3.1;
 					};
 				};
 			};
@@ -239,6 +299,7 @@
 			targets = (
 				0B4929C91A13FD9C003D9AB3 /* Mattress */,
 				0B4929D41A13FD9C003D9AB3 /* MattressTests */,
+				143537FC1B0F825800FD502B /* CommonCrypto */,
 			);
 		};
 /* End PBXProject section */
@@ -258,6 +319,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		143537FB1B0F825800FD502B /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -265,10 +333,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				143537F61B0F7E2700FD502B /* String+Crypto.swift in Sources */,
 				0B4929E91A13FE1C003D9AB3 /* DiskCache.swift in Sources */,
 				0B4929ED1A14017C003D9AB3 /* URLProtocol.swift in Sources */,
 				2FA084A51ACC538E0033B060 /* Synchronization.swift in Sources */,
 				0B4929EB1A14004A003D9AB3 /* WebViewCacher.swift in Sources */,
+				143537F31B0F7DF600FD502B /* NSData+Crypto.swift in Sources */,
 				0B4929E71A13FDD1003D9AB3 /* URLCache.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -281,11 +351,20 @@
 				0BF50D631A169E3E0027B673 /* DiskCacheTests.swift in Sources */,
 				0BBA4BCD1A1527EC00709E9D /* WebViewCacher.swift in Sources */,
 				0BBA4BCB1A1527E800709E9D /* URLProtocol.swift in Sources */,
+				143537F41B0F7DF600FD502B /* NSData+Crypto.swift in Sources */,
 				0BBA4BCF1A15431200709E9D /* URLProtocolTests.swift in Sources */,
 				0BBA4BD11A1552D500709E9D /* WebViewCacherTests.swift in Sources */,
 				0BBA4BCA1A1527B500709E9D /* URLCache.swift in Sources */,
+				143537F71B0F7E2700FD502B /* String+Crypto.swift in Sources */,
 				0BBA4BCC1A1527EA00709E9D /* DiskCache.swift in Sources */,
 				2FA084F01ACDEE260033B060 /* Synchronization.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		143537F81B0F825800FD502B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -296,6 +375,11 @@
 			isa = PBXTargetDependency;
 			target = 0B4929C91A13FD9C003D9AB3 /* Mattress */;
 			targetProxy = 0B4929D71A13FD9C003D9AB3 /* PBXContainerItemProxy */;
+		};
+		143538181B0F83AA00FD502B /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 143537FC1B0F825800FD502B /* CommonCrypto */;
+			targetProxy = 143538171B0F83AA00FD502B /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -401,8 +485,13 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SDKROOT)/usr/lib/system",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SWIFT_INCLUDE_PATHS = "";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -424,8 +513,13 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SDKROOT)/usr/lib/system",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SWIFT_INCLUDE_PATHS = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
@@ -464,6 +558,49 @@
 			};
 			name = Release;
 		};
+		143538111B0F825900FD502B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 143538161B0F82C700FD502B /* CommonCrypto.xcconfig */;
+			buildSettings = {
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = CommonCrypto/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.3;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		143538121B0F825900FD502B /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 143538161B0F82C700FD502B /* CommonCrypto.xcconfig */;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_NO_COMMON_BLOCKS = YES;
+				INFOPLIST_FILE = CommonCrypto/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.3;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -493,6 +630,14 @@
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
+		};
+		143538101B0F825900FD502B /* Build configuration list for PBXNativeTarget "CommonCrypto" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				143538111B0F825900FD502B /* Debug */,
+				143538121B0F825900FD502B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
 		};
 /* End XCConfigurationList section */
 	};
