@@ -7,27 +7,28 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0B4929D01A13FD9C003D9AB3 /* Mattress.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B4929CF1A13FD9C003D9AB3 /* Mattress.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		0B4929E71A13FDD1003D9AB3 /* URLCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B4929E61A13FDD1003D9AB3 /* URLCache.swift */; };
-		0B4929E91A13FE1C003D9AB3 /* DiskCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B4929E81A13FE1C003D9AB3 /* DiskCache.swift */; };
-		0B4929EB1A14004A003D9AB3 /* WebViewCacher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B4929EA1A14004A003D9AB3 /* WebViewCacher.swift */; };
-		0B4929ED1A14017C003D9AB3 /* URLProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B4929EC1A14017C003D9AB3 /* URLProtocol.swift */; };
 		0B6EF8CC1A38E4FB0095EBD3 /* Mattress.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0B4929CA1A13FD9C003D9AB3 /* Mattress.framework */; };
-		0BBA4BCA1A1527B500709E9D /* URLCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B4929E61A13FDD1003D9AB3 /* URLCache.swift */; };
-		0BBA4BCB1A1527E800709E9D /* URLProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B4929EC1A14017C003D9AB3 /* URLProtocol.swift */; };
-		0BBA4BCC1A1527EA00709E9D /* DiskCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B4929E81A13FE1C003D9AB3 /* DiskCache.swift */; };
-		0BBA4BCD1A1527EC00709E9D /* WebViewCacher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B4929EA1A14004A003D9AB3 /* WebViewCacher.swift */; };
-		0BBA4BCF1A15431200709E9D /* URLProtocolTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBA4BCE1A15431200709E9D /* URLProtocolTests.swift */; };
-		0BBA4BD11A1552D500709E9D /* WebViewCacherTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBA4BD01A1552D500709E9D /* WebViewCacherTests.swift */; };
-		0BF50D631A169E3E0027B673 /* DiskCacheTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BF50D621A169E3E0027B673 /* DiskCacheTests.swift */; };
-		0BFAB50F1A15214600859B23 /* URLCacheTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BFAB50E1A15214600859B23 /* URLCacheTests.swift */; };
-		143537F31B0F7DF600FD502B /* NSData+Crypto.swift in Sources */ = {isa = PBXBuildFile; fileRef = 143537F21B0F7DF600FD502B /* NSData+Crypto.swift */; };
-		143537F41B0F7DF600FD502B /* NSData+Crypto.swift in Sources */ = {isa = PBXBuildFile; fileRef = 143537F21B0F7DF600FD502B /* NSData+Crypto.swift */; };
-		143537F61B0F7E2700FD502B /* String+Crypto.swift in Sources */ = {isa = PBXBuildFile; fileRef = 143537F51B0F7E2700FD502B /* String+Crypto.swift */; };
-		143537F71B0F7E2700FD502B /* String+Crypto.swift in Sources */ = {isa = PBXBuildFile; fileRef = 143537F51B0F7E2700FD502B /* String+Crypto.swift */; };
+		140FA3C31B30BE8B00BFFAAE /* NSData+Crypto.swift in Sources */ = {isa = PBXBuildFile; fileRef = 140FA3C11B30BE8B00BFFAAE /* NSData+Crypto.swift */; };
+		140FA3C41B30BE8B00BFFAAE /* String+Crypto.swift in Sources */ = {isa = PBXBuildFile; fileRef = 140FA3C21B30BE8B00BFFAAE /* String+Crypto.swift */; };
+		140FA3CB1B30BEA400BFFAAE /* DiskCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 140FA3C51B30BEA400BFFAAE /* DiskCache.swift */; };
+		140FA3CC1B30BEA400BFFAAE /* Mattress.h in Headers */ = {isa = PBXBuildFile; fileRef = 140FA3C61B30BEA400BFFAAE /* Mattress.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		140FA3CD1B30BEA400BFFAAE /* Synchronization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 140FA3C71B30BEA400BFFAAE /* Synchronization.swift */; };
+		140FA3CE1B30BEA400BFFAAE /* URLCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 140FA3C81B30BEA400BFFAAE /* URLCache.swift */; };
+		140FA3CF1B30BEA400BFFAAE /* URLProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 140FA3C91B30BEA400BFFAAE /* URLProtocol.swift */; };
+		140FA3D01B30BEA400BFFAAE /* WebViewCacher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 140FA3CA1B30BEA400BFFAAE /* WebViewCacher.swift */; };
+		140FA3DF1B30BF2100BFFAAE /* CommonCrypto.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 140FA3DD1B30BF2100BFFAAE /* CommonCrypto.xcconfig */; };
+		140FA3E11B30BFBA00BFFAAE /* DiskCacheTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 140FA3D31B30BEC600BFFAAE /* DiskCacheTests.swift */; };
+		140FA3E21B30BFBE00BFFAAE /* URLCacheTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 140FA3D41B30BEC600BFFAAE /* URLCacheTests.swift */; };
+		140FA3E31B30BFC100BFFAAE /* URLProtocolTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 140FA3D51B30BEC600BFFAAE /* URLProtocolTests.swift */; };
+		140FA3E41B30BFC500BFFAAE /* WebViewCacherTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 140FA3D61B30BEC600BFFAAE /* WebViewCacherTests.swift */; };
+		140FA3E91B30C08900BFFAAE /* DiskCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 140FA3C51B30BEA400BFFAAE /* DiskCache.swift */; };
+		140FA3EA1B30C08C00BFFAAE /* Synchronization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 140FA3C71B30BEA400BFFAAE /* Synchronization.swift */; };
+		140FA3EB1B30C08F00BFFAAE /* URLCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 140FA3C81B30BEA400BFFAAE /* URLCache.swift */; };
+		140FA3EC1B30C09100BFFAAE /* URLProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 140FA3C91B30BEA400BFFAAE /* URLProtocol.swift */; };
+		140FA3ED1B30C09400BFFAAE /* WebViewCacher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 140FA3CA1B30BEA400BFFAAE /* WebViewCacher.swift */; };
+		140FA3EE1B30C0C500BFFAAE /* NSData+Crypto.swift in Sources */ = {isa = PBXBuildFile; fileRef = 140FA3C11B30BE8B00BFFAAE /* NSData+Crypto.swift */; };
+		140FA3EF1B30C0C800BFFAAE /* String+Crypto.swift in Sources */ = {isa = PBXBuildFile; fileRef = 140FA3C21B30BE8B00BFFAAE /* String+Crypto.swift */; };
 		1435381B1B0F84C700FD502B /* CommonCrypto.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 143537FD1B0F825800FD502B /* CommonCrypto.framework */; settings = {ATTRIBUTES = (Required, ); }; };
-		2FA084A51ACC538E0033B060 /* Synchronization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FA084A41ACC538E0033B060 /* Synchronization.swift */; };
-		2FA084F01ACDEE260033B060 /* Synchronization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FA084A41ACC538E0033B060 /* Synchronization.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -61,25 +62,25 @@
 
 /* Begin PBXFileReference section */
 		0B4929CA1A13FD9C003D9AB3 /* Mattress.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Mattress.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		0B4929CE1A13FD9C003D9AB3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		0B4929CF1A13FD9C003D9AB3 /* Mattress.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Mattress.h; sourceTree = "<group>"; };
 		0B4929D51A13FD9C003D9AB3 /* MattressTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MattressTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		0B4929DB1A13FD9C003D9AB3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		0B4929E61A13FDD1003D9AB3 /* URLCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = URLCache.swift; sourceTree = "<group>"; };
-		0B4929E81A13FE1C003D9AB3 /* DiskCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DiskCache.swift; sourceTree = "<group>"; };
-		0B4929EA1A14004A003D9AB3 /* WebViewCacher.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebViewCacher.swift; sourceTree = "<group>"; };
-		0B4929EC1A14017C003D9AB3 /* URLProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = URLProtocol.swift; sourceTree = "<group>"; };
-		0BBA4BCE1A15431200709E9D /* URLProtocolTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = URLProtocolTests.swift; sourceTree = "<group>"; };
-		0BBA4BD01A1552D500709E9D /* WebViewCacherTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebViewCacherTests.swift; sourceTree = "<group>"; };
-		0BF50D621A169E3E0027B673 /* DiskCacheTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DiskCacheTests.swift; sourceTree = "<group>"; };
-		0BFAB50E1A15214600859B23 /* URLCacheTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = URLCacheTests.swift; sourceTree = "<group>"; };
-		143537F21B0F7DF600FD502B /* NSData+Crypto.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSData+Crypto.swift"; sourceTree = "<group>"; };
-		143537F51B0F7E2700FD502B /* String+Crypto.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+Crypto.swift"; sourceTree = "<group>"; };
+		140FA3C11B30BE8B00BFFAAE /* NSData+Crypto.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "NSData+Crypto.swift"; path = "Source/Extensions/NSData+Crypto.swift"; sourceTree = SOURCE_ROOT; };
+		140FA3C21B30BE8B00BFFAAE /* String+Crypto.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "String+Crypto.swift"; path = "Source/Extensions/String+Crypto.swift"; sourceTree = SOURCE_ROOT; };
+		140FA3C51B30BEA400BFFAAE /* DiskCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DiskCache.swift; path = Source/DiskCache.swift; sourceTree = SOURCE_ROOT; };
+		140FA3C61B30BEA400BFFAAE /* Mattress.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Mattress.h; path = Source/Mattress.h; sourceTree = SOURCE_ROOT; };
+		140FA3C71B30BEA400BFFAAE /* Synchronization.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Synchronization.swift; path = Source/Synchronization.swift; sourceTree = SOURCE_ROOT; };
+		140FA3C81B30BEA400BFFAAE /* URLCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = URLCache.swift; path = Source/URLCache.swift; sourceTree = SOURCE_ROOT; };
+		140FA3C91B30BEA400BFFAAE /* URLProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = URLProtocol.swift; path = Source/URLProtocol.swift; sourceTree = SOURCE_ROOT; };
+		140FA3CA1B30BEA400BFFAAE /* WebViewCacher.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = WebViewCacher.swift; path = Source/WebViewCacher.swift; sourceTree = SOURCE_ROOT; };
+		140FA3D11B30BEB200BFFAAE /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = Source/Info.plist; sourceTree = SOURCE_ROOT; };
+		140FA3D31B30BEC600BFFAAE /* DiskCacheTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DiskCacheTests.swift; path = Tests/DiskCacheTests.swift; sourceTree = SOURCE_ROOT; };
+		140FA3D41B30BEC600BFFAAE /* URLCacheTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = URLCacheTests.swift; path = Tests/URLCacheTests.swift; sourceTree = SOURCE_ROOT; };
+		140FA3D51B30BEC600BFFAAE /* URLProtocolTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = URLProtocolTests.swift; path = Tests/URLProtocolTests.swift; sourceTree = SOURCE_ROOT; };
+		140FA3D61B30BEC600BFFAAE /* WebViewCacherTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = WebViewCacherTests.swift; path = Tests/WebViewCacherTests.swift; sourceTree = SOURCE_ROOT; };
+		140FA3DB1B30BED100BFFAAE /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = Tests/Info.plist; sourceTree = SOURCE_ROOT; };
+		140FA3DD1B30BF2100BFFAAE /* CommonCrypto.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = CommonCrypto.xcconfig; sourceTree = "<group>"; };
+		140FA3DE1B30BF2100BFFAAE /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		143537FD1B0F825800FD502B /* CommonCrypto.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = CommonCrypto.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		143538161B0F82C700FD502B /* CommonCrypto.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = CommonCrypto.xcconfig; sourceTree = "<group>"; };
 		143538191B0F83C900FD502B /* libcommonCrypto.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libcommonCrypto.dylib; path = usr/lib/system/libcommonCrypto.dylib; sourceTree = SDKROOT; };
-		1435381C1B0F86B500FD502B /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		2FA084A41ACC538E0033B060 /* Synchronization.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Synchronization.swift; sourceTree = "<group>"; };
 		2FFFE5A71B06894900F57E22 /* CryptoSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CryptoSwift.framework; path = Carthage/Build/iOS/CryptoSwift.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -135,12 +136,12 @@
 			isa = PBXGroup;
 			children = (
 				143537EE1B0F7D6700FD502B /* Extensions */,
-				2FA084A41ACC538E0033B060 /* Synchronization.swift */,
-				0B4929CF1A13FD9C003D9AB3 /* Mattress.h */,
-				0B4929E61A13FDD1003D9AB3 /* URLCache.swift */,
-				0B4929EC1A14017C003D9AB3 /* URLProtocol.swift */,
-				0B4929E81A13FE1C003D9AB3 /* DiskCache.swift */,
-				0B4929EA1A14004A003D9AB3 /* WebViewCacher.swift */,
+				140FA3C51B30BEA400BFFAAE /* DiskCache.swift */,
+				140FA3C61B30BEA400BFFAAE /* Mattress.h */,
+				140FA3C71B30BEA400BFFAAE /* Synchronization.swift */,
+				140FA3C81B30BEA400BFFAAE /* URLCache.swift */,
+				140FA3C91B30BEA400BFFAAE /* URLProtocol.swift */,
+				140FA3CA1B30BEA400BFFAAE /* WebViewCacher.swift */,
 				0B4929CD1A13FD9C003D9AB3 /* Supporting Files */,
 			);
 			path = Mattress;
@@ -149,7 +150,7 @@
 		0B4929CD1A13FD9C003D9AB3 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				0B4929CE1A13FD9C003D9AB3 /* Info.plist */,
+				140FA3D11B30BEB200BFFAAE /* Info.plist */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -157,10 +158,10 @@
 		0B4929D91A13FD9C003D9AB3 /* MattressTests */ = {
 			isa = PBXGroup;
 			children = (
-				0BFAB50E1A15214600859B23 /* URLCacheTests.swift */,
-				0BBA4BCE1A15431200709E9D /* URLProtocolTests.swift */,
-				0BBA4BD01A1552D500709E9D /* WebViewCacherTests.swift */,
-				0BF50D621A169E3E0027B673 /* DiskCacheTests.swift */,
+				140FA3D31B30BEC600BFFAAE /* DiskCacheTests.swift */,
+				140FA3D41B30BEC600BFFAAE /* URLCacheTests.swift */,
+				140FA3D51B30BEC600BFFAAE /* URLProtocolTests.swift */,
+				140FA3D61B30BEC600BFFAAE /* WebViewCacherTests.swift */,
 				0B4929DA1A13FD9C003D9AB3 /* Supporting Files */,
 			);
 			path = MattressTests;
@@ -169,7 +170,7 @@
 		0B4929DA1A13FD9C003D9AB3 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				0B4929DB1A13FD9C003D9AB3 /* Info.plist */,
+				140FA3DB1B30BED100BFFAAE /* Info.plist */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -177,8 +178,8 @@
 		143537EE1B0F7D6700FD502B /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
-				143537F21B0F7DF600FD502B /* NSData+Crypto.swift */,
-				143537F51B0F7E2700FD502B /* String+Crypto.swift */,
+				140FA3C11B30BE8B00BFFAAE /* NSData+Crypto.swift */,
+				140FA3C21B30BE8B00BFFAAE /* String+Crypto.swift */,
 			);
 			name = Extensions;
 			sourceTree = "<group>";
@@ -186,8 +187,8 @@
 		143537FE1B0F825800FD502B /* CommonCrypto */ = {
 			isa = PBXGroup;
 			children = (
-				1435381C1B0F86B500FD502B /* Info.plist */,
-				143538161B0F82C700FD502B /* CommonCrypto.xcconfig */,
+				140FA3DD1B30BF2100BFFAAE /* CommonCrypto.xcconfig */,
+				140FA3DE1B30BF2100BFFAAE /* Info.plist */,
 			);
 			path = CommonCrypto;
 			sourceTree = "<group>";
@@ -208,7 +209,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0B4929D01A13FD9C003D9AB3 /* Mattress.h in Headers */,
+				140FA3CC1B30BEA400BFFAAE /* Mattress.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -336,6 +337,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				140FA3DF1B30BF2100BFFAAE /* CommonCrypto.xcconfig in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -346,13 +348,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				143537F61B0F7E2700FD502B /* String+Crypto.swift in Sources */,
-				0B4929E91A13FE1C003D9AB3 /* DiskCache.swift in Sources */,
-				0B4929ED1A14017C003D9AB3 /* URLProtocol.swift in Sources */,
-				2FA084A51ACC538E0033B060 /* Synchronization.swift in Sources */,
-				0B4929EB1A14004A003D9AB3 /* WebViewCacher.swift in Sources */,
-				143537F31B0F7DF600FD502B /* NSData+Crypto.swift in Sources */,
-				0B4929E71A13FDD1003D9AB3 /* URLCache.swift in Sources */,
+				140FA3CE1B30BEA400BFFAAE /* URLCache.swift in Sources */,
+				140FA3C41B30BE8B00BFFAAE /* String+Crypto.swift in Sources */,
+				140FA3C31B30BE8B00BFFAAE /* NSData+Crypto.swift in Sources */,
+				140FA3CF1B30BEA400BFFAAE /* URLProtocol.swift in Sources */,
+				140FA3D01B30BEA400BFFAAE /* WebViewCacher.swift in Sources */,
+				140FA3CD1B30BEA400BFFAAE /* Synchronization.swift in Sources */,
+				140FA3CB1B30BEA400BFFAAE /* DiskCache.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -360,17 +362,17 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0BFAB50F1A15214600859B23 /* URLCacheTests.swift in Sources */,
-				0BF50D631A169E3E0027B673 /* DiskCacheTests.swift in Sources */,
-				0BBA4BCD1A1527EC00709E9D /* WebViewCacher.swift in Sources */,
-				0BBA4BCB1A1527E800709E9D /* URLProtocol.swift in Sources */,
-				143537F41B0F7DF600FD502B /* NSData+Crypto.swift in Sources */,
-				0BBA4BCF1A15431200709E9D /* URLProtocolTests.swift in Sources */,
-				0BBA4BD11A1552D500709E9D /* WebViewCacherTests.swift in Sources */,
-				0BBA4BCA1A1527B500709E9D /* URLCache.swift in Sources */,
-				143537F71B0F7E2700FD502B /* String+Crypto.swift in Sources */,
-				0BBA4BCC1A1527EA00709E9D /* DiskCache.swift in Sources */,
-				2FA084F01ACDEE260033B060 /* Synchronization.swift in Sources */,
+				140FA3E21B30BFBE00BFFAAE /* URLCacheTests.swift in Sources */,
+				140FA3EC1B30C09100BFFAAE /* URLProtocol.swift in Sources */,
+				140FA3EB1B30C08F00BFFAAE /* URLCache.swift in Sources */,
+				140FA3E41B30BFC500BFFAAE /* WebViewCacherTests.swift in Sources */,
+				140FA3EA1B30C08C00BFFAAE /* Synchronization.swift in Sources */,
+				140FA3E31B30BFC100BFFAAE /* URLProtocolTests.swift in Sources */,
+				140FA3E11B30BFBA00BFFAAE /* DiskCacheTests.swift in Sources */,
+				140FA3EE1B30C0C500BFFAAE /* NSData+Crypto.swift in Sources */,
+				140FA3ED1B30C09400BFFAAE /* WebViewCacher.swift in Sources */,
+				140FA3E91B30C08900BFFAAE /* DiskCache.swift in Sources */,
+				140FA3EF1B30C0C800BFFAAE /* String+Crypto.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -495,7 +497,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
-				INFOPLIST_FILE = Mattress/Info.plist;
+				INFOPLIST_FILE = "$(SRCROOT)/Source/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
@@ -524,7 +526,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
-				INFOPLIST_FILE = Mattress/Info.plist;
+				INFOPLIST_FILE = "$(SRCROOT)/Source/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
@@ -551,7 +553,7 @@
 					"DEBUG=1",
 					"$(inherited)",
 				);
-				INFOPLIST_FILE = MattressTests/Info.plist;
+				INFOPLIST_FILE = Tests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -567,7 +569,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
-				INFOPLIST_FILE = MattressTests/Info.plist;
+				INFOPLIST_FILE = Tests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -576,7 +578,7 @@
 		};
 		140FA3B41B2FB82700BFFAAE /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 143538161B0F82C700FD502B /* CommonCrypto.xcconfig */;
+			baseConfigurationReference = 140FA3DD1B30BF2100BFFAAE /* CommonCrypto.xcconfig */;
 			buildSettings = {
 				COPY_PHASE_STRIP = NO;
 				DEFINES_MODULE = YES;
@@ -589,7 +591,7 @@
 		};
 		140FA3B51B2FB82700BFFAAE /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 143538161B0F82C700FD502B /* CommonCrypto.xcconfig */;
+			baseConfigurationReference = 140FA3DD1B30BF2100BFFAAE /* CommonCrypto.xcconfig */;
 			buildSettings = {
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
