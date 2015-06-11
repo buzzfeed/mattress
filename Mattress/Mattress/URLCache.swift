@@ -9,6 +9,7 @@
 import Foundation
 
 public let MattressOfflineCacheRequestPropertyKey = "MattressOfflineCacheRequest"
+public let MattressAvoidCacheRetreiveOnlineRequestPropertyKey = "MattressAvoidCacheRetreiveOnlineRequestPropertyKey" // for the main document that we don't want to cache
 let URLCacheStoredRequestPropertyKey = "URLCacheStoredRequest"
 
 private let kB = 1024
@@ -101,14 +102,23 @@ public class URLCache: NSURLCache {
 
     // MARK: Public
 
+    public func clearOfflineCache() {
+        offlineCache.clearCache()
+    }
+
     override public func storeCachedResponse(cachedResponse: NSCachedURLResponse, forRequest request: NSURLRequest) {
         if URLCache.requestShouldBeStoredOffline(request) {
             let success = offlineCache.storeCachedResponse(cachedResponse, forRequest: request)
         } else {
             super.storeCachedResponse(cachedResponse, forRequest: request)
-            // If we've already stored this in the offline cache, update it
-            if offlineCache.hasCacheForRequest(request) {
-                offlineCache.storeCachedResponse(cachedResponse, forRequest: request)
+            // Don't store failure responses
+            if let httpResponse = cachedResponse.response as? NSHTTPURLResponse {
+                if httpResponse.statusCode < 400 {
+                    // If we've already stored this in the offline cache, update it
+                    if offlineCache.hasCacheForRequest(request) {
+                        offlineCache.storeCachedResponse(cachedResponse, forRequest: request)
+                    }
+                }
             }
         }
     }
@@ -119,6 +129,10 @@ public class URLCache: NSURLCache {
             return cachedResponse
         }
         return super.cachedResponseForRequest(request)
+    }
+
+    internal func hasOfflineCachedResponseForRequest(request: NSURLRequest) -> Bool{
+        return offlineCache.hasOfflineCachedResponseForRequest(request)
     }
 
     /**

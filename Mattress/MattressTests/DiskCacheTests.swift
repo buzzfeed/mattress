@@ -267,6 +267,18 @@ class DiskCacheTests: XCTestCase {
         }
     }
 
+    func testClearCacheRemovesAnyExistingRequests() {
+        let url = NSURL(string: "foo://bar")!
+        let request = NSURLRequest(URL: url)
+        let userInfo = ["foo" : "bar"]
+        let dataSize = 1
+        let cachedResponse = cachedResponseWithDataOfSize(dataSize, request: request, userInfo: userInfo)
+        let diskCache = DiskCache(path: "test", searchPathDirectory: .DocumentDirectory, maxCacheSize: 1024)
+        diskCache.storeCachedResponse(cachedResponse, forRequest: request)
+        diskCache.clearCache()
+        XCTAssertFalse(diskCache.hasCacheForRequest(request))
+    }
+
     // Mark: - Test Helpers
 
     func assertCachedResponsesAreEqual(#response1 : NSCachedURLResponse, response2: NSCachedURLResponse) {
