@@ -24,7 +24,9 @@ public var shouldRetrieveFromOfflineCacheByDefault = false
 */
 class URLProtocol: NSURLProtocol, NSURLConnectionDataDelegate {
     var connection: NSURLConnection?
-
+    
+    static var shouldRetrieveFromOfflineCacheByDefault = false
+    
     // MARK: - Class Methods
 
     override class func canInitWithRequest(request: NSURLRequest) -> Bool {
