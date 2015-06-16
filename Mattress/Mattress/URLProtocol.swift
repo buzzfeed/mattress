@@ -12,7 +12,7 @@ var caches: [URLCache] = []
 let cacheLockObject = NSObject()
 
 private let URLProtocolHandledRequestKey = "URLProtocolHandledRequestKey"
-public var shouldRetrieveFromOfflineCacheByDefault = false
+public var shouldRetrieveFromMattressCacheByDefault = false
 
 /**
     URLProtocol is an NSURLProtocol in charge of ensuring
@@ -20,12 +20,12 @@ public var shouldRetrieveFromOfflineCacheByDefault = false
     are forwarded back to the WebViewCacher responsible.
 
     Additionally it ensures that when we are offline, we will
-    use the offline diskCache if possible.
+    use the Mattress diskCache if possible.
 */
 class URLProtocol: NSURLProtocol, NSURLConnectionDataDelegate {
     var connection: NSURLConnection?
     
-    static var shouldRetrieveFromOfflineCacheByDefault = false
+    static var shouldRetrieveFromMattressCacheByDefault = false
     
     // MARK: - Class Methods
 
@@ -34,7 +34,7 @@ class URLProtocol: NSURLProtocol, NSURLConnectionDataDelegate {
             return false
         }
 
-        // In the case that we're trying to offlineCache, we should always use this protocol
+        // In the case that we're trying to diskCache, we should always use this protocol
         if let webViewCacher = webViewCacherForRequest(request) {
             return true
         }
@@ -55,12 +55,12 @@ class URLProtocol: NSURLProtocol, NSURLConnectionDataDelegate {
         }
 
         // Online requests that didn't opt out will get included if turned on
-        // and if there is something in the offline cache to get fetched.
+        // and if there is something in the Mattress disk cache to get fetched.
         let scheme = request.URL?.scheme
         if scheme == "http" || scheme == "https" {
-            if shouldRetrieveFromOfflineCacheByDefault {
+            if shouldRetrieveFromMattressCacheByDefault {
                 if let cache = NSURLCache.sharedURLCache() as? URLCache {
-                    if cache.hasOfflineCachedResponseForRequest(request) {
+                    if cache.hasMattressCachedResponseForRequest(request) {
                         return true
                     }
                 }
