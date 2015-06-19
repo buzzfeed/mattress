@@ -11,17 +11,17 @@
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
 		<key>970E34A4FA8138A627BD341808D3E5866560D48B</key>
-		<string>https://github.com/buzzfeed/mattress.git</string>
+		<string>github.com:buzzfeed/mattress.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
-	<string>Mattress/Mattress.xcodeproj/project.xcworkspace</string>
+	<string>Mattress.xcodeproj</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
 		<key>970E34A4FA8138A627BD341808D3E5866560D48B</key>
-		<string>../../..</string>
+		<string>../..</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
-	<string>https://github.com/buzzfeed/mattress.git</string>
+	<string>github.com:buzzfeed/mattress.git</string>
 	<key>IDESourceControlProjectVersion</key>
 	<integer>111</integer>
 	<key>IDESourceControlProjectWCCIdentifier</key>
