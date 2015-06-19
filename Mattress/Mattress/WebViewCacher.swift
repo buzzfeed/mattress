@@ -15,8 +15,8 @@ typealias WebViewCacherCompletionHandler = (webViewCacher: WebViewCacher) -> ()
     WebViewCacher is in charge of loading all of the
     requests associated with a url and ensuring that
     all of that webpage's request have the property
-    to signal that they should be stored in the NSURLCache's
-    offline disk cache.
+    to signal that they should be stored in the Mattress
+    disk cache.
 */
 class WebViewCacher: NSObject, UIWebViewDelegate {
 
@@ -56,20 +56,20 @@ class WebViewCacher: NSObject, UIWebViewDelegate {
         mutableRequestForRequest: creates a mutable request for a
         given request that should be handled by the WebViewCacher.
     
-        The property signaling that the request should be offline
-        cached will be added.
+        The property signaling that the request should be stored in
+        the Mattress disk cache will be added.
     */
     func mutableRequestForRequest(request: NSURLRequest) -> NSMutableURLRequest {
         var mutableRequest = request.mutableCopy() as! NSMutableURLRequest
-        NSURLProtocol.setProperty(true, forKey: MattressOfflineCacheRequestPropertyKey, inRequest: mutableRequest)
+        NSURLProtocol.setProperty(true, forKey: MattressCacheRequestPropertyKey, inRequest: mutableRequest)
         return mutableRequest
     }
 
     /**
-        offlineCacheURL:loadedHandler:completionHandler: is the main
+        mattressCacheURL:loadedHandler:completionHandler: is the main
         entry point for dealing with WebViewCacher. Calling this method
         will result in a new UIWebView being generated to cache all the
-        requests associated with the given NSURL.
+        requests associated with the given NSURL to the Mattress disk cache.
     
         :param: url The url to be cached.
         :param: loadedHandler The handler that will be called every time
@@ -79,10 +79,10 @@ class WebViewCacher: NSObject, UIWebViewDelegate {
         :param: completionHandler Called once the loadedHandler has returned
             true and we are done caching the requests at the given url.
     */
-    func offlineCacheURL(url: NSURL,
-               loadedHandler: WebViewLoadedHandler,
-           completionHandler: WebViewCacherCompletionHandler,
-                failureHandler: (NSError) -> ()) {
+    func mattressCacheURL(url: NSURL,
+                loadedHandler: WebViewLoadedHandler,
+            completionHandler: WebViewCacherCompletionHandler,
+               failureHandler: (NSError) -> ()) {
         self.loadedHandler = loadedHandler
         self.completionHandler = completionHandler
         self.failureHandler = failureHandler
@@ -139,7 +139,7 @@ class WebViewCacher: NSObject, UIWebViewDelegate {
 
     func webView(webView: UIWebView, shouldStartLoadWithRequest request: NSURLRequest, navigationType: UIWebViewNavigationType) -> Bool {
         mainDocumentURL = request.mainDocumentURL
-        if !URLCache.requestShouldBeStoredOffline(request) {
+        if !URLCache.requestShouldBeStoredInMattress(request) {
             let mutableRequest = mutableRequestForRequest(request)
             webView.loadRequest(mutableRequest)
             return false

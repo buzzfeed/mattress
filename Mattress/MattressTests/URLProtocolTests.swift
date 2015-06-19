@@ -37,8 +37,8 @@ class URLProtocolTests: XCTestCase {
     // Mark: - Helpers
 
     func makeMockCache() -> MockCache {
-        return MockCache(memoryCapacity: 0, diskCapacity: 0, diskPath: nil, offlineDiskCapacity: 0,
-            offlineDiskPath: nil, offlineSearchPathDirectory: .DocumentDirectory, isOfflineHandler: nil)
+        return MockCache(memoryCapacity: 0, diskCapacity: 0, diskPath: nil, mattressDiskCapacity: 0,
+            mattressDiskPath: nil, mattressSearchPathDirectory: .DocumentDirectory, isOfflineHandler: nil)
     }
 }
 

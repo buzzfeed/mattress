@@ -8,7 +8,7 @@
 
 import Foundation
 
-public let MattressOfflineCacheRequestPropertyKey = "MattressOfflineCacheRequest"
+public let MattressCacheRequestPropertyKey = "MattressCacheRequest"
 public let MattressAvoidCacheRetreiveOnlineRequestPropertyKey = "MattressAvoidCacheRetreiveOnlineRequestPropertyKey" // for the main document that we don't want to cache
 let URLCacheStoredRequestPropertyKey = "URLCacheStoredRequest"
 
@@ -18,12 +18,13 @@ private let ArbitrarilyLargeSize = MB * 100
 
 /**
     URLCache is an NSURLCache with an additional diskCache used
-    only for storing requests that should be available offline.
+    only for storing requests that should be available without
+    hitting the network.
 */
 public class URLCache: NSURLCache {
     var isOfflineHandler: (() -> Bool)?
     
-    var offlineCache: DiskCache
+    var diskCache: DiskCache
     var cachers: [WebViewCacher] = []
 
     /*
@@ -41,8 +42,8 @@ public class URLCache: NSURLCache {
 
     // MARK: - Class Methods
 
-    class func requestShouldBeStoredOffline(request: NSURLRequest) -> Bool {
-        if let value = NSURLProtocol.propertyForKey(MattressOfflineCacheRequestPropertyKey, inRequest: request) as? Bool {
+    class func requestShouldBeStoredInMattress(request: NSURLRequest) -> Bool {
+        if let value = NSURLProtocol.propertyForKey(MattressCacheRequestPropertyKey, inRequest: request) as? Bool {
             return value
         }
         return false
@@ -57,19 +58,19 @@ public class URLCache: NSURLCache {
         :param: diskCapacity The disk capacity of the cache in bytes
         :param: diskPath The location in the application's default cache
             directory at which to store the on-disk cache
-        :param: offlineDiskCapacity The disk capacity of the cache dedicated
-            to requests that should be available offline
-        :param: offlineDiskPath The location at which to store the offline
-            disk cache, relative to the specified offlineSearchPathDirectory
-        :param: offlineSearchPathDirectory The searchPathDirectory to use as
-            the location for the offline disk cache
+        :param: mattressDiskCapacity The disk capacity of the cache dedicated
+            to requests that should be available via Mattress
+        :param: mattressDiskPath The location at which to store the Mattress
+            disk cache, relative to the specified mattressSearchPathDirectory
+        :param: mattressSearchPathDirectory The searchPathDirectory to use as
+            the location for the Mattress disk cache
         :param: isOfflineHandler A handler that will be called as needed to
-            determine if the offline cache should be used
+            determine if the Mattress cache should be used
     */
-    public init(memoryCapacity: Int, diskCapacity: Int, diskPath path: String?, offlineDiskCapacity: Int, offlineDiskPath offlinePath: String?,
-        offlineSearchPathDirectory searchPathDirectory: NSSearchPathDirectory, isOfflineHandler: (() -> Bool)?)
+    public init(memoryCapacity: Int, diskCapacity: Int, diskPath path: String?, mattressDiskCapacity: Int, mattressDiskPath: String?,
+        mattressSearchPathDirectory searchPathDirectory: NSSearchPathDirectory, isOfflineHandler: (() -> Bool)?)
     {
-        offlineCache = DiskCache(path: offlinePath, searchPathDirectory: searchPathDirectory, maxCacheSize: offlineDiskCapacity)
+        diskCache = DiskCache(path: mattressDiskPath, searchPathDirectory: searchPathDirectory, maxCacheSize: mattressDiskCapacity)
         self.isOfflineHandler = isOfflineHandler
         super.init(memoryCapacity: memoryCapacity, diskCapacity: diskCapacity, diskPath: path)
         addToProtocol(true)
@@ -102,21 +103,21 @@ public class URLCache: NSURLCache {
 
     // MARK: Public
 
-    public func clearOfflineCache() {
-        offlineCache.clearCache()
+    public func clearDiskCache() {
+        diskCache.clearCache()
     }
 
     override public func storeCachedResponse(cachedResponse: NSCachedURLResponse, forRequest request: NSURLRequest) {
-        if URLCache.requestShouldBeStoredOffline(request) {
-            let success = offlineCache.storeCachedResponse(cachedResponse, forRequest: request)
+        if URLCache.requestShouldBeStoredInMattress(request) {
+            let success = diskCache.storeCachedResponse(cachedResponse, forRequest: request)
         } else {
             super.storeCachedResponse(cachedResponse, forRequest: request)
             // Don't store failure responses
             if let httpResponse = cachedResponse.response as? NSHTTPURLResponse {
                 if httpResponse.statusCode < 400 {
-                    // If we've already stored this in the offline cache, update it
-                    if offlineCache.hasCacheForRequest(request) {
-                        offlineCache.storeCachedResponse(cachedResponse, forRequest: request)
+                    // If we've already stored this in the Mattress cache, update it
+                    if diskCache.hasCacheForRequest(request) {
+                        diskCache.storeCachedResponse(cachedResponse, forRequest: request)
                     }
                 }
             }
@@ -124,20 +125,20 @@ public class URLCache: NSURLCache {
     }
 
     override public func cachedResponseForRequest(request: NSURLRequest) -> NSCachedURLResponse? {
-        var cachedResponse = offlineCache.cachedResponseForRequest(request)
+        var cachedResponse = diskCache.cachedResponseForRequest(request)
         if cachedResponse != nil {
             return cachedResponse
         }
         return super.cachedResponseForRequest(request)
     }
 
-    internal func hasOfflineCachedResponseForRequest(request: NSURLRequest) -> Bool{
-        return offlineCache.hasOfflineCachedResponseForRequest(request)
+    internal func hasMattressCachedResponseForRequest(request: NSURLRequest) -> Bool{
+        return diskCache.hasCachedResponseForRequest(request)
     }
 
     /**
         This method should be called to signal that the entire page at a url
-        should be downloaded and stored in the offlineCache. Any urls cached
+        should be downloaded and stored in the Mattress diskCache. Any urls cached
         in this way will be available when the device is offline.
     
         :param: url The url of a webpage to download
@@ -147,7 +148,7 @@ public class URLCache: NSURLCache {
             and should return true if we are done loading the page, or false
             if we should continue loading.
     */
-    public func offlineCacheURL(url: NSURL,
+    public func diskCacheURL(url: NSURL,
                       loadedHandler: WebViewLoadedHandler,
                     completeHandler: (() ->Void)? = nil,
                      failureHandler: ((NSError) ->Void)? = nil) {
@@ -160,7 +161,7 @@ public class URLCache: NSURLCache {
         var failureHandler = failureHandler
         var completeHandler = completeHandler
 
-        webViewCacher.offlineCacheURL(url, loadedHandler: loadedHandler, completionHandler: { (webViewCacher) -> () in
+        webViewCacher.mattressCacheURL(url, loadedHandler: loadedHandler, completionHandler: { (webViewCacher) -> () in
             synchronized(self) {
                 if let index = find(self.cachers, webViewCacher) {
                     self.cachers.removeAtIndex(index)

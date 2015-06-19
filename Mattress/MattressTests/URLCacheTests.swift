@@ -12,7 +12,7 @@ private let url = NSURL(string: "foo://bar")!
 private let TestDirectory = "test"
 
 class MockCacher: WebViewCacher {
-    override func offlineCacheURL(url: NSURL,
+    override func mattressCacheURL(url: NSURL,
         loadedHandler: WebViewLoadedHandler,
         completionHandler: WebViewCacherCompletionHandler,
         failureHandler: (NSError) -> ()) {}
@@ -20,15 +20,15 @@ class MockCacher: WebViewCacher {
 
 class URLCacheTests: XCTestCase {
 
-    func testRequestShouldBeStoredOffline() {
+    func testRequestShouldBeStoredInMattress() {
         var mutableRequest = NSMutableURLRequest(URL: url)
-        NSURLProtocol.setProperty(true, forKey: MattressOfflineCacheRequestPropertyKey, inRequest: mutableRequest)
-        XCTAssert(URLCache.requestShouldBeStoredOffline(mutableRequest), "")
+        NSURLProtocol.setProperty(true, forKey: MattressCacheRequestPropertyKey, inRequest: mutableRequest)
+        XCTAssert(URLCache.requestShouldBeStoredInMattress(mutableRequest), "")
     }
 
-    func testOfflineRequestGoesToOfflineDiskCache() {
+    func testMattressRequestGoesToMattressDiskCache() {
         var mutableRequest = NSMutableURLRequest(URL: url)
-        NSURLProtocol.setProperty(true, forKey: MattressOfflineCacheRequestPropertyKey, inRequest: mutableRequest)
+        NSURLProtocol.setProperty(true, forKey: MattressCacheRequestPropertyKey, inRequest: mutableRequest)
 
         var didCallMock = false
         let cache = makeMockURLCache()
@@ -37,10 +37,10 @@ class URLCacheTests: XCTestCase {
         }
         let response = NSCachedURLResponse()
         cache.storeCachedResponse(response, forRequest: mutableRequest)
-        XCTAssertTrue(didCallMock, "Offline cache storage method was not called")
+        XCTAssertTrue(didCallMock, "Disk cache storage method was not called")
     }
 
-    func testStandardRequestDoesNotGoToOfflineDiskCache() {
+    func testStandardRequestDoesNotGoToMattressDiskCache() {
         // Ensure plist on disk is reset
         let diskCache = DiskCache(path: TestDirectory, searchPathDirectory: .DocumentDirectory, maxCacheSize: 0)
         if let path = diskCache.diskPathForPropertyList()?.path {
@@ -56,10 +56,10 @@ class URLCacheTests: XCTestCase {
         }
         let response = NSCachedURLResponse()
         cache.storeCachedResponse(response, forRequest: mutableRequest)
-        XCTAssertFalse(didCallMock, "Offline cache storage method was called")
+        XCTAssertFalse(didCallMock, "Disk cache storage method was called")
     }
 
-    func testCachedResponseIsRetriedFromOfflineDiskCache() {
+    func testCachedResponseIsRetriedFromMattressDiskCache() {
         let request = NSMutableURLRequest(URL: url)
         let cachedResponse = NSCachedURLResponse()
 
@@ -75,10 +75,10 @@ class URLCacheTests: XCTestCase {
         }
     }
 
-    func testOfflineRequestGeneratesWebViewCacher() {
+    func testMattressRequestGeneratesWebViewCacher() {
         let cache = makeURLCache()
         XCTAssert(cache.cachers.count == 0, "Cache should not start with any cachers")
-        cache.offlineCacheURL(url, loadedHandler: { webView in
+        cache.diskCacheURL(url, loadedHandler: { webView in
             return true
         })
         XCTAssert(cache.cachers.count == 1, "Should have created a single WebViewCacher")
@@ -100,7 +100,7 @@ class URLCacheTests: XCTestCase {
         }
     }
 
-    func testCachingARequestToTheStandardCacheAlsoUpdatesTheRequestInTheOfflineCacheIfItWasAlreadyStoredForOffline() {
+    func testCachingARequestToTheStandardCacheAlsoUpdatesTheRequestInTheMattressCacheIfItWasAlreadyStoredOnDisk() {
         // Ensure plist on disk is reset
         let diskCache = DiskCache(path: TestDirectory, searchPathDirectory: .DocumentDirectory, maxCacheSize: 0)
         if let path = diskCache.diskPathForPropertyList()?.path {
@@ -108,7 +108,7 @@ class URLCacheTests: XCTestCase {
         }
 
         let cache = MockURLCacheWithMockDiskCache(memoryCapacity: 0, diskCapacity: 0, diskPath: nil,
-            offlineDiskCapacity: 1024 * 1024, offlineDiskPath: nil, offlineSearchPathDirectory: .DocumentDirectory, isOfflineHandler: {
+            mattressDiskCapacity: 1024 * 1024, mattressDiskPath: nil, mattressSearchPathDirectory: .DocumentDirectory, isOfflineHandler: {
                 return false
         })
 
@@ -126,19 +126,19 @@ class URLCacheTests: XCTestCase {
         }
 
         cache.storeCachedResponse(cachedResponse, forRequest: request)
-        XCTAssert(didCall, "The offline disk cache storage method was not called")
+        XCTAssert(didCall, "The Mattress disk cache storage method was not called")
     }
 
     // Mark: - Helpers
 
     func makeURLCache() -> URLCache {
-        return URLCache(memoryCapacity: 0, diskCapacity: 0, diskPath: nil, offlineDiskCapacity: 0,
-            offlineDiskPath: nil, offlineSearchPathDirectory: .DocumentDirectory, isOfflineHandler: nil)
+        return URLCache(memoryCapacity: 0, diskCapacity: 0, diskPath: nil, mattressDiskCapacity: 0,
+            mattressDiskPath: nil, mattressSearchPathDirectory: .DocumentDirectory, isOfflineHandler: nil)
     }
 
     func makeMockURLCache() -> MockURLCacheWithMockDiskCache {
-        return MockURLCacheWithMockDiskCache(memoryCapacity: 0, diskCapacity: 0, diskPath: nil, offlineDiskCapacity: 0,
-            offlineDiskPath: nil, offlineSearchPathDirectory: .DocumentDirectory, isOfflineHandler: nil)
+        return MockURLCacheWithMockDiskCache(memoryCapacity: 0, diskCapacity: 0, diskPath: nil, mattressDiskCapacity: 0,
+            mattressDiskPath: nil, mattressSearchPathDirectory: .DocumentDirectory, isOfflineHandler: nil)
     }
 }
 
@@ -172,16 +172,16 @@ class MockDiskCache: DiskCache {
 }
 class MockURLCacheWithMockDiskCache: URLCache {
     var mockDiskCache: MockDiskCache {
-        return offlineCache as! MockDiskCache
+        return diskCache as! MockDiskCache
     }
 
-    override init(memoryCapacity: Int, diskCapacity: Int, diskPath path: String?, offlineDiskCapacity: Int,
-        offlineDiskPath offlinePath: String?, offlineSearchPathDirectory searchPathDirectory: NSSearchPathDirectory, isOfflineHandler: (() -> Bool)?)
+    override init(memoryCapacity: Int, diskCapacity: Int, diskPath path: String?, mattressDiskCapacity: Int,
+        mattressDiskPath mattressPath: String?, mattressSearchPathDirectory searchPathDirectory: NSSearchPathDirectory, isOfflineHandler: (() -> Bool)?)
     {
-        super.init(memoryCapacity: memoryCapacity, diskCapacity: diskCapacity, diskPath: path, offlineDiskCapacity: offlineDiskCapacity,
-            offlineDiskPath: offlinePath, offlineSearchPathDirectory: searchPathDirectory, isOfflineHandler: isOfflineHandler)
+        super.init(memoryCapacity: memoryCapacity, diskCapacity: diskCapacity, diskPath: path, mattressDiskCapacity: mattressDiskCapacity,
+            mattressDiskPath: mattressPath, mattressSearchPathDirectory: searchPathDirectory, isOfflineHandler: isOfflineHandler)
 
-        offlineCache = MockDiskCache(path: TestDirectory, searchPathDirectory: .DocumentDirectory, maxCacheSize: 1024)
+        diskCache = MockDiskCache(path: TestDirectory, searchPathDirectory: .DocumentDirectory, maxCacheSize: 1024)
     }
 }
 

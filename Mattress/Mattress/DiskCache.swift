@@ -59,7 +59,7 @@ class DiskCache {
             stored.
     */
     init(path: String?, searchPathDirectory: NSSearchPathDirectory, maxCacheSize: Int) {
-        self.path = path ?? "offline"
+        self.path = path ?? "mattress"
         self.searchPathDirectory = searchPathDirectory
         self.maxCacheSize = maxCacheSize
         loadPropertiesFromDisk()
@@ -170,7 +170,7 @@ class DiskCache {
         individually to work around iOS 7 not properly storing the response
         to disk with it's data and userInfo.
     
-        NOTE: Storage policy is not stored because it is irrelevant to offline
+        NOTE: Storage policy is not stored because it is irrelevant to Mattress
         cached responses.
 
         :param: cachedResponse an NSCachedURLResponse to persist to disk.
@@ -270,7 +270,7 @@ class DiskCache {
         This will simply check if a response exists in the cache for the
         specified request.
     */
-    internal func hasOfflineCachedResponseForRequest(request: NSURLRequest) -> Bool {
+    internal func hasCachedResponseForRequest(request: NSURLRequest) -> Bool {
 
         if let path = self.diskPathForRequest(request)?.path {
             return NSFileManager.defaultManager().fileExistsAtPath(path)
