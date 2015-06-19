@@ -6,15 +6,15 @@
 //  Copyright (c) 2014 BuzzFeed. All rights reserved.
 //
 
+import Foundation
+import UIKit
+
 /**
     DiskCache is a NSURLCache replacement that will store
     and retreive NSCachedURLResponses to disk.
 */
-
-import Foundation
-import UIKit
-
 class DiskCache {
+
     /**
         Keys used to store properties in the plist.
     */
@@ -24,6 +24,7 @@ class DiskCache {
     }
 
     // MARK: - Properties
+    
     var isAtLeastiOS8: Bool {
         struct Static {
             static var onceToken : dispatch_once_t = 0
@@ -35,13 +36,19 @@ class DiskCache {
         return Static.value
     }
 
+    /// Filesystem path where the cache is stored
     private let path: String
+    /// Search path for the disk cache location
     private let searchPathDirectory: NSSearchPathDirectory
+    /// Size limit for the disk cache
     private let maxCacheSize: Int
-    
+
+    /// Provides locking for multi-threading sensitive operations
     private let lockObject = NSObject()
-    
+
+    /// Current disk cache size
     var currentSize = 0
+    /// File paths for requests cached on disk
     var requestCaches: [String] = []
 
     // Mark: - Instance methods
@@ -66,7 +73,7 @@ class DiskCache {
     }
 
     /**
-        Load appropriate properties from the plist to restore
+        Loads appropriate properties from the plist to restore
         this cache from disk.
     */
     private func loadPropertiesFromDisk() {
@@ -89,7 +96,7 @@ class DiskCache {
     }
 
     /**
-        Save appropriate properties to a plist to save
+        Saves appropriate properties to a plist to save
         this cache to disk.
     */
     private func persistPropertiesToDisk() {
@@ -109,7 +116,7 @@ class DiskCache {
     }
 
     /**
-        This will keep removing the oldest request until our
+        Keeps removing the oldest request until our
         currentSize is not greater than the maxCacheSize.
     */
     private func trimCacheIfNeeded() {
@@ -129,8 +136,10 @@ class DiskCache {
     }
 
     /**
-        Create an NSDictionary that will be used to store
+        Creates an NSDictionary that will be used to store
         this diskCache's properties to disk.
+    
+        :returns: A dictionary of the cache's properties
     */
     private func dictionaryForCache() -> NSDictionary {
         var dict = NSMutableDictionary()
@@ -140,8 +149,8 @@ class DiskCache {
     }
 
     /**
-        storeCachedResponse:forRequest: functions much like NSURLCache's
-        similarly named method, storing a response and request to disk only.
+        Functions much like NSURLCache's similarly named method, storing a
+        response and request to disk only.
     
         :param: cachedResponse an NSCachedURLResponse to persist to disk.
         :param: forRequest an NSURLRequest to associate the cachedResponse with.
@@ -166,9 +175,9 @@ class DiskCache {
     }
 
     /**
-        This will store components of the NSCachedURLResponse to disk each
-        individually to work around iOS 7 not properly storing the response
-        to disk with it's data and userInfo.
+        Stores components of the NSCachedURLResponse to disk each individually
+        to work around iOS 7 not properly storing the response to disk with
+        it's data and userInfo.
     
         NOTE: Storage policy is not stored because it is irrelevant to Mattress
         cached responses.
@@ -245,9 +254,13 @@ class DiskCache {
     }
 
     /**
-        cachedResponseForRequest: functions much like NSURLCache's
-        method of the same signature. An NSCachedURLResponse associated
-        with the specified NSURLRequest will be returned.
+        Functions much like NSURLCache's method of the same signature.
+        An NSCachedURLResponse associated with the specified
+        NSURLRequest will be returned.
+        
+        :param: request The request.
+
+        :returns: The cached response.
     */
     func cachedResponseForRequest(request: NSURLRequest) -> NSCachedURLResponse? {
         var response: NSCachedURLResponse?
@@ -282,6 +295,10 @@ class DiskCache {
         Will create the cachedResponse from its response, data and
         userInfo. This is only used to workaround the bug in iOS 7
         preventing us from just saving the cachedResponse itself.
+    
+        :param: request The request.
+        
+        :returns: The cached response.
     */
     private func cachedResponseFromPiecesForRequest(request: NSURLRequest) -> NSCachedURLResponse? {
         var cachedResponse: NSCachedURLResponse? = nil
@@ -316,6 +333,11 @@ class DiskCache {
         hasCacheForRequest: returns a Bool indicating whether
         this diskCache has a cachedResponse associated with the
         specified NSURLRequest.
+    
+        :param: The request.
+
+        :returns: A boolean indicating whether the cache has a
+            response cached for the given request.
     */
     func hasCacheForRequest(request: NSURLRequest) -> Bool {
         if let hash = hashForRequest(request) {
@@ -330,6 +352,8 @@ class DiskCache {
 
     /**
         Returns the path where we should store our plist.
+    
+        :returns: The file path URL.
     */
     func diskPathForPropertyList() -> NSURL? {
         var url: NSURL?
@@ -343,6 +367,10 @@ class DiskCache {
     /**
         Returns the path where we should store a cache
         with the specified filename.
+    
+        :params: name The filename of the cached request.
+        
+        :returns: The file path URL.
     */
     private func diskPathForRequestCacheNamed(name: String) -> NSURL? {
         var url: NSURL?
@@ -355,6 +383,10 @@ class DiskCache {
     /**
         Returns the path where a response should be stored
         for a given NSURLRequest.
+    
+        :params: request The request.
+
+        :returns: The file path URL.
     */
     func diskPathForRequest(request: NSURLRequest) -> NSURL? {
         var url: NSURL?
@@ -371,6 +403,8 @@ class DiskCache {
     /**
         Return the path that should be used as the baseURL for
         all paths associated with this diskCache.
+    
+        :returns: The file path URL.
     */
     private func diskPath() -> NSURL? {
         var url: NSURL?
@@ -393,6 +427,10 @@ class DiskCache {
     /**
         Returns the hash/filename that should be used for
         a given NSURLRequest.
+    
+        :param: request The request.
+        
+        :returns: The hash.
     */
     func hashForRequest(request: NSURLRequest) -> String? {
         if let urlString = request.URL?.absoluteString {
@@ -405,6 +443,8 @@ class DiskCache {
         Returns the hash/filename for the response associated with
         the hash for a request. This is only used as an iOS 7
         workaround.
+    
+        :returns: The hash.
     */
     func hashForResponseFromHash(hash: String) -> String {
         return "\(hash)_response"
@@ -414,6 +454,10 @@ class DiskCache {
         Returns the hash/filename for the data associated with
         the hash for a request. This is only used as an iOS 7
         workaround.
+        
+        :param: hash The hash.
+
+        :returns: The hash.
     */
     func hashForDataFromHash(hash: String) -> String {
         return "\(hash)_data"
@@ -423,6 +467,10 @@ class DiskCache {
         Returns the hash/filename for the userInfo associated with
         the hash for a request. This is only used as an iOS 7
         workaround.
+    
+        :param: hash The hash.
+
+        :returns: The hash.
     */
     func hashForUserInfoFromHash(hash: String) -> String {
         return "\(hash)_userInfo"
@@ -431,6 +479,10 @@ class DiskCache {
     /**
         Returns the hash/filename that should be used for
         a given the URL absoluteString of a request.
+    
+        :param: string The URL string.
+    
+        :returns: The hash.
     */
     func hashForURLString(string: String) -> String? {
         return string.MD5()

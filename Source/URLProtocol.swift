@@ -8,9 +8,12 @@
 
 import Foundation
 
+/// Caches to be consulted
 var caches: [URLCache] = []
+/// Provides locking for multi-threading sensitive operations
 let cacheLockObject = NSObject()
 
+/// Used to indicate that a request has been handled by this URLProtocol
 private let URLProtocolHandledRequestKey = "URLProtocolHandledRequestKey"
 public var shouldRetrieveFromMattressCacheByDefault = false
 
@@ -23,6 +26,8 @@ public var shouldRetrieveFromMattressCacheByDefault = false
     use the Mattress diskCache if possible.
 */
 class URLProtocol: NSURLProtocol, NSURLConnectionDataDelegate {
+
+    /// Used to stop loading
     var connection: NSURLConnection?
     
     static var shouldRetrieveFromMattressCacheByDefault = false
@@ -72,14 +77,16 @@ class URLProtocol: NSURLProtocol, NSURLConnectionDataDelegate {
     }
 
     /**
-        addCache: Adds another URLCache that should
-        be checked in with when deciding which/if a
-        WebViewCacher is responsible for a request.
+        Adds a URLCache that should be consulted
+        when deciding which/if a WebViewCacher is
+        responsible for a request.
     
         This method is responsible for having this
         protocol registered. It will only register
         itself when there is a URLCache that has been
         added.
+    
+        :param: cache The cache to be added.
     */
     class func addCache(cache: URLCache) {
         synchronized(cacheLockObject, { () -> Void in
@@ -91,12 +98,14 @@ class URLProtocol: NSURLProtocol, NSURLConnectionDataDelegate {
     }
 
     /**
-        removeCache: removes the URLCache from the
-        list of caches that should be used to find the
-        WebViewCacher responsible for requests.
+        Removes a URLCache from the list of caches
+        that should be used to find the WebViewCacher
+        responsible for requests.
     
         If there are no more caches, this protocol will
         unregister itself.
+    
+        :param: cache The cache to be removed.
     */
     class func removeCache(cache: URLCache) {
         synchronized(cacheLockObject) { () -> Void in
@@ -110,6 +119,12 @@ class URLProtocol: NSURLProtocol, NSURLConnectionDataDelegate {
         }
     }
 
+    /**
+        Registers and unregisters this class for URL handling.
+    
+        :param: shouldRegister If true, registers this class
+            for URL handling. If false, unregisters the class.
+    */
     class func registerProtocol(shouldRegister: Bool) {
         if shouldRegister {
             self.registerClass(self)
@@ -121,6 +136,10 @@ class URLProtocol: NSURLProtocol, NSURLConnectionDataDelegate {
     /**
         Finds the webViewCacher responsible for a request by
         asking each of its URLCaches in reverse order.
+    
+        :param: request The request.
+        
+        :returns: The WebViewCacher responsible for the request.
     */
     private class func webViewCacherForRequest(request: NSURLRequest) -> WebViewCacher? {
         var webViewCacherReturn: WebViewCacher? = nil
@@ -138,6 +157,14 @@ class URLProtocol: NSURLProtocol, NSURLConnectionDataDelegate {
         return webViewCacherReturn
     }
 
+    /**
+        Helper method that returns and configures mutable copy
+        of a request.
+    
+        :param: request The request.
+    
+        :returns: The mutable, configured copy of the request.
+    */
     private class func mutableCanonicalRequestForRequest(request: NSURLRequest) -> NSMutableURLRequest {
         var mutableRequest = request.mutableCopy() as! NSMutableURLRequest
         mutableRequest.cachePolicy = .ReturnCacheDataElseLoad
