@@ -28,7 +28,7 @@
 		140FA3ED1B30C09400BFFAAE /* WebViewCacher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 140FA3CA1B30BEA400BFFAAE /* WebViewCacher.swift */; };
 		140FA3EE1B30C0C500BFFAAE /* NSData+Crypto.swift in Sources */ = {isa = PBXBuildFile; fileRef = 140FA3C11B30BE8B00BFFAAE /* NSData+Crypto.swift */; };
 		140FA3EF1B30C0C800BFFAAE /* String+Crypto.swift in Sources */ = {isa = PBXBuildFile; fileRef = 140FA3C21B30BE8B00BFFAAE /* String+Crypto.swift */; };
-		1435381B1B0F84C700FD502B /* CommonCrypto.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 143537FD1B0F825800FD502B /* CommonCrypto.framework */; settings = {ATTRIBUTES = (Required, ); }; };
+		1435381B1B0F84C700FD502B /* CommonCrypto.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 143537FD1B0F825800FD502B /* CommonCrypto.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
