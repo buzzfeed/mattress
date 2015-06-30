@@ -16,7 +16,6 @@
 		140FA3CE1B30BEA400BFFAAE /* URLCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 140FA3C81B30BEA400BFFAAE /* URLCache.swift */; };
 		140FA3CF1B30BEA400BFFAAE /* URLProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 140FA3C91B30BEA400BFFAAE /* URLProtocol.swift */; };
 		140FA3D01B30BEA400BFFAAE /* WebViewCacher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 140FA3CA1B30BEA400BFFAAE /* WebViewCacher.swift */; };
-		140FA3DF1B30BF2100BFFAAE /* CommonCrypto.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 140FA3DD1B30BF2100BFFAAE /* CommonCrypto.xcconfig */; };
 		140FA3E11B30BFBA00BFFAAE /* DiskCacheTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 140FA3D31B30BEC600BFFAAE /* DiskCacheTests.swift */; };
 		140FA3E21B30BFBE00BFFAAE /* URLCacheTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 140FA3D41B30BEC600BFFAAE /* URLCacheTests.swift */; };
 		140FA3E31B30BFC100BFFAAE /* URLProtocolTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 140FA3D51B30BEC600BFFAAE /* URLProtocolTests.swift */; };
@@ -337,7 +336,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				140FA3DF1B30BF2100BFFAAE /* CommonCrypto.xcconfig in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -493,10 +491,6 @@
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = NO;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/Carthage/Build/iOS",
-				);
 				INFOPLIST_FILE = "$(SRCROOT)/Source/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
@@ -509,7 +503,7 @@
 				SKIP_INSTALL = YES;
 				SWIFT_INCLUDE_PATHS = "";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				TARGETED_DEVICE_FAMILY = 1;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
@@ -522,10 +516,6 @@
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = NO;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/Carthage/Build/iOS",
-				);
 				INFOPLIST_FILE = "$(SRCROOT)/Source/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
@@ -536,7 +526,7 @@
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
-				TARGETED_DEVICE_FAMILY = 1;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};
@@ -547,7 +537,6 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
-					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
@@ -567,7 +556,6 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
-					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
 				INFOPLIST_FILE = Tests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
@@ -582,10 +570,13 @@
 			buildSettings = {
 				COPY_PHASE_STRIP = NO;
 				DEFINES_MODULE = YES;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				INFOPLIST_FILE = "$(SRCROOT)/CommonCrypto/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_NAME = CommonCrypto;
+				SKIP_INSTALL = YES;
 			};
 			name = Debug;
 		};
@@ -596,8 +587,11 @@
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEFINES_MODULE = YES;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				INFOPLIST_FILE = "$(SRCROOT)/CommonCrypto/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_NAME = CommonCrypto;
+				SKIP_INSTALL = YES;
 			};
 			name = Release;
 		};
