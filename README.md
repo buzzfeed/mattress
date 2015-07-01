@@ -10,6 +10,8 @@ A Swift framework for storing entire web pages into a disk cache distinct from, 
 **Installation**
 ----------------
 
+Mattress includes a wrapper around CommonCrypto so that it can be easily used from within Swift. You will need to make sure you include both the Mattress and CommonCrypto frameworks in your project.
+
 **Carthage (Recommended)**
 
 If you are not already using Carthage, you will need to install it using [Homebrew](http://brew.sh).
@@ -25,7 +27,7 @@ Once installed, add it to your Cartfile:
 github "buzzfeed/Mattress" >= 1.0
 ```
 
-You will then need to build using Carthage, and manually integrate the framework into your project.
+You will then need to build using Carthage, and manually integrate both the Mattress and CommonCrypto frameworks into your project.
 
 ```
 $ carthage build
@@ -50,7 +52,7 @@ pod 'Mattress', '~> 1.0.0'
 1. Open the `Mattress` folder, and drag `Mattress.xcodeproj` into the file navigator of your app project. **NOTE: The Mattress project needs to be added somewhere under the target project or you won't be able to add it to your target dependencies.**
 2. Ensure that the deployment target of the Mattress project matches that of the application target.
 3. In your target's "Build Phases" panel, add `Mattress.framework` to the "Target Dependencies"
-4. Click on the `+` button at the top left of the panel and select "New Copy Files Phase". Rename this new phase to "Copy Frameworks", set the "Destination" to "Frameworks", and add `Mattress.framework`.
+4. Click on the `+` button at the top left of the panel and select "New Copy Files Phase". Rename this new phase to "Copy Frameworks", set the "Destination" to "Frameworks", and add both `Mattress.framework` and `CommonCrypto.framework`.
 
 **Usage**
 ---------
