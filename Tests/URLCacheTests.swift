@@ -26,7 +26,21 @@ class URLCacheTests: XCTestCase {
         XCTAssert(URLCache.requestShouldBeStoredInMattress(mutableRequest), "")
     }
 
-    func testMattressRequestGoesToMattressDiskCache() {
+    func testValidMattressResponseGoesToMattressDiskCache() {
+        var mutableRequest = NSMutableURLRequest(URL: url)
+        NSURLProtocol.setProperty(true, forKey: MattressCacheRequestPropertyKey, inRequest: mutableRequest)
+
+        var didCallMock = false
+        let cache = makeMockURLCache()
+        cache.mockDiskCache.storeCacheCalledHandler = {
+            didCallMock = true
+        }
+        let response = makeValidCachedResponseForRequest(mutableRequest)
+        cache.storeCachedResponse(response, forRequest: mutableRequest)
+        XCTAssertTrue(didCallMock, "Disk cache storage method was not called")
+    }
+
+    func testInvalidMattressResponseDoesNotGoToMattressDiskCache() {
         var mutableRequest = NSMutableURLRequest(URL: url)
         NSURLProtocol.setProperty(true, forKey: MattressCacheRequestPropertyKey, inRequest: mutableRequest)
 
@@ -37,7 +51,7 @@ class URLCacheTests: XCTestCase {
         }
         let response = NSCachedURLResponse()
         cache.storeCachedResponse(response, forRequest: mutableRequest)
-        XCTAssertTrue(didCallMock, "Disk cache storage method was not called")
+        XCTAssertFalse(didCallMock, "Disk cache storage method was not called")
     }
 
     func testStandardRequestDoesNotGoToMattressDiskCache() {
@@ -114,10 +128,8 @@ class URLCacheTests: XCTestCase {
 
         // Make sure the request has been stored once
         let url = NSURL(string: "foo://bar")!
-        let data = "hello, world".dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)!
-        let response = NSHTTPURLResponse(URL: url, statusCode: 200, HTTPVersion: "HTTP/1.1", headerFields: nil)!
         let request = NSURLRequest(URL: url)
-        let cachedResponse = NSCachedURLResponse(response: response, data: data, userInfo: nil, storagePolicy: .Allowed)
+        let cachedResponse = makeValidCachedResponseForRequest(request)
         cache.mockDiskCache.storeCachedResponseOnSuper(cachedResponse, forRequest: request)
 
         var didCall = false
@@ -130,6 +142,14 @@ class URLCacheTests: XCTestCase {
     }
 
     // Mark: - Helpers
+
+    func makeValidCachedResponseForRequest(request: NSURLRequest) -> NSCachedURLResponse {
+        let url = request.URL ?? NSURL(string: "")!
+        let data = "hello, world".dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)!
+        let response = NSHTTPURLResponse(URL: url, statusCode: 200, HTTPVersion: "HTTP/1.1", headerFields: nil)!
+        let request = NSURLRequest(URL: url)
+        return NSCachedURLResponse(response: response, data: data, userInfo: nil, storagePolicy: .Allowed)
+    }
 
     func makeURLCache() -> URLCache {
         return URLCache(memoryCapacity: 0, diskCapacity: 0, diskPath: nil, mattressDiskCapacity: 0,

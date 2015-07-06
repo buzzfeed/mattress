@@ -190,7 +190,9 @@ class URLProtocol: NSURLProtocol, NSURLConnectionDataDelegate {
         var mutableRequest = URLProtocol.mutableCanonicalRequestForRequest(request)
         if let
             cache = NSURLCache.sharedURLCache() as? URLCache,
-            cachedResponse = cache.cachedResponseForRequest(mutableRequest)
+            cachedResponse = cache.cachedResponseForRequest(mutableRequest),
+            response = cachedResponse.response as? NSHTTPURLResponse
+            where response.statusCode < 400
         {
             client?.URLProtocol(self, cachedResponseIsValid: cachedResponse)
             return

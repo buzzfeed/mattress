@@ -135,8 +135,8 @@
 			isa = PBXGroup;
 			children = (
 				143537EE1B0F7D6700FD502B /* Extensions */,
-				140FA3C51B30BEA400BFFAAE /* DiskCache.swift */,
 				140FA3C61B30BEA400BFFAAE /* Mattress.h */,
+				140FA3C51B30BEA400BFFAAE /* DiskCache.swift */,
 				140FA3C71B30BEA400BFFAAE /* Synchronization.swift */,
 				140FA3C81B30BEA400BFFAAE /* URLCache.swift */,
 				140FA3C91B30BEA400BFFAAE /* URLProtocol.swift */,

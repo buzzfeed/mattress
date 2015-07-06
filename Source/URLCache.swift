@@ -126,6 +126,22 @@ public class URLCache: NSURLCache {
         return nil
     }
 
+    /**
+        Stores the cached response into the diskCache only if the response
+        is valid (statusCode < 400).
+    
+        :param: cachedResponse The NSCachedURLResponse to store in diskCache.
+        :param: request The NSURLRequest this response is associated with.
+    */
+    func storeCachedResponseInDiskCache(cachedResponse: NSCachedURLResponse, forRequest request: NSURLRequest) {
+        // We should never store failure responses
+        if let httpResponse = cachedResponse.response as? NSHTTPURLResponse {
+            if httpResponse.statusCode < 400 {
+                diskCache.storeCachedResponse(cachedResponse, forRequest: request)
+            }
+        }
+    }
+
     // MARK: Public
 
     public func clearDiskCache() {
@@ -134,17 +150,12 @@ public class URLCache: NSURLCache {
 
     override public func storeCachedResponse(cachedResponse: NSCachedURLResponse, forRequest request: NSURLRequest) {
         if URLCache.requestShouldBeStoredInMattress(request) {
-            let success = diskCache.storeCachedResponse(cachedResponse, forRequest: request)
+            storeCachedResponseInDiskCache(cachedResponse, forRequest: request)
         } else {
             super.storeCachedResponse(cachedResponse, forRequest: request)
-            // Don't store failure responses
-            if let httpResponse = cachedResponse.response as? NSHTTPURLResponse {
-                if httpResponse.statusCode < 400 {
-                    // If we've already stored this in the Mattress cache, update it
-                    if diskCache.hasCacheForRequest(request) {
-                        diskCache.storeCachedResponse(cachedResponse, forRequest: request)
-                    }
-                }
+            // If we've already stored this in the Mattress cache, update it
+            if diskCache.hasCacheForRequest(request) {
+                storeCachedResponseInDiskCache(cachedResponse, forRequest: request)
             }
         }
     }
