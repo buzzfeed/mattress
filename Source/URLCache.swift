@@ -126,19 +126,26 @@ public class URLCache: NSURLCache {
         return nil
     }
 
-    // MARK: Public
-
-    public func clearDiskCache() {
-        diskCache.clearCache()
-    }
-
-    public func storeCachedResponseInDiskCache(cachedResponse: NSCachedURLResponse, forRequest request: NSURLRequest) {
+    /**
+        Stores the cached response into the diskCache only if the response
+        is valid (statusCode < 400).
+    
+        :param: cachedResponse The NSCachedURLResponse to store in diskCache.
+        :param: request The NSURLRequest this response is associated with.
+    */
+    func storeCachedResponseInDiskCache(cachedResponse: NSCachedURLResponse, forRequest request: NSURLRequest) {
         // We should never store failure responses
         if let httpResponse = cachedResponse.response as? NSHTTPURLResponse {
             if httpResponse.statusCode < 400 {
                 diskCache.storeCachedResponse(cachedResponse, forRequest: request)
             }
         }
+    }
+
+    // MARK: Public
+
+    public func clearDiskCache() {
+        diskCache.clearCache()
     }
 
     override public func storeCachedResponse(cachedResponse: NSCachedURLResponse, forRequest request: NSURLRequest) {
