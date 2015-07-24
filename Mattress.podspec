@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name = 'Mattress'
-  s.version = '0.0.7'
+  s.version = '0.0.8'
   s.license = 'MIT'
   s.summary = 'iOS Offline Caching for Web Content'
   s.homepage = 'https://github.com/buzzfeed/mattress'
@@ -17,6 +17,6 @@ Pod::Spec.new do |s|
     'SWIFT_INCLUDE_PATHS[sdk=iphoneos*]' => '$(SRCROOT)/Mattress/CommonCrypto/iphoneos',
     'SWIFT_INCLUDE_PATHS[sdk=iphonesimulator*]' => '$(SRCROOT)/Mattress/CommonCrypto/iphonesimulator',
     'SWIFT_INCLUDE_PATHS[sdk=macosx*]' => '$(SRCROOT)/Mattress/CommonCrypto/macosx'
-   } 
+   }
   s.requires_arc = true
 end
