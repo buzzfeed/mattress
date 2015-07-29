@@ -112,6 +112,7 @@ class DiskCache {
     func clearCache() {
         if let path = diskPath()?.path {
             NSFileManager.defaultManager().removeItemAtPath(path, error: nil)
+            requestCaches = []
         }
     }
 
@@ -221,11 +222,7 @@ class DiskCache {
         
         synchronized(lockObject) { () -> Void in
             let data = NSKeyedArchiver.archivedDataWithRootObject(object)
-            if var path = self.diskPathForRequestCacheNamed(hash)?.path {
-                if count(path) > 255 {
-                    //path =
-                    
-                }
+            if let path = self.diskPathForRequestCacheNamed(hash)?.path {
                 if data.length < self.maxCacheSize {
                     self.currentSize += data.length
                     var index = -1

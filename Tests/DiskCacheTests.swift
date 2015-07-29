@@ -273,7 +273,7 @@ class DiskCacheTests: XCTestCase {
         let userInfo = ["foo" : "bar"]
         let dataSize = 1
         let cachedResponse = cachedResponseWithDataOfSize(dataSize, request: request, userInfo: userInfo)
-        let diskCache = DiskCache(path: "test", searchPathDirectory: .DocumentDirectory, maxCacheSize: 1024)
+        let diskCache = DiskCache(path: "test", searchPathDirectory: .DocumentDirectory, maxCacheSize: 1024*1024)
         diskCache.storeCachedResponse(cachedResponse, forRequest: request)
         diskCache.clearCache()
         XCTAssertFalse(diskCache.hasCacheForRequest(request))
