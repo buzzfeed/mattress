@@ -10,7 +10,7 @@ import Foundation
 
 func synchronized<T>(lockObj: AnyObject!, closure: () -> T) -> T {
     objc_sync_enter(lockObj)
-    var value: T = closure()
+    let value: T = closure()
     objc_sync_exit(lockObj)
     return value
 }

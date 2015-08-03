@@ -161,7 +161,7 @@ public class URLCache: NSURLCache {
     }
 
     override public func cachedResponseForRequest(request: NSURLRequest) -> NSCachedURLResponse? {
-        var cachedResponse = diskCache.cachedResponseForRequest(request)
+        let cachedResponse = diskCache.cachedResponseForRequest(request)
         if cachedResponse != nil {
             return cachedResponse
         }
@@ -203,7 +203,7 @@ public class URLCache: NSURLCache {
 
         webViewCacher.mattressCacheURL(url, loadedHandler: loadedHandler, completionHandler: { (webViewCacher) -> () in
             synchronized(self) {
-                if let index = find(self.cachers, webViewCacher) {
+                if let index = self.cachers.indexOf(webViewCacher) {
                     self.cachers.removeAtIndex(index)
                 }
                 

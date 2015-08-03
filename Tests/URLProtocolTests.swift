@@ -18,7 +18,7 @@ class URLProtocolTests: XCTestCase {
 
     func testProtocolRegistersItselfWhenFirstCacheIsCreated() {
         XCTAssertFalse(mockProtocolIsRegistered, "Should not have registered yet")
-        let cache = makeMockCache()
+        makeMockCache()
         XCTAssertTrue(mockProtocolIsRegistered, "Protocol did not register itself")
     }
 

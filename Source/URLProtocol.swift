@@ -40,7 +40,7 @@ class URLProtocol: NSURLProtocol, NSURLConnectionDataDelegate {
         }
 
         // In the case that we're trying to diskCache, we should always use this protocol
-        if let webViewCacher = webViewCacherForRequest(request) {
+        if webViewCacherForRequest(request) != nil {
             return true
         }
 
@@ -89,12 +89,12 @@ class URLProtocol: NSURLProtocol, NSURLConnectionDataDelegate {
         :param: cache The cache to be added.
     */
     class func addCache(cache: URLCache) {
-        synchronized(cacheLockObject, { () -> Void in
+        synchronized(cacheLockObject) { () -> Void in
             if caches.count == 0 {
                 self.registerProtocol(true)
             }
             caches.append(cache)
-        })
+        }
     }
 
     /**
@@ -109,8 +109,7 @@ class URLProtocol: NSURLProtocol, NSURLConnectionDataDelegate {
     */
     class func removeCache(cache: URLCache) {
         synchronized(cacheLockObject) { () -> Void in
-            var index = find(caches, cache)
-            if let index = index {
+            if let index = caches.indexOf(cache) {
                 caches.removeAtIndex(index)
                 if caches.count == 0 {
                     self.registerProtocol(false)
@@ -145,7 +144,7 @@ class URLProtocol: NSURLProtocol, NSURLConnectionDataDelegate {
         var webViewCacherReturn: WebViewCacher? = nil
         
         synchronized(cacheLockObject) { () -> Void in
-            for i in reverse(0..<caches.count) {
+            for i in (0..<caches.count).reverse() {
                 let cache = caches[i]
                 if let webViewCacher = cache.webViewCacherOriginatingRequest(request) {
                     webViewCacherReturn = webViewCacher
@@ -187,7 +186,7 @@ class URLProtocol: NSURLProtocol, NSURLConnectionDataDelegate {
     // MARK: - Instance Methods
 
     override func startLoading() {
-        var mutableRequest = URLProtocol.mutableCanonicalRequestForRequest(request)
+        let mutableRequest = URLProtocol.mutableCanonicalRequestForRequest(request)
         if let
             cache = NSURLCache.sharedURLCache() as? URLCache,
             cachedResponse = cache.cachedResponseForRequest(mutableRequest),
