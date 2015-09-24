@@ -111,8 +111,14 @@ class DiskCache {
 
     func clearCache() {
         if let path = diskPath()?.path {
-            NSFileManager.defaultManager().removeItemAtPath(path, error: nil)
-            requestCaches = []
+            do {
+                try NSFileManager.defaultManager().removeItemAtPath(path)
+                requestCaches = []
+            } catch {
+                NSLog("Error clearing cache")
+            }
+        } else {
+            NSLog("Error clearing cache")
         }
     }
 
@@ -124,14 +130,27 @@ class DiskCache {
         while currentSize > maxCacheSize && !requestCaches.isEmpty {
             let fileName = requestCaches.removeAtIndex(0)
             if let path = diskPathForRequestCacheNamed(fileName)?.path {
+                let attributes: [String : AnyObject]?
+                do {
+                    try attributes = NSFileManager.defaultManager().attributesOfItemAtPath(path)
+                } catch {
+                    NSLog("Error getting attributes of item at path \(path)")
+                    attributes = nil
+                }
+
                 if let
-                    attributes = NSFileManager.defaultManager().attributesOfItemAtPath(path, error: nil) as? [String: AnyObject],
+                    attributes = attributes,
                     fileSize = attributes[NSFileSize] as? NSNumber
                 {
                         let size = fileSize.integerValue
                         currentSize -= size
                 }
-                NSFileManager.defaultManager().removeItemAtPath(path, error: nil)
+
+                do {
+                    try NSFileManager.defaultManager().removeItemAtPath(path)
+                } catch {
+                    NSLog("Error removing item at path \(path)")
+                }
             }
         }
     }
@@ -143,7 +162,7 @@ class DiskCache {
         :returns: A dictionary of the cache's properties
     */
     private func dictionaryForCache() -> NSDictionary {
-        var dict = NSMutableDictionary()
+        let dict = NSMutableDictionary()
         dict.setValue(currentSize, forKey: DictionaryKeys.maxCacheSize.rawValue)
         dict.setValue(requestCaches, forKey: DictionaryKeys.requestsFilenameArray.rawValue)
         return NSDictionary(dictionary: dict)
@@ -238,9 +257,11 @@ class DiskCache {
                     self.requestCaches.append(hash)
                     self.trimCacheIfNeeded()
                     self.persistPropertiesToDisk()
-                    var error: NSError?
-                    success = data.writeToFile(path, options: .allZeros, error: &error)
-                    if let error = error {
+                    success = true
+                    do {
+                        try data.writeToFile(path, options: [])
+                    } catch {
+                        success = false
                         NSLog("Error writing request to disk: \(error)")
                     }
                 }
@@ -404,17 +425,28 @@ class DiskCache {
         :returns: The file path URL.
     */
     private func diskPath() -> NSURL? {
+
+        let baseURL: NSURL?
+        do {
+            baseURL = try NSFileManager.defaultManager().URLForDirectory(searchPathDirectory,
+                inDomain: .UserDomainMask, appropriateForURL: nil, create: false)
+        } catch {
+            baseURL = nil
+        }
+
         var url: NSURL?
         if let
-            baseURL = NSFileManager.defaultManager().URLForDirectory(searchPathDirectory,
-                inDomain: .UserDomainMask, appropriateForURL: nil, create: false, error: nil),
-            fileURL = NSURL(string: path, relativeToURL: baseURL),
-            fileURLString = fileURL.absoluteString
+            baseURL = baseURL,
+            fileURL = NSURL(string: path, relativeToURL: baseURL)
         {
             var isDir : ObjCBool = false
-            if !NSFileManager.defaultManager().fileExistsAtPath(fileURLString, isDirectory: &isDir) {
-                NSFileManager.defaultManager().createDirectoryAtURL(fileURL,
-                    withIntermediateDirectories: true, attributes: nil, error: nil)
+            if !NSFileManager.defaultManager().fileExistsAtPath(fileURL.absoluteString, isDirectory: &isDir) {
+                do {
+                    try NSFileManager.defaultManager().createDirectoryAtURL(fileURL,
+                        withIntermediateDirectories: true, attributes: nil)
+                } catch {
+                    NSLog("Error creating directory at URL: \(fileURL)")
+                }
             }
             url = fileURL
         }
@@ -493,7 +525,7 @@ class DiskCache {
                 string is too long to be used as a disk filename).
             */
             let toRemove = NSCharacterSet.alphanumericCharacterSet().invertedSet
-            return "".join(string.componentsSeparatedByCharactersInSet(toRemove))
+            return string.componentsSeparatedByCharactersInSet(toRemove).joinWithSeparator("")
         }
     }
 }

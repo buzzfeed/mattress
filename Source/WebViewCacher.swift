@@ -70,7 +70,7 @@ class WebViewCacher: NSObject, UIWebViewDelegate {
         :returns: A mutable request based on the requested passed in.
     */
     func mutableRequestForRequest(request: NSURLRequest) -> NSMutableURLRequest {
-        var mutableRequest = request.mutableCopy() as! NSMutableURLRequest
+        let mutableRequest = request.mutableCopy() as! NSMutableURLRequest
         NSURLProtocol.setProperty(true, forKey: MattressCacheRequestPropertyKey, inRequest: mutableRequest)
         return mutableRequest
     }
@@ -110,7 +110,7 @@ class WebViewCacher: NSObject, UIWebViewDelegate {
     private func loadURLInWebView(url: NSURL) {
         let webView = UIWebView(frame: CGRectZero)
         let request = NSURLRequest(URL: url)
-        var mutableRequest = mutableRequestForRequest(request)
+        let mutableRequest = mutableRequestForRequest(request)
         self.webView = webView
         webView.delegate = self
         webView.loadRequest(mutableRequest)
@@ -137,19 +137,21 @@ class WebViewCacher: NSObject, UIWebViewDelegate {
         }
     }
     
-    func webView(webView: UIWebView, didFailLoadWithError error: NSError) {
+    func webView(webView: UIWebView, didFailLoadWithError error: NSError?) {
         // we can ignore this error
-        if error.code == -999 {
+        if error?.code == -999 {
             return
         }
-        
-        NSLog("WebViewLoadError:%@", error)
-    
-        synchronized(self) { () -> Void in
-            if let failureHandler = self.failureHandler {
-                failureHandler(error)
+
+        if let error = error {
+            NSLog("WebViewLoadError: %@", error)
+
+            synchronized(self) { () -> Void in
+                if let failureHandler = self.failureHandler {
+                    failureHandler(error)
+                }
+                self.failureHandler = nil
             }
-            self.failureHandler = nil
         }
     }
 

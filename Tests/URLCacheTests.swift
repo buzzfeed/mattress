@@ -21,13 +21,13 @@ class MockCacher: WebViewCacher {
 class URLCacheTests: XCTestCase {
 
     func testRequestShouldBeStoredInMattress() {
-        var mutableRequest = NSMutableURLRequest(URL: url)
+        let mutableRequest = NSMutableURLRequest(URL: url)
         NSURLProtocol.setProperty(true, forKey: MattressCacheRequestPropertyKey, inRequest: mutableRequest)
         XCTAssert(URLCache.requestShouldBeStoredInMattress(mutableRequest), "")
     }
 
     func testValidMattressResponseGoesToMattressDiskCache() {
-        var mutableRequest = NSMutableURLRequest(URL: url)
+        let mutableRequest = NSMutableURLRequest(URL: url)
         NSURLProtocol.setProperty(true, forKey: MattressCacheRequestPropertyKey, inRequest: mutableRequest)
 
         var didCallMock = false
@@ -41,7 +41,7 @@ class URLCacheTests: XCTestCase {
     }
 
     func testInvalidMattressResponseDoesNotGoToMattressDiskCache() {
-        var mutableRequest = NSMutableURLRequest(URL: url)
+        let mutableRequest = NSMutableURLRequest(URL: url)
         NSURLProtocol.setProperty(true, forKey: MattressCacheRequestPropertyKey, inRequest: mutableRequest)
 
         var didCallMock = false
@@ -58,10 +58,10 @@ class URLCacheTests: XCTestCase {
         // Ensure plist on disk is reset
         let diskCache = DiskCache(path: TestDirectory, searchPathDirectory: .DocumentDirectory, maxCacheSize: 0)
         if let path = diskCache.diskPathForPropertyList()?.path {
-            NSFileManager.defaultManager().removeItemAtPath(path, error: nil)
+            try! NSFileManager.defaultManager().removeItemAtPath(path)
         }
 
-        var mutableRequest = NSMutableURLRequest(URL: url)
+        let mutableRequest = NSMutableURLRequest(URL: url)
 
         var didCallMock = false
         let cache = makeMockURLCache()
@@ -81,7 +81,7 @@ class URLCacheTests: XCTestCase {
         cache.mockDiskCache.retrieveCacheCalledHandler = { request in
             return cachedResponse
         }
-        var response = cache.cachedResponseForRequest(request)
+        let response = cache.cachedResponseForRequest(request)
         if let response = response {
             XCTAssert(response == cachedResponse, "Response did not match")
         } else {
@@ -106,8 +106,7 @@ class URLCacheTests: XCTestCase {
         let cache = makeURLCache()
         cache.cachers.append(cacher1)
         cache.cachers.append(cacher2)
-        var source = cache.webViewCacherOriginatingRequest(request)
-        if let source = source {
+        if let source = cache.webViewCacherOriginatingRequest(request) {
             XCTAssert(source == cacher1, "Returned the incorrect cacher")
         } else {
             XCTFail("No source cacher found")
@@ -118,7 +117,7 @@ class URLCacheTests: XCTestCase {
         // Ensure plist on disk is reset
         let diskCache = DiskCache(path: TestDirectory, searchPathDirectory: .DocumentDirectory, maxCacheSize: 0)
         if let path = diskCache.diskPathForPropertyList()?.path {
-            NSFileManager.defaultManager().removeItemAtPath(path, error: nil)
+            try! NSFileManager.defaultManager().removeItemAtPath(path)
         }
 
         let cache = MockURLCacheWithMockDiskCache(memoryCapacity: 0, diskCapacity: 0, diskPath: nil,
@@ -147,7 +146,6 @@ class URLCacheTests: XCTestCase {
         let url = request.URL ?? NSURL(string: "")!
         let data = "hello, world".dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)!
         let response = NSHTTPURLResponse(URL: url, statusCode: 200, HTTPVersion: "HTTP/1.1", headerFields: nil)!
-        let request = NSURLRequest(URL: url)
         return NSCachedURLResponse(response: response, data: data, userInfo: nil, storagePolicy: .Allowed)
     }
 

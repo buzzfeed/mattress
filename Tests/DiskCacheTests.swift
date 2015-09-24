@@ -14,7 +14,7 @@ class DiskCacheTests: XCTestCase {
         // Ensure plist on disk is reset
         let diskCache = DiskCache(path: "test", searchPathDirectory: .DocumentDirectory, maxCacheSize: 0)
         if let path = diskCache.diskPathForPropertyList()?.path {
-            NSFileManager.defaultManager().removeItemAtPath(path, error: nil)
+            try! NSFileManager.defaultManager().removeItemAtPath(path)
         }
     }
 
@@ -101,15 +101,12 @@ class DiskCacheTests: XCTestCase {
         XCTAssert(diskCache.currentSize == 0, "Current size should start zeroed out")
         diskCache.storeCachedResponse(cachedResponse, forRequest: request)
         if let path = diskCache.diskPathForRequest(request)?.path {
-            if let attributes = NSFileManager.defaultManager().attributesOfItemAtPath(path, error: nil) as? [String: AnyObject] {
-                if let fileSize = attributes[NSFileSize] as? NSNumber {
-                    let size = fileSize.integerValue
-                    XCTAssert(diskCache.currentSize == size, "Disk cache size was not incremented by the correct amount")
-                } else {
-                    XCTFail("Could not get fileSize from attribute")
-                }
+            let attributes = try! NSFileManager.defaultManager().attributesOfItemAtPath(path)
+            if let fileSize = attributes[NSFileSize] as? NSNumber {
+                let size = fileSize.integerValue
+                XCTAssert(diskCache.currentSize == size, "Disk cache size was not incremented by the correct amount")
             } else {
-                XCTFail("Could not get attributes for file")
+                XCTFail("Could not get fileSize from attribute")
             }
         } else {
             XCTFail("Did not get a valid path for request")
@@ -147,7 +144,7 @@ class DiskCacheTests: XCTestCase {
         diskCache.storeCachedResponse(cachedResponse2, forRequest: request2)
         diskCache.storeCachedResponse(cachedResponse3, forRequest: request3) // This should cause response1 to be removed
 
-        let requestCaches = [diskCache.hashForURLString(url2.absoluteString!)!, diskCache.hashForURLString(url3.absoluteString!)!]
+        let requestCaches = [diskCache.hashForURLString(url2.absoluteString)!, diskCache.hashForURLString(url3.absoluteString)!]
         XCTAssert(diskCache.requestCaches == requestCaches, "Request caches did not match expectations")
     }
 
@@ -258,7 +255,6 @@ class DiskCacheTests: XCTestCase {
         let userInfo = ["foo" : "bar"]
         let cachedResponse = cachedResponseWithDataOfSize(dataSize, request: request, userInfo: userInfo)
         diskCache.storeCachedResponse(cachedResponse, forRequest: request)
-        let basePath = (diskCache.diskPathForRequest(request)?.path)!
 
         if let response = diskCache.cachedResponseForRequest(request) {
             assertCachedResponsesAreEqual(response1: response, response2: cachedResponse)
@@ -281,7 +277,7 @@ class DiskCacheTests: XCTestCase {
 
     // Mark: - Test Helpers
 
-    func assertCachedResponsesAreEqual(#response1 : NSCachedURLResponse, response2: NSCachedURLResponse) {
+    func assertCachedResponsesAreEqual(response1 response1 : NSCachedURLResponse, response2: NSCachedURLResponse) {
         XCTAssert(response1.data == response2.data, "Data did not match")
         XCTAssert(response1.response.URL == response2.response.URL, "Response did not match")
         if response1.userInfo != nil && response2.userInfo != nil {
