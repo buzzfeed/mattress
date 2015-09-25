@@ -144,8 +144,7 @@ class URLProtocol: NSURLProtocol, NSURLConnectionDataDelegate {
         var webViewCacherReturn: WebViewCacher? = nil
         
         synchronized(cacheLockObject) { () -> Void in
-            for i in (0..<caches.count).reverse() {
-                let cache = caches[i]
+            for cache in caches.reverse() {
                 if let webViewCacher = cache.webViewCacherOriginatingRequest(request) {
                     webViewCacherReturn = webViewCacher
                     break

@@ -161,12 +161,12 @@ class DiskCacheTests: XCTestCase {
         if let plistPath = diskCache.diskPathForPropertyList()?.path {
             if NSFileManager.defaultManager().fileExistsAtPath(plistPath) {
                 if let dict = NSDictionary(contentsOfFile: plistPath) {
-                    if let currentSize = dict.valueForKey(DiskCache.DictionaryKeys.maxCacheSize.rawValue) as? Int {
+                    if let currentSize = dict.valueForKey(DiskCache.DictionaryKeys.maxCacheSize) as? Int {
                         XCTAssert(currentSize == expectedSize, "Current size did not match expected value")
                     } else {
                         XCTFail("Plist did not have currentSize property")
                     }
-                    if let requestCaches = dict.valueForKey(DiskCache.DictionaryKeys.requestsFilenameArray.rawValue) as? [String] {
+                    if let requestCaches = dict.valueForKey(DiskCache.DictionaryKeys.requestsFilenameArray) as? [String] {
                         XCTAssert(requestCaches == expectedRequestCaches, "Request caches did not match expected value")
                     } else {
                         XCTFail("Plist did not have requestCaches property")
