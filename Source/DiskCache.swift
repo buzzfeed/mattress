@@ -514,18 +514,6 @@ class DiskCache {
         :returns: The hash.
     */
     func hashForURLString(string: String) -> String? {
-        if NSProcessInfo.processInfo().operatingSystemVersion.majorVersion >= 9 {
-            return string.MD5()
-        } else {
-            /*
-                CommonCrypto is not behaving properly when the project is
-                built for Alpha (and possibly Release) in iOS 8. As a compromise
-                we just remove non alpha numeric characters from the string
-                (this will cause some requests to not get stored because the
-                string is too long to be used as a disk filename).
-            */
-            let toRemove = NSCharacterSet.alphanumericCharacterSet().invertedSet
-            return string.componentsSeparatedByCharactersInSet(toRemove).joinWithSeparator("")
-        }
+        return string.mattress_MD5()
     }
 }
