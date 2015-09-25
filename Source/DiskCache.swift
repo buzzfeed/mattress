@@ -114,6 +114,7 @@ class DiskCache {
             do {
                 try NSFileManager.defaultManager().removeItemAtPath(path)
                 requestCaches = []
+                currentSize = 0
             } catch {
                 NSLog("Error clearing cache")
             }
@@ -125,32 +126,47 @@ class DiskCache {
     /**
         Keeps removing the oldest request until our
         currentSize is not greater than the maxCacheSize.
+        Clears the cache on any failures.
     */
     private func trimCacheIfNeeded() {
         while currentSize > maxCacheSize && !requestCaches.isEmpty {
-            let fileName = requestCaches.removeAtIndex(0)
-            if let path = diskPathForRequestCacheNamed(fileName)?.path {
-                let attributes: [String : AnyObject]?
+            let lastCurrentSize = currentSize
+            let fileName = requestCaches.first
+            if let
+                fileName = fileName,
+                path = diskPathForRequestCacheNamed(fileName)?.path
+            {
+                var attributes: [String : AnyObject]?
                 do {
                     try attributes = NSFileManager.defaultManager().attributesOfItemAtPath(path)
+                    try NSFileManager.defaultManager().removeItemAtPath(path)
                 } catch {
-                    NSLog("Error getting attributes of item at path \(path)")
+                    NSLog("Error getting attributes of or deleting item at path \(path)")
                     attributes = nil
+                    clearCache()
+                    return
                 }
+
 
                 if let
                     attributes = attributes,
                     fileSize = attributes[NSFileSize] as? NSNumber
                 {
-                        let size = fileSize.integerValue
-                        currentSize -= size
+                    let size = fileSize.integerValue
+                    currentSize -= size
                 }
-
-                do {
-                    try NSFileManager.defaultManager().removeItemAtPath(path)
-                } catch {
-                    NSLog("Error removing item at path \(path)")
+                if let index = requestCaches.indexOf(fileName) {
+                    requestCaches.removeAtIndex(index)
                 }
+            } else {
+                NSLog("Error getting filename or path")
+                clearCache()
+                return
+            }
+            if currentSize == lastCurrentSize {
+                NSLog("Error: current cache size did not decrement")
+                clearCache()
+                return
             }
         }
     }
