@@ -18,9 +18,9 @@ class DiskCache {
     /**
         Keys used to store properties in the plist.
     */
-    enum DictionaryKeys: String {
-        case maxCacheSize = "maxCacheSize"
-        case requestsFilenameArray = "requestsFilenameArray"
+    struct DictionaryKeys {
+        static let maxCacheSize = "maxCacheSize"
+        static let requestsFilenameArray = "requestsFilenameArray"
     }
 
     // MARK: - Properties
@@ -83,10 +83,10 @@ class DiskCache {
                     self.persistPropertiesToDisk()
                 } else {
                     if let dict = NSDictionary(contentsOfFile: plistPath) {
-                        if let currentSize = dict.valueForKey(DictionaryKeys.maxCacheSize.rawValue) as? Int {
+                        if let currentSize = dict.valueForKey(DictionaryKeys.maxCacheSize) as? Int {
                             self.currentSize = currentSize
                         }
-                        if let requestCaches = dict.valueForKey(DictionaryKeys.requestsFilenameArray.rawValue) as? [String] {
+                        if let requestCaches = dict.valueForKey(DictionaryKeys.requestsFilenameArray) as? [String] {
                             self.requestCaches = requestCaches
                         }
                     }
@@ -103,7 +103,7 @@ class DiskCache {
         synchronized(lockObject) { () -> Void in
             if let plistPath = self.diskPathForPropertyList()?.path {
                 let dict = self.dictionaryForCache()
-                dict.writeToFile(plistPath, atomically: true)
+                (dict as NSDictionary).writeToFile(plistPath, atomically: true)
             }
             return
         }
@@ -156,16 +156,16 @@ class DiskCache {
     }
 
     /**
-        Creates an NSDictionary that will be used to store
+        Creates a dictionary that will be used to store
         this diskCache's properties to disk.
     
         :returns: A dictionary of the cache's properties
     */
-    private func dictionaryForCache() -> NSDictionary {
-        let dict = NSMutableDictionary()
-        dict.setValue(currentSize, forKey: DictionaryKeys.maxCacheSize.rawValue)
-        dict.setValue(requestCaches, forKey: DictionaryKeys.requestsFilenameArray.rawValue)
-        return NSDictionary(dictionary: dict)
+    private func dictionaryForCache() -> [String: AnyObject] {
+        var dict = [String: AnyObject]()
+        dict[DictionaryKeys.maxCacheSize] = currentSize
+        dict[DictionaryKeys.requestsFilenameArray] = requestCaches
+        return dict
     }
 
     /**
