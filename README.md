@@ -24,7 +24,7 @@ $ brew install carthage
 Once installed, add it to your Cartfile:
 
 ```
-github "buzzfeed/Mattress" >= 1.0
+github "buzzfeed/Mattress" >= 1.0.0
 ```
 
 You will then need to build using Carthage, and manually integrate both the Mattress and CommonCrypto frameworks into your project.
