@@ -173,7 +173,6 @@ public class URLCache: NSURLCache {
     }
 
     /**
-
         Downloads and stores an entire page in the diskCache. Any urls
         cached in this way will be available when the device is offline.
 
