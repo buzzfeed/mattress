@@ -138,7 +138,7 @@ class WebViewCacher: NSObject, UIWebViewDelegate {
     }
     
     func webView(webView: UIWebView, didFailLoadWithError error: NSError?) {
-        // we can ignore this error as it just means canceled
+        // We can ignore this error as it just means canceled.
         // http://stackoverflow.com/a/1053411/1084997
         if error?.code == -999 {
             return

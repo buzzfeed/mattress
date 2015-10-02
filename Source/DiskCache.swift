@@ -57,8 +57,9 @@ class DiskCache {
         Initializes a new DiskCache
     
         :param: path The path of the location on disk that should be used
-            to store requests. This MUST be unique for each DiskCache instance. Otherwise you will have hard to debug crashes.
-        :param: searchPathDirectory The NSSearchPathDirectory that should be
+            to store requests. This MUST be unique for each DiskCache instance.
+            Otherwise, you will have a hard time debugging crashes.
+        :param: searchPathDirectory The NSSearchPathDirectory that will be
             used to find the location at which to store requests.
         :param: maxCacheSize The size limit of this diskCache. When the size
             of the requests exceeds this amount, older requests will be removed.
@@ -147,7 +148,6 @@ class DiskCache {
                     return
                 }
 
-
                 if let
                     attributes = attributes,
                     fileSize = attributes[NSFileSize] as? NSNumber
@@ -211,9 +211,9 @@ class DiskCache {
     }
 
     /**
-        Stores components of the NSCachedURLResponse to disk each individually
-        to work around iOS 7 not properly storing the response to disk with
-        it's data and userInfo.
+        Stores components of the NSCachedURLResponse to disk individually to
+        work around iOS 7 not properly storing the response to disk with its
+        data and userInfo.
     
         NOTE: Storage policy is not stored because it is irrelevant to Mattress
         cached responses.
@@ -242,12 +242,12 @@ class DiskCache {
     }
 
     /**
-        Saves an archived object's data to disk with the hash it
-        should be associated with. This will only store the request
-        if it could fit in our max cache size, and will empty out
-        older cached items if it needs to to make room.
+        Saves an archived object's data to disk with the hash it should be
+        associated with. This will only store the request if it can fit in
+        our max cache size, and will empty out older cached items if it
+        needs to to make room.
     
-        :param: data The data of the archived root object.
+        :param: object The NSCoding compliant object to save.
         :param: hash The hash associated with that object.
     
         :returns: A Bool indicating that the saves were successful.
@@ -289,8 +289,8 @@ class DiskCache {
 
     /**
         Functions much like NSURLCache's method of the same signature.
-        An NSCachedURLResponse associated with the specified
-        NSURLRequest will be returned.
+        An NSCachedURLResponse associated with the specified NSURLRequest
+        will be returned.
         
         :param: request The request.
 
