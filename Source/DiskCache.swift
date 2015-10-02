@@ -103,7 +103,7 @@ class DiskCache {
     private func persistPropertiesToDisk() {
         synchronized(lockObject) { () -> Void in
             if let plistPath = self.diskPathForPropertyList()?.path {
-                let dict = self.dictionaryForCache()
+                let dict = self.propertiesDictionary()
                 (dict as NSDictionary).writeToFile(plistPath, atomically: true)
             }
             return
@@ -177,7 +177,7 @@ class DiskCache {
     
         :returns: A dictionary of the cache's properties
     */
-    private func dictionaryForCache() -> [String: AnyObject] {
+    private func propertiesDictionary() -> [String: AnyObject] {
         var dict = [String: AnyObject]()
         dict[DictionaryKeys.maxCacheSize] = currentSize
         dict[DictionaryKeys.requestsFilenameArray] = requestCaches
@@ -254,10 +254,9 @@ class DiskCache {
     */
     private func saveObject(object: NSCoding, withHash hash: String) -> Bool {
         var success = false
-        
         synchronized(lockObject) { () -> Void in
-            let data = NSKeyedArchiver.archivedDataWithRootObject(object)
             if let path = self.diskPathForRequestCacheNamed(hash)?.path {
+                let data = NSKeyedArchiver.archivedDataWithRootObject(object)
                 if data.length < self.maxCacheSize {
                     self.currentSize += data.length
                     var index = -1
