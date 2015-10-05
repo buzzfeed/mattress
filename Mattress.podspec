@@ -1,12 +1,13 @@
 Pod::Spec.new do |s|
   s.name = 'Mattress'
-  s.version = '0.0.8'
+  s.version = '1.0.0'
   s.license = 'MIT'
   s.summary = 'iOS Offline Caching for Web Content'
   s.homepage = 'https://github.com/buzzfeed/mattress'
   s.social_media_url = 'http://twitter.com/buzzfeed'
-  s.authors = { 'David Mauro' => 'david.mauro@buzzfeed.com' }
-  s.source = { :git => 'https://github.com/buzzfeed/mattress.git', :tag => s.version }
+  s.authors = { 'David Mauro' => 'david.mauro@buzzfeed.com',
+		'Kevin Lord'  => 'kevin.lord@buzzfeed.com' }
+  s.source = { :git => 'git@github.com:buzzfeed/mattress.git', :tag => s.version }
 
   s.ios.deployment_target = '8.0'
 
