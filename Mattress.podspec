@@ -7,7 +7,7 @@ Pod::Spec.new do |s|
   s.social_media_url = 'http://twitter.com/buzzfeed'
   s.authors = { 'David Mauro' => 'david.mauro@buzzfeed.com',
 		'Kevin Lord'  => 'kevin.lord@buzzfeed.com' }
-  s.source = { :git => 'git@github.com:buzzfeed/mattress.git', :tag => s.version }
+  s.source = { :git => 'https://github.com/buzzfeed/mattress.git', :tag => s.version }
 
   s.ios.deployment_target = '8.0'
 
