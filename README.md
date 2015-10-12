@@ -43,7 +43,7 @@ $ gem install cocoapods
 
 Once installed, add it to your Podfile:
 
-```
+```ruby
 pod 'Mattress', '~> 1.0.0'
 ```
 
@@ -59,7 +59,7 @@ pod 'Mattress', '~> 1.0.0'
 You should create an instance of URLCache and set it as the shared
 cache for your app in your application:didFinishLaunching: method.
 
-```
+```swift
 func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
     let reach = Reachability.reachabilityForInternetConnection()
     reach.startNotifier()
@@ -81,7 +81,7 @@ func application(application: UIApplication, didFinishLaunchingWithOptions launc
 
 To cache a webPage in the Mattress disk cache, simply call URLCache's diskCacheURL:loadedHandler: method.
 
-```
+```swift
 if let cache = NSURLCache.sharedURLCache() as? Mattress.URLCache {
     let url = NSURL(string: "http://www.buzzfeed.com")!
     cache.diskCacheURL(url) { [unowned self] webView in
