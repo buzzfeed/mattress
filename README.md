@@ -35,7 +35,7 @@ $ carthage build
 
 **Cocoapods**
 
-If you are not already using Cocoapods, you will need to install it using Gem.
+If you are not already using Cocoapods, you will need to install it using RubyGems.
 
 ```
 $ gem install cocoapods
