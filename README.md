@@ -33,9 +33,9 @@ You will then need to build using Carthage, and manually integrate both the Matt
 $ carthage build
 ```
 
-**Cocoapods**
+**CocoaPods**
 
-If you are not already using Cocoapods, you will need to install it using RubyGems.
+If you are not already using CocoaPods, you will need to install it using RubyGems.
 
 ```
 $ gem install cocoapods
