@@ -61,14 +61,14 @@ cache for your app in your application:didFinishLaunching: method.
 
 ```swift
 func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
-    let reach = Reachability.reachabilityForInternetConnection()
-    reach.startNotifier()
     let kB = 1024
     let MB = 1024 * kB
     let GB = 1024 * MB
     let isOfflineHandler: (() -> Bool) = {
-        let isOffline = reach.currentReachabilityStatus().value == NotReachable.value
-        return isOffline
+        // This is for demonstration only.
+        // You should use Reachability or your preferred method to determine offline status
+        // and return a proper value here.
+        return false
     }
     let urlCache = Mattress.URLCache(memoryCapacity: 20 * MB, diskCapacity: 20 * MB, diskPath: nil,
     	mattressDiskCapacity: 1 * GB, mattressDiskPath: nil, mattressSearchPathDirectory: .DocumentDirectory,
