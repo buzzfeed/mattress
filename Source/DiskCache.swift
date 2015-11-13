@@ -427,7 +427,6 @@ class DiskCache {
             hash = hashForRequest(request),
             baseURL = diskPath()
         {
-            NSLog("stuff not nil")
             url = NSURL(string: hash, relativeToURL: baseURL)
         }
         return url

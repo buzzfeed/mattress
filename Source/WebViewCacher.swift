@@ -114,7 +114,6 @@ class WebViewCacher: NSObject, UIWebViewDelegate {
         self.webView = webView
         webView.delegate = self
         webView.loadRequest(mutableRequest)
-        NSLog("WebView loadRequest:%x", self.webView!)
     }
 
     // MARK: - UIWebViewDelegate
