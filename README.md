@@ -82,16 +82,24 @@ func application(application: UIApplication, didFinishLaunchingWithOptions launc
 To cache a webPage in the Mattress disk cache, simply call URLCache's diskCacheURL:loadedHandler: method.
 
 ```swift
-if let cache = NSURLCache.sharedURLCache() as? Mattress.URLCache {
-    let url = NSURL(string: "http://www.buzzfeed.com")!
-    cache.diskCacheURL(url) { [unowned self] webView in
-        var state = webView.stringByEvaluatingJavaScriptFromString("document.readyState")
-        if state == "complete" {
-        	// Loading is done once we've returned true
-            return true
-        }
-        return false
-    }
+NSLog("Caching page")
+let urlToCache = NSURL(string: "https://www.google.com")
+if let
+    cache = NSURLCache.sharedURLCache() as? Mattress.URLCache,
+    urlToCache = urlToCache
+{
+    cache.diskCacheURL(urlToCache, loadedHandler: { (webView) -> (Bool) in
+            let state = webView.stringByEvaluatingJavaScriptFromString("document.readyState")
+            if state == "complete" {
+                // Loading is done once we've returned true
+                return true
+            }
+            return false
+        }, completeHandler: { () -> Void in
+            NSLog("Finished caching")
+        }, failureHandler: { (error) -> Void in
+            NSLog("Error caching: %@", error)
+    })
 }
 ```
 
