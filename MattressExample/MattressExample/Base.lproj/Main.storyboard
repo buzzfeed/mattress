@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9059" systemVersion="15A284" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="BYZ-38-t0r">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9049"/>
+    </dependencies>
+    <scenes>
+        <!--View Controller-->
+        <scene sceneID="tne-QT-ifu">
+            <objects>
+                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="MattressExample" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
+                        <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="sIc-s0-sfN">
+                                <rect key="frame" x="0.0" y="556" width="600" height="44"/>
+                                <animations/>
+                                <items>
+                                    <barButtonItem title="Cache Page" id="Uc0-96-bza">
+                                        <connections>
+                                            <action selector="cachePage" destination="BYZ-38-t0r" id="xxT-Du-URh"/>
+                                        </connections>
+                                    </barButtonItem>
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="2st-sy-fP5"/>
+                                    <barButtonItem title="Load Page" id="bqG-oW-duo">
+                                        <connections>
+                                            <action selector="loadPage" destination="BYZ-38-t0r" id="mJl-LT-yiv"/>
+                                        </connections>
+                                    </barButtonItem>
+                                </items>
+                            </toolbar>
+                            <webView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3WQ-CZ-vmw">
+                                <rect key="frame" x="0.0" y="20" width="600" height="536"/>
+                                <animations/>
+                                <color key="backgroundColor" red="0.36078431370000003" green="0.38823529410000002" blue="0.4039215686" alpha="1" colorSpace="deviceRGB"/>
+                            </webView>
+                        </subviews>
+                        <animations/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="sIc-s0-sfN" firstAttribute="top" secondItem="3WQ-CZ-vmw" secondAttribute="bottom" id="HsI-sJ-tDZ"/>
+                            <constraint firstItem="sIc-s0-sfN" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="Nve-mF-m6t"/>
+                            <constraint firstAttribute="trailing" secondItem="sIc-s0-sfN" secondAttribute="trailing" id="Or2-Ly-NMW"/>
+                            <constraint firstItem="3WQ-CZ-vmw" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" id="QOY-qo-cLR"/>
+                            <constraint firstItem="3WQ-CZ-vmw" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" id="TNS-eT-gdy"/>
+                            <constraint firstItem="3WQ-CZ-vmw" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="dOh-kr-iPv"/>
+                            <constraint firstAttribute="bottom" secondItem="sIc-s0-sfN" secondAttribute="bottom" id="oJV-4u-u6T"/>
+                            <constraint firstItem="3WQ-CZ-vmw" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="qLq-ER-4Z0"/>
+                            <constraint firstAttribute="trailing" secondItem="3WQ-CZ-vmw" secondAttribute="trailing" id="wI0-AY-TVi"/>
+                        </constraints>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="QOY-qo-cLR"/>
+                                <exclude reference="dOh-kr-iPv"/>
+                            </mask>
+                        </variation>
+                    </view>
+                    <connections>
+                        <outlet property="webView" destination="3WQ-CZ-vmw" id="kr8-fL-3AU"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="284" y="418"/>
+        </scene>
+    </scenes>
+</document>
