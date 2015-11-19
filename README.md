@@ -89,6 +89,12 @@ if let
     urlToCache = urlToCache
 {
     cache.diskCacheURL(urlToCache, loadedHandler: { (webView) -> (Bool) in
+            /*
+               Note: The below code should work for fairly simple pages. However, if the page you are
+               attempting to cache contains progressively / lazily loaded images or other assets you
+               will also need to trigger any JavaScript functions here to mimic user actions and
+               ensure those assets are also loaded before returning true.
+            */
             let state = webView.stringByEvaluatingJavaScriptFromString("document.readyState")
             if state == "complete" {
                 // Loading is done once we've returned true
