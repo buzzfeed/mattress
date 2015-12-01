@@ -7,26 +7,71 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1407B4EB1C04B89200814BA9 /* Mattress.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1407B4E41C04B86400814BA9 /* Mattress.framework */; };
+		1407B4EC1C04B89200814BA9 /* Mattress.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 1407B4E41C04B86400814BA9 /* Mattress.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		1407B4EF1C04B89200814BA9 /* CommonCrypto.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1407B4E81C04B86400814BA9 /* CommonCrypto.framework */; };
+		1407B4F01C04B89200814BA9 /* CommonCrypto.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 1407B4E81C04B86400814BA9 /* CommonCrypto.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		14738D131BF6299C00FED144 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14738D121BF6299C00FED144 /* AppDelegate.swift */; };
 		14738D151BF6299C00FED144 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14738D141BF6299C00FED144 /* ViewController.swift */; };
 		14738D181BF6299C00FED144 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 14738D161BF6299C00FED144 /* Main.storyboard */; };
 		14738D1A1BF6299C00FED144 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 14738D191BF6299C00FED144 /* Assets.xcassets */; };
 		14738D1D1BF6299C00FED144 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 14738D1B1BF6299C00FED144 /* LaunchScreen.storyboard */; };
-		14738D631BFE459F00FED144 /* Mattress.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 14738D621BFE459F00FED144 /* Mattress.framework */; };
-		14738D641BFE459F00FED144 /* Mattress.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 14738D621BFE459F00FED144 /* Mattress.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		14738D661BFE459F00FED144 /* CommonCrypto.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 14738D651BFE459F00FED144 /* CommonCrypto.framework */; };
-		14738D671BFE459F00FED144 /* CommonCrypto.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 14738D651BFE459F00FED144 /* CommonCrypto.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		1407B4E31C04B86400814BA9 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1407B4DD1C04B86400814BA9 /* Mattress.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 0B4929CA1A13FD9C003D9AB3;
+			remoteInfo = Mattress;
+		};
+		1407B4E51C04B86400814BA9 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1407B4DD1C04B86400814BA9 /* Mattress.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 0B4929D51A13FD9C003D9AB3;
+			remoteInfo = MattressTests;
+		};
+		1407B4E71C04B86400814BA9 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1407B4DD1C04B86400814BA9 /* Mattress.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 143537FD1B0F825800FD502B;
+			remoteInfo = CommonCrypto;
+		};
+		1407B4E91C04B87200814BA9 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1407B4DD1C04B86400814BA9 /* Mattress.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 0B4929C91A13FD9C003D9AB3;
+			remoteInfo = Mattress;
+		};
+		1407B4ED1C04B89200814BA9 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1407B4DD1C04B86400814BA9 /* Mattress.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 0B4929C91A13FD9C003D9AB3;
+			remoteInfo = Mattress;
+		};
+		1407B4F11C04B89200814BA9 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1407B4DD1C04B86400814BA9 /* Mattress.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 143537FC1B0F825800FD502B;
+			remoteInfo = CommonCrypto;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXCopyFilesBuildPhase section */
-		14738D681BFE459F00FED144 /* Embed Frameworks */ = {
+		1407B4DB1C04B40800814BA9 /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				14738D671BFE459F00FED144 /* CommonCrypto.framework in Embed Frameworks */,
-				14738D641BFE459F00FED144 /* Mattress.framework in Embed Frameworks */,
+				1407B4F01C04B89200814BA9 /* CommonCrypto.framework in Embed Frameworks */,
+				1407B4EC1C04B89200814BA9 /* Mattress.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -34,6 +79,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		1407B4DD1C04B86400814BA9 /* Mattress.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Mattress.xcodeproj; path = ../Mattress.xcodeproj; sourceTree = "<group>"; };
 		14738D0F1BF6299C00FED144 /* MattressExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MattressExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		14738D121BF6299C00FED144 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		14738D141BF6299C00FED144 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -41,8 +87,6 @@
 		14738D191BF6299C00FED144 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		14738D1C1BF6299C00FED144 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		14738D1E1BF6299C00FED144 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		14738D621BFE459F00FED144 /* Mattress.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; name = Mattress.framework; path = "/Users/kevinlord/Library/Developer/Xcode/DerivedData/Mattress-aqemttuzbkdmvefylygnstriakjp/Build/Products/Debug-iphoneos/Mattress.framework"; sourceTree = "<absolute>"; };
-		14738D651BFE459F00FED144 /* CommonCrypto.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; name = CommonCrypto.framework; path = "/Users/kevinlord/Library/Developer/Xcode/DerivedData/Mattress-aqemttuzbkdmvefylygnstriakjp/Build/Products/Debug-iphoneos/CommonCrypto.framework"; sourceTree = "<absolute>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -50,20 +94,31 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				14738D661BFE459F00FED144 /* CommonCrypto.framework in Frameworks */,
-				14738D631BFE459F00FED144 /* Mattress.framework in Frameworks */,
+				1407B4EF1C04B89200814BA9 /* CommonCrypto.framework in Frameworks */,
+				1407B4EB1C04B89200814BA9 /* Mattress.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1407B4DE1C04B86400814BA9 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				1407B4E41C04B86400814BA9 /* Mattress.framework */,
+				1407B4E61C04B86400814BA9 /* MattressTests.xctest */,
+				1407B4E81C04B86400814BA9 /* CommonCrypto.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		14738D061BF6299C00FED144 = {
 			isa = PBXGroup;
 			children = (
 				14738D3C1BF635E100FED144 /* Frameworks */,
 				14738D111BF6299C00FED144 /* MattressExample */,
 				14738D101BF6299C00FED144 /* Products */,
+				1407B4DD1C04B86400814BA9 /* Mattress.xcodeproj */,
 			);
 			sourceTree = "<group>";
 		};
@@ -91,8 +146,6 @@
 		14738D3C1BF635E100FED144 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				14738D651BFE459F00FED144 /* CommonCrypto.framework */,
-				14738D621BFE459F00FED144 /* Mattress.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -107,11 +160,14 @@
 				14738D0B1BF6299C00FED144 /* Sources */,
 				14738D0C1BF6299C00FED144 /* Frameworks */,
 				14738D0D1BF6299C00FED144 /* Resources */,
-				14738D681BFE459F00FED144 /* Embed Frameworks */,
+				1407B4DB1C04B40800814BA9 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				1407B4EA1C04B87200814BA9 /* PBXTargetDependency */,
+				1407B4EE1C04B89200814BA9 /* PBXTargetDependency */,
+				1407B4F21C04B89200814BA9 /* PBXTargetDependency */,
 			);
 			name = MattressExample;
 			productName = MattressExample;
@@ -144,12 +200,42 @@
 			mainGroup = 14738D061BF6299C00FED144;
 			productRefGroup = 14738D101BF6299C00FED144 /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 1407B4DE1C04B86400814BA9 /* Products */;
+					ProjectRef = 1407B4DD1C04B86400814BA9 /* Mattress.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				14738D0E1BF6299C00FED144 /* MattressExample */,
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		1407B4E41C04B86400814BA9 /* Mattress.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = Mattress.framework;
+			remoteRef = 1407B4E31C04B86400814BA9 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		1407B4E61C04B86400814BA9 /* MattressTests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = MattressTests.xctest;
+			remoteRef = 1407B4E51C04B86400814BA9 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		1407B4E81C04B86400814BA9 /* CommonCrypto.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = CommonCrypto.framework;
+			remoteRef = 1407B4E71C04B86400814BA9 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		14738D0D1BF6299C00FED144 /* Resources */ = {
@@ -175,6 +261,24 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		1407B4EA1C04B87200814BA9 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = Mattress;
+			targetProxy = 1407B4E91C04B87200814BA9 /* PBXContainerItemProxy */;
+		};
+		1407B4EE1C04B89200814BA9 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = Mattress;
+			targetProxy = 1407B4ED1C04B89200814BA9 /* PBXContainerItemProxy */;
+		};
+		1407B4F21C04B89200814BA9 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = CommonCrypto;
+			targetProxy = 1407B4F11C04B89200814BA9 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		14738D161BF6299C00FED144 /* Main.storyboard */ = {
@@ -283,6 +387,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
 				INFOPLIST_FILE = MattressExample/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.buzzfeed.MattressExample;
@@ -294,6 +399,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
 				INFOPLIST_FILE = MattressExample/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.buzzfeed.MattressExample;

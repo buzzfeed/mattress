@@ -80,7 +80,6 @@
 		140FA3DE1B30BF2100BFFAAE /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		143537FD1B0F825800FD502B /* CommonCrypto.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = CommonCrypto.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		143538191B0F83C900FD502B /* libcommonCrypto.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libcommonCrypto.dylib; path = usr/lib/system/libcommonCrypto.dylib; sourceTree = SDKROOT; };
-		2FFFE5A71B06894900F57E22 /* CryptoSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CryptoSwift.framework; path = Carthage/Build/iOS/CryptoSwift.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -196,7 +195,6 @@
 			isa = PBXGroup;
 			children = (
 				143538191B0F83C900FD502B /* libcommonCrypto.dylib */,
-				2FFFE5A71B06894900F57E22 /* CryptoSwift.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
