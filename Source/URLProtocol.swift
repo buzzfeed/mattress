@@ -25,10 +25,14 @@ public var shouldRetrieveFromMattressCacheByDefault = false
     Additionally it ensures that when we are offline, we will
     use the Mattress diskCache if possible.
 */
-class URLProtocol: NSURLProtocol, NSURLConnectionDataDelegate {
+class URLProtocol: NSURLProtocol, NSURLSessionDataDelegate {
 
     /// Used to stop loading
-    var connection: NSURLConnection?
+    lazy var session: NSURLSession = {
+        let config = NSURLSession.sharedSession().configuration
+        return NSURLSession(configuration: config, delegate: self, delegateQueue: nil)
+    }()
+    var dataTask: NSURLSessionDataTask?
     
     static var shouldRetrieveFromMattressCacheByDefault = false
     
@@ -195,29 +199,41 @@ class URLProtocol: NSURLProtocol, NSURLConnectionDataDelegate {
             client?.URLProtocol(self, cachedResponseIsValid: cachedResponse)
             return
         }
-        self.connection = NSURLConnection(request: mutableRequest, delegate: self)
+        self.dataTask = self.session.dataTaskWithRequest(request)
+        self.dataTask?.resume()
     }
 
     override func stopLoading() {
-        connection?.cancel()
-        connection = nil
+        self.dataTask?.cancel()
+        self.dataTask = nil
     }
 
-    // Mark: - NSURLConnectionDataDelegate Methods
+    // Mark: - NSURLSessionDataDelegate Methods
 
-    func connection(connection: NSURLConnection, didReceiveResponse response: NSURLResponse) {
+    func URLSession(session: NSURLSession,
+        dataTask: NSURLSessionDataTask,
+        didReceiveResponse response: NSURLResponse,
+        completionHandler: (NSURLSessionResponseDisposition) -> Void)
+    {
+        completionHandler(.Allow)
         self.client?.URLProtocol(self, didReceiveResponse: response, cacheStoragePolicy: .Allowed)
     }
 
-    func connection(connection: NSURLConnection, didReceiveData data: NSData) {
+    func URLSession(session: NSURLSession,
+        dataTask: NSURLSessionDataTask,
+        didReceiveData data: NSData)
+    {
         self.client?.URLProtocol(self, didLoadData: data)
     }
 
-    func connectionDidFinishLoading(connection: NSURLConnection) {
-        self.client?.URLProtocolDidFinishLoading(self)
-    }
-
-    func connection(connection: NSURLConnection, didFailWithError error: NSError) {
-        self.client?.URLProtocol(self, didFailWithError: error)
+    func URLSession(session: NSURLSession,
+        task: NSURLSessionTask,
+        didCompleteWithError error: NSError?)
+    {
+        if let error = error {
+            self.client?.URLProtocol(self, didFailWithError: error)
+        } else {
+            self.client?.URLProtocolDidFinishLoading(self)
+        }
     }
 }
