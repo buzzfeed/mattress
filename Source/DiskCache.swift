@@ -67,7 +67,7 @@ class DiskCache {
             stored.
     */
     init(path: String?, searchPathDirectory: NSSearchPathDirectory, maxCacheSize: Int) {
-        self.path = path ?? "mattress"
+        self.path = path ?? "mattress/"
         self.searchPathDirectory = searchPathDirectory
         self.maxCacheSize = maxCacheSize
         loadPropertiesFromDisk()
