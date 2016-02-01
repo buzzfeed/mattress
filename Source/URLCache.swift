@@ -35,19 +35,6 @@ public class URLCache: NSURLCache {
     // Array of WebViewCacher objects used to cache pages
     var cachers: [WebViewCacher] = []
 
-    /*
-    We need to override this because the connection
-    might decide not to cache something if it decides
-    the cache is too small wrt the size of the request
-    to be cached.
-    */
-    override public var diskCapacity: Int {
-        get {
-            return ArbitrarilyLargeSize
-        }
-        set (value) {}
-    }
-
     // MARK: - Class Methods
 
     /**
