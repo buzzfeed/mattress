@@ -11,7 +11,7 @@ import UIKit
 
 /**
     DiskCache is a NSURLCache replacement that will store
-    and retreive NSCachedURLResponses to disk.
+    and retrieve NSCachedURLResponses to disk.
 */
 class DiskCache {
 
